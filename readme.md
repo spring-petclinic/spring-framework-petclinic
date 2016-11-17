@@ -1,10 +1,9 @@
 # Spring PetClinic Sample Application [![Build Status](https://travis-ci.org/spring-petclinic/spring-framework-petclinic.svg?branch=master)](https://travis-ci.org/spring-petclinic/spring-framework-petclinic/)
 
 Approved by the Spring team, this repo is a fork of the [spring-projects/spring-petclinic](https://github.com/spring-projects/spring-petclinic).
-It allows the Spring community to maintain the [legacy branch](https://github.com/spring-projects/spring-petclinic/tree/legacy).
-By legacy, we are speaking about building an application without Spring Boot (i.e. plain old Spring Framework configuration) 
-and with a 3-layer architecture (i.e. presentation --> service --> repository).
-The original repo will now focus on the Spring Boot version of Spring Petclinic and has moved to [aggregate-oriented domain]([https://github.com/spring-projects/spring-petclinic/pull/200).
+It allows the Spring community to maintain a Petclinic version with a plain old **Spring Framework configuration**
+and with a **3-layer architecture** (i.e. presentation --> service --> repository).
+The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggregate-oriented domain]([https://github.com/spring-projects/spring-petclinic/pull/200). 
 
 
 ## Understanding the Spring Petclinic application with a few diagrams
@@ -118,7 +117,7 @@ File -> Import -> Maven -> Existing Maven project
 | JavaScript dependencies | [JavaScript libraries are defined by the manifest file bower.json](bower.json) |
 | Bower configuration | [Bower configuration using JSON](.bowerrc) |
 | Static resources config | [Resource mapping in Spring configuration](/src/main/resources/spring/mvc-core-config.xml#L30) |
-| Static resourcs usage | [staticFiles.jsp](src/main/webapp/WEB-INF/jsp/fragments/staticFiles.jsp#L12) |
+| Static resources usage | [staticFiles.jsp](src/main/webapp/WEB-INF/jsp/fragments/staticFiles.jsp#L12) |
 | Thymeleaf | In the late 2016, the original [Spring Petclinic](https://github.com/spring-projects/spring-petclinic) has moved from JSP to Thymeleaf. |
 
 | 'Service' and 'Repository' layers | Files |
