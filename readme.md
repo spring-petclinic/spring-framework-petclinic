@@ -12,7 +12,7 @@ The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggre
 ## Running petclinic locally
 ```
 	git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
-	cd spring-petclinic
+	cd spring-framework-petclinic
 	./mvnw tomcat7:run
 ```
 
