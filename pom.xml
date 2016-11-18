@@ -20,6 +20,13 @@
         <spring-io-platform.version>2.0.8.RELEASE</spring-io-platform.version>
         <spring-data-jdbc.version>1.1.0.RELEASE</spring-data-jdbc.version>
 
+        <!-- Web dependencies -->
+        <!-- Version update should also be done in wro.xml, petclinic.less and static resources: htmlHeader.tag and footer.tag-->
+        <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
+        <webjars-jquery-ui.version>1.11.4</webjars-jquery-ui.version>
+        <webjars-jquery.version>2.2.4</webjars-jquery.version>
+        <wro4j.version>1.8.0</wro4j.version>
+
 
         <!-- Java EE / Java SE dependencies -->
         <tomcat.version>7.0.59</tomcat.version>
@@ -182,6 +189,24 @@
             </exclusions>
         </dependency>
 
+
+        <!-- Webjars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${webjars-jquery.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-ui</artifactId>
+            <version>${webjars-jquery-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${webjars-bootstrap.version}</version>
+        </dependency>
+
         <!-- Test Artifacts -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -340,6 +365,34 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>${wro4j.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+                    <cssDestinationFolder>${project.build.directory}/petclinic/resources/css</cssDestinationFolder>
+                    <wroFile>${basedir}/src/main/wro/wro.xml</wroFile>
+                    <extraConfigFile>${basedir}/src/main/wro/wro.properties</extraConfigFile>
+                    <contextFolder>${basedir}/src/main/webapp/resources/less</contextFolder>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>bootstrap</artifactId>
+                        <version>${webjars-bootstrap.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
     <reporting>
@@ -360,60 +413,6 @@
         </plugins>
     </reporting>
     <profiles>
-		<profile>
-			<id>bower-install</id>
-  			<build>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
-					<executions>
-						<execution>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<executable>bower</executable>
-						<arguments>
-							<argument>install</argument>
-						</arguments>
-						<workingDirectory>${basedir}</workingDirectory>
-					</configuration>
-				</plugin>
-			</plugins>
-		  </build>
-		</profile>
-        <profile>
-            <id>less-install</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.lesscss</groupId>
-                        <artifactId>lesscss-maven-plugin</artifactId>
-                        <version>1.7.0.1.1</version>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/webapp/resources/less</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/resources/css</outputDirectory>
-                            <compress>true</compress>
-                            <includes>
-                                <include>petclinic.less</include>
-                            </includes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>HSQLDB</id>
             <activation>
