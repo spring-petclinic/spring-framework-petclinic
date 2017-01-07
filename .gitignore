@@ -1,13 +1,11 @@
-target/*
-.settings/*
+# Eclipse
+.settings/
 .classpath
 .project
+
+# IntelliJ IDEA
 .idea
 *.iml
-/target
 
-generated/
-
-# Easier branch switching
-springboot-petclinic-client/
-springboot-petclinic-server/
+# Maven
+target/
