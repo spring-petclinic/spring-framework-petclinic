@@ -113,9 +113,7 @@ File -> Import -> Maven -> Existing Maven project
 | Spring MVC - XML integration | [mvc-view-config.xml](src/main/resources/spring/mvc-view-config.xml)  |
 | Spring MVC - ContentNegotiatingViewResolver| [mvc-view-config.xml](src/main/resources/spring/mvc-view-config.xml) |
 | JSP custom tags | [WEB-INF/tags](src/main/webapp/WEB-INF/tags), [createOrUpdateOwnerForm.jsp](src/main/webapp/WEB-INF/jsp/owners/createOrUpdateOwnerForm.jsp)|
-| Bower Maven profile | [The bower-install maven profile is declared into the pom.xml](pom.xml). 
-| JavaScript dependencies | [JavaScript libraries are defined by the manifest file bower.json](bower.json) |
-| Bower configuration | [Bower configuration using JSON](.bowerrc) |
+| JavaScript dependencies | [JavaScript libraries are declared as webjars in the pom.xml](pom.xml) |
 | Static resources config | [Resource mapping in Spring configuration](/src/main/resources/spring/mvc-core-config.xml#L30) |
 | Static resources usage | [staticFiles.jsp](src/main/webapp/WEB-INF/jsp/fragments/staticFiles.jsp#L12) |
 | Thymeleaf | In the late 2016, the original [Spring Petclinic](https://github.com/spring-projects/spring-petclinic) has moved from JSP to Thymeleaf. |
