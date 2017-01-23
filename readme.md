@@ -13,7 +13,7 @@ The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggre
 ```
 	git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 	cd spring-framework-petclinic
-	./mvnw tomcat7:run
+	./mvnw tomcat7:run-war
 ```
 
 You can then access petclinic here: http://localhost:9966/petclinic/
@@ -34,7 +34,7 @@ To run petclinic locally using persistent database, it is needed to run with pro
 For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
 
 ```
-./mvnw tomcat7:run -P MySQL
+./mvnw tomcat7:run-war -P MySQL
 ```
 
 Before do this, would be good to check properties defined in MySQL profile inside pom.xml file.
@@ -58,7 +58,7 @@ docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATA
 For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
 
 ```
-./mvnw tomcat7:run -P PostgreSQL
+./mvnw tomcat7:run-war -P PostgreSQL
 ```
 
 Before do this, would be good to check properties defined in PostgreSQL profile inside pom.xml file.
