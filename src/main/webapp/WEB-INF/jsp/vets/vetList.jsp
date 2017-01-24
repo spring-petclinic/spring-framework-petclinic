@@ -7,7 +7,7 @@
 <petclinic:layout pageName="vets">
     <h2>Veterinarians</h2>
 
-    <table id="vets" class="table table-striped">
+    <table id="vetsTable" class="table table-striped">
         <thead>
         <tr>
             <th>Name</th>
