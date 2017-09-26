@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic</artifactId>
-    <version>4.3.6</version>
+    <version>4.3.11</version>
 
     <name>petclinic</name>
     <packaging>war</packaging>
@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Spring -->
-        <spring-io-platform.version>Brussels-SR3</spring-io-platform.version>
+        <spring-io-platform.version>Brussels-SR5</spring-io-platform.version>
         <spring-data-jdbc.version>1.1.0.RELEASE</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
