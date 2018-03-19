@@ -8,7 +8,7 @@
 <petclinic:layout pageName="owners">
     <h2>Owners</h2>
 
-    <table id="vets" class="table table-striped">
+    <table id="ownersTable" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 150px;">Name</th>
