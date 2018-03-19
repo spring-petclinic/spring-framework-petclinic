@@ -12,12 +12,12 @@
     <properties>
 
         <!-- Generic properties -->
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Spring -->
-        <spring-io-platform.version>Brussels-SR7</spring-io-platform.version>
+        <spring-io-platform.version>Cairo-RC1</spring-io-platform.version>
         <spring-data-jdbc.version>1.1.0.RELEASE</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
@@ -29,7 +29,7 @@
 
 
         <!-- Java EE / Java SE dependencies -->
-        <tomcat.version>7.0.59</tomcat.version>
+        <tomcat.version>8.0.50</tomcat.version>
 
         <!-- Test -->
         <assertj.version>2.2.0</assertj.version>
@@ -474,6 +474,14 @@
             </dependencies>
         </profile>
    </profiles>
+
+    <repositories>
+        <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <url>demopetclinic</url>
 </project>
