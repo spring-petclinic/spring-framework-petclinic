@@ -18,7 +18,7 @@
 
         <!-- Spring -->
         <spring-io-platform.version>Cairo-SR2</spring-io-platform.version>
-        <spring-data-jdbc.version>1.1.0.RELEASE</spring-data-jdbc.version>
+        <spring-data-jdbc.version>2.0.0.M1</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
         <!-- Version update should also be done in wro.xml, petclinic.less and static resources: htmlHeader.tag and footer.tag-->
