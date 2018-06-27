@@ -42,7 +42,7 @@ Before do this, would be good to check properties defined in MySQL profile insid
 ```
 <properties>
     <jpa.database>MYSQL</jpa.database>
-    <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+    <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
     <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
     <jdbc.username>root</jdbc.username>
     <jdbc.password>petclinic</jdbc.password>

@@ -37,7 +37,7 @@
         <assertj.version>2.2.0</assertj.version>
 
         <!-- Others -->
-        <mysql-driver.version>5.1.36</mysql-driver.version>
+        <mysql-driver.version>8.0.11</mysql-driver.version>
 
         <postgresql-driver.version>9.4.1211.jre7</postgresql-driver.version>
 
