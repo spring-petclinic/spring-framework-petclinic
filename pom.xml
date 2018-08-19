@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic</artifactId>
-    <version>5.0.7</version>
+    <version>5.0.8</version>
 
     <name>petclinic</name>
     <packaging>war</packaging>
@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Spring -->
-        <spring-io-platform.version>Cairo-SR2</spring-io-platform.version>
+        <spring-io-platform.version>Cairo-SR3</spring-io-platform.version>
         <spring-data-jdbc.version>2.0.0.M1</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
