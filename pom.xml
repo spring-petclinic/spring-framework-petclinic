@@ -4,10 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic</artifactId>
-    <version>5.0.8</version>
+    <version>5.1.0</version>
 
     <name>petclinic</name>
     <packaging>war</packaging>
+    <description>A Spring Framework application based on JSP, Spring MVC, Spring Data JPA, Hibernate and JDBC</description>
+    <url>https://github.com/spring-petclinic/</url>
 
     <properties>
 
@@ -17,7 +19,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Spring -->
-        <spring-io-platform.version>Cairo-SR3</spring-io-platform.version>
+        <spring-framework.version>5.1.0.RELEASE</spring-framework.version>
         <spring-data-jdbc.version>2.0.0.M1</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
@@ -27,32 +29,60 @@
         <webjars-jquery.version>2.2.4</webjars-jquery.version>
         <wro4j.version>1.8.0</wro4j.version>
 
-
         <!-- Java EE / Java SE dependencies -->
-        <tomcat.version>8.0.50</tomcat.version>
-        <jaxb.version>2.2.11</jaxb.version>
+        <tomcat.version>9.0.12</tomcat.version>
+        <jaxb.version>2.3.0</jaxb.version>
         <activation.version>1.1.1</activation.version>
+        <servlet-api.version>4.0.1</servlet-api.version>
+        <javax-jstl.version>1.2.2</javax-jstl.version>
+        <taglibs-standard.version>1.2.5</taglibs-standard.version>
+
+        <!-- Persistence -->
+        <spring-data-releasetrain.version>Lovelace-RELEASE</spring-data-releasetrain.version>
+        <hibernate.version>5.3.6.Final</hibernate.version>
+        <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
+        <hsqldb.version>2.4.1</hsqldb.version>
+
+        <!-- Logging -->
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.3</logback.version>
 
         <!-- Test -->
         <assertj.version>2.2.0</assertj.version>
+        <jacoco.version>0.8.1</jacoco.version>
+        <json-path.version>2.4.0</json-path.version>
+        <mockito.version>2.22.0</mockito.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <junit.version>4.12</junit.version>
 
-        <!-- Others -->
+        <!-- JDBC Drivers -->
         <mysql-driver.version>8.0.11</mysql-driver.version>
-
         <postgresql-driver.version>9.4.1211.jre7</postgresql-driver.version>
 
-        <jacoco.version>0.8.1</jacoco.version>
+        <!-- Others -->
+        <jackson.version>2.9.7</jackson.version>
+        <aspectj.version>1.9.1</aspectj.version>
+
+        <!-- Maven plugins -->
+        <jetty-maven-plugin.version>9.4.12.v20180830</jetty-maven-plugin.version>
+
     </properties>
 
     <dependencyManagement>
-        <!-- Import the maven Spring IO Platform Bill Of Materials (BOM) -->
         <dependencies>
             <dependency>
-                <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
-                <version>${spring-io-platform.version}</version>
-                <type>pom</type>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
                 <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-releasetrain</artifactId>
+                <version>${spring-data-releasetrain.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -65,11 +95,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jasper-el</artifactId>
             <version>${tomcat.version}</version>
@@ -79,10 +104,12 @@
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <version>${javax-jstl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.taglibs</groupId>
             <artifactId>taglibs-standard-jstlel</artifactId>
+            <version>${taglibs-standard.version}</version>
         </dependency>
         <!--  JSon -->
         <dependency>
@@ -96,6 +123,7 @@
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
+            <version>${json-path.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- SPRING, SPRING, SPRINGITY SPRING -->
@@ -120,28 +148,34 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <version>${spring-framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${spring-framework.version}</version>
         </dependency>
         <!-- used for EhCacheCacheManager -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+            <version>${spring-framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
+            <version>${spring-framework.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -152,6 +186,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -159,10 +194,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -170,25 +207,17 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${hibernate.version}</version>
         </dependency>
 
 
@@ -213,11 +242,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>${spring-framework.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -229,43 +260,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- temporary fix: below dependency should not be necessary as it is a transitive dependency.
-        For some reason we can't build the app unless it is a first level dependency -->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-        </dependency>
-
-        <!-- JAXB and Activation added for Java 9 compatibility.
-             The JAXB API is considered to be Java EE API and therefore is
-             no longer contained on the default class path in Java SE 9 -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>${activation.version}</version>
         </dependency>
 
     </dependencies>
@@ -304,6 +306,7 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -314,6 +317,7 @@
                     </includes>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -322,6 +326,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -348,6 +353,7 @@
                     </additionalProjectnatures>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -358,16 +364,7 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <server>tomcat-development-server</server>
-                    <port>9966</port>
-                    <path>/petclinic</path>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -387,6 +384,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!--Specify the encoding for copying resources-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -424,6 +422,13 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty-maven-plugin.version}</version>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -445,6 +450,7 @@
                 <dependency>
                     <groupId>org.hsqldb</groupId>
                     <artifactId>hsqldb</artifactId>
+                    <version>${hsqldb.version}</version>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
@@ -487,6 +493,38 @@
                 </dependency>
             </dependencies>
         </profile>
+
+        <profile>
+            <id>java9+</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <dependencies>
+                <!-- JAXB and Activation added for Java 9 compatibility.
+                     The JAXB API is considered to be Java EE API and therefore is
+                     no longer contained on the default class path in Java SE 9 -->
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>${jaxb.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-core</artifactId>
+                    <version>${jaxb.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                    <version>${jaxb.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                    <version>${activation.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
    </profiles>
 
     <repositories>
@@ -497,5 +535,4 @@
         </repository>
     </repositories>
 
-    <url>demopetclinic</url>
 </project>
