@@ -88,13 +88,13 @@ The following items should be installed in your system:
 * Jetty 9.4+ or Tomcat 9+
 * Your prefered IDE 
   * Eclipse with the m2e plugin. Note: when m2e is available, there is an m2 icon in Help -> About dialog. If m2e is not there, just follow the install process here: http://www.eclipse.org/m2e/
-  * or [Spring Tools Suite](https://spring.io/tools) (STS)
-  * or IntelliJ IDEA
+  * [Spring Tools Suite](https://spring.io/tools) (STS)
+  * IntelliJ IDEA
 
 
 ### Steps:
 
-1) In the command line
+1) On the command line
 ```
 git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 ```
@@ -103,13 +103,16 @@ git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 ```
 File -> Import -> Maven -> Existing Maven project
 ```
-Then either build on the command line `./mvnw install` or using the Eclipse launcher (right click on project and `Run As -> Maven install`) to generate the CSS.
+Then either build on the command line `./mvnw generate-resources` or using the Eclipse launcher (right click on project and `Run As -> Maven install`) to generate the CSS.
 Configure a Jetty or a Tomcat web container then deploy the `spring-petclinic.war` file.
 
-3) Or inside IntelliJ IDEA
+3) Inside IntelliJ IDEA
 
-On the main menu, select `File | Open`. Select the Petclinic [pom.xml](pom.xml). Click on the `Open as Project` button.
-Then either build on the command line `./mvnw install` or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders` to generate the CSS.
+In the main menu, select `File > Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
+
+CSS files are generated from the Maven build. You can either build them on the command line `./mvnw generate-resources` 
+or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders`.
+
 Go to the `Run -> Edit Configuration` then configure a Tomcat or a Jetty web container. Deploy the `spring-petclinic.war` file.
 Run the application by clicking on the `Run` icon.
 
