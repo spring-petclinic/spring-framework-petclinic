@@ -1,9 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * <p> Integration test using the 'Spring Data' profile.
@@ -12,8 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
 
-@ContextConfiguration(locations = {"classpath:spring/business-config.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
+@SpringJUnitConfig(locations = {"classpath:spring/business-config.xml"})
 @ActiveProfiles("spring-data-jpa")
 public class ClinicServiceSpringDataJpaTests extends AbstractClinicServiceTests {
 
