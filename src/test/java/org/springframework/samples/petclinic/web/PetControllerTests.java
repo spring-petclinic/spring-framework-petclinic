@@ -1,9 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.samples.petclinic.config.MvcCoreConfig;
@@ -12,9 +11,7 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -29,9 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Colin But
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = { MvcCoreConfig.class, MvcTestConfig.class })
+@SpringJUnitWebConfig({ MvcCoreConfig.class, MvcTestConfig.class })
 public class PetControllerTests {
 
     private static final int TEST_OWNER_ID = 1;
@@ -48,7 +43,7 @@ public class PetControllerTests {
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         DefaultFormattingConversionService formattingConversionService = new DefaultFormattingConversionService();
         formattingConversionService.addFormatter(petTypeFormatter);

@@ -13,10 +13,10 @@ The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggre
 ```
 	git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 	cd spring-framework-petclinic
-	./mvnw tomcat7:run-war
+	./mvnw jetty:run-war
 ```
 
-You can then access petclinic here: http://localhost:9966/petclinic/
+You can then access petclinic here: [http://localhost:8080/](http://localhost:8080/)
 
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
 
@@ -34,7 +34,7 @@ To run petclinic locally using persistent database, it is needed to run with pro
 For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
 
 ```
-./mvnw tomcat7:run-war -P MySQL
+./mvnw jetty:run-war -P MySQL
 ```
 
 Before do this, would be good to check properties defined in MySQL profile inside pom.xml file.
@@ -42,14 +42,14 @@ Before do this, would be good to check properties defined in MySQL profile insid
 ```
 <properties>
     <jpa.database>MYSQL</jpa.database>
-    <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+    <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
     <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
     <jdbc.username>root</jdbc.username>
     <jdbc.password>petclinic</jdbc.password>
 </properties>
 ```      
 
-You may also start a MySql database with docker:
+You could start MySql locally with whatever installer works for your OS, or with docker:
 
 ```
 docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
@@ -58,7 +58,7 @@ docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATA
 For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
 
 ```
-./mvnw tomcat7:run-war -P PostgreSQL
+./mvnw jetty:run-war -P PostgreSQL
 ```
 
 Before do this, would be good to check properties defined in PostgreSQL profile inside pom.xml file.
@@ -72,34 +72,60 @@ Before do this, would be good to check properties defined in PostgreSQL profile 
     <jdbc.password>petclinic</jdbc.password>
 </properties>
 ```
-You may also start a Postgres database with docker:
+You could alos start PostgreSQL locally with whatever installer works for your OS, or with docker:
 
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
 
-## Working with Petclinic in Eclipse/STS
+## Working with Petclinic in your IDE
 
-### prerequisites
+### Prerequisites
 The following items should be installed in your system:
-* Maven 3 (http://www.sonatype.com/books/mvnref-book/reference/installation.html)
+* Java 8 (waiting the [wro4j JDK 9 compatibility fix](https://github.com/wro4j/wro4j/issues/1039) for Java 9, 10 and 11 support)
+* Maven 3.3+ (http://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
-* Eclipse with the m2e plugin (m2e is installed by default when using the STS (http://www.springsource.org/sts) distribution of Eclipse)
-
-Note: when m2e is available, there is an m2 icon in Help -> About dialog.
-If m2e is not there, just follow the install process here: http://eclipse.org/m2e/download/
+* Jetty 9.4+ or Tomcat 9+
+* Your prefered IDE 
+  * Eclipse with the m2e plugin. Note: when m2e is available, there is an m2 icon in Help -> About dialog. If m2e is not there, just follow the install process here: http://www.eclipse.org/m2e/
+  * [Spring Tools Suite](https://spring.io/tools) (STS)
+  * IntelliJ IDEA
 
 
 ### Steps:
 
-1) In the command line
+1) On the command line
 ```
 git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 ```
-2) Inside Eclipse
+
+2) Inside Eclipse or STS
 ```
 File -> Import -> Maven -> Existing Maven project
 ```
+Then either build on the command line `./mvnw generate-resources` or using the Eclipse launcher (right click on project and `Run As -> Maven install`) to generate the CSS.
+Configure a Jetty or a Tomcat web container then deploy the `spring-petclinic.war` file.
+
+3) Inside IntelliJ IDEA
+
+In the main menu, select `File > Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
+
+CSS files are generated from the Maven build. You can either build them on the command line `./mvnw generate-resources` 
+or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders`.
+
+Go to the `Run -> Edit Configuration` then configure a Tomcat or a Jetty web container. Deploy the `spring-petclinic.war` file.
+Run the application by clicking on the `Run` icon.
+
+
+4) Navigate to Petclinic
+
+Visit [http://localhost:8080](http://localhost:8080) in your browser.
+
+
+## Working with Petclinic in IntelliJ IDEA
+
+### prerequisites
+The following items should be installed in your system:
 
 
 ## Looking for something in particular?
