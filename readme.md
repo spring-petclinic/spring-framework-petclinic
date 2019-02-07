@@ -14,6 +14,8 @@ The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggre
 	git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 	cd spring-framework-petclinic
 	./mvnw jetty:run-war
+        For Windows
+        ./mvnw.cmd jetty:run-war
 ```
 
 You can then access petclinic here: [http://localhost:8080/](http://localhost:8080/)
