@@ -1,0 +1,8 @@
+kind: pipeline
+name: default
+
+steps:
+- name: default
+- image: maven:3.6.0-jdk-8-alpine
+- commands:
+  - mvn package
