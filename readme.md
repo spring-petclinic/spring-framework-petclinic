@@ -87,7 +87,7 @@ docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_
 
 ### Prerequisites
 The following items should be installed in your system:
-* Java 8 (waiting the [wro4j JDK 9 compatibility fix](https://github.com/wro4j/wro4j/issues/1039) for Java 9, 10 and 11 support)
+* Java 8 or above
 * Maven 3.3+ (http://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
 * Jetty 9.4+ or Tomcat 9+
