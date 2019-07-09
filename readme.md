@@ -22,6 +22,7 @@ git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
 cd spring-framework-petclinic
 ./mvnw jetty:run-war
 # For Windows : ./mvnw.cmd jetty:run-war
+```
 
 ### With Docker
 ```
