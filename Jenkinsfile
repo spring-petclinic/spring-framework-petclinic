@@ -21,6 +21,12 @@ pipeline {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }
         }
+         stage('deploy') {
+            steps {
+        xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic', serverCredentials: 'admin -credentials'
+       } 
+            
+     }
         
     }
 }
