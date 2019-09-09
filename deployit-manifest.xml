@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="PetClinic-war">
+  <application />
+  <orchestrator />
+  <deployables>
+    <jee.War name="/petclinic" file="/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar">
+      <tags />
+      <scanPlaceholders>false</scanPlaceholders>
+      <preScannedPlaceholders>true</preScannedPlaceholders>
+      <placeholders />
+      <checksum>7e21b7dd23d96a0b1da9abdbe1a2b6a56467e175</checksum>
+    </jee.War>
+  </deployables>
+  <applicationDependencies />
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+  <templates />
+  <boundTemplates />
+</udm.DeploymentPackage>
