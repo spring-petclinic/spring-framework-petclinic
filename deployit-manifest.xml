@@ -1,9 +1,9 @@
-<?xml version="2.0" encoding="UTF-8"?>
-<udm.DeploymentPackage version="2.0" application="xld project">
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="PetClinic-war">
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic2" file="/petclinic.war">
+    <jee.War name="/petclinic" file="/petclinic.war">
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
