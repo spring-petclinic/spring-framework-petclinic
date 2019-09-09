@@ -3,7 +3,7 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="/petclinic.war">
+    <jee.War name="/petclinic2" file="/petclinic.war">
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
