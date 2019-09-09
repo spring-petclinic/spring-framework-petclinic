@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<udm.DeploymentPackage version="1.0" application="PetClinic-war">
+<?xml version="2.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="2.0" application="PetClinic-war">
   <application />
   <orchestrator />
   <deployables>
