@@ -23,8 +23,9 @@ pipeline {
         }
         stage('deploy') {
             steps {
-        xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/$JOB_NAME', serverCredentials: 'admin -credentials'
-        } 
-        }
+        xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications', serverCredentials: 'admin -credentials'
+       } 
+            
+     }
     }
 }
