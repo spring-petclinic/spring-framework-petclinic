@@ -3,7 +3,7 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="/spring-framework-petclinic.war">
+    <jee.War name="/petclinic" file="/xld project/petclinic.war">
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
