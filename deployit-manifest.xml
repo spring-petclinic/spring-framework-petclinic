@@ -3,7 +3,7 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar">
+    <jee.War name="/petclinic" file="/spring-petclinic-2.1.0.BUILD-SNAPSHOT.war">
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
