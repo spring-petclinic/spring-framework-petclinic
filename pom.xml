@@ -541,7 +541,7 @@
         </profile>
    </profiles>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>repository.spring.milestone</id>
             <name>Spring Milestone Repository</name>
@@ -549,7 +549,7 @@
         </repository>
     </repositories>
 
-    <repositories>
+    <repositories> -->
     <repository>
         <id>xebialabs-releases</id>
         <url>http://localhost:8081/repository/petclinic-repo/</url>
