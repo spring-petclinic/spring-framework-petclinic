@@ -549,4 +549,14 @@
         </repository>
     </repositories>
 
+    <repositories>
+    <repository>
+        <id>xebialabs-releases</id>
+        <url>http://localhost:8081/repository/petclinic-repo/</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+
 </project>
