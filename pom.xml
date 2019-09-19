@@ -541,22 +541,20 @@
         </profile>
    </profiles>
 
-    <!-- <repositories>
+    <repositories>
         <repository>
             <id>repository.spring.milestone</id>
             <name>Spring Milestone Repository</name>
             <url>http://repo.spring.io/milestone</url>
         </repository>
-    </repositories>
-
-    <repositories> -->
-    <repository>
+        <repository>
         <id>xebialabs-releases</id>
         <url>http://localhost:8081/repository/petclinic-repo/</url>
         <snapshots>
             <enabled>false</enabled>
         </snapshots>
     </repository>
+       
 </repositories>
 
 </project>
