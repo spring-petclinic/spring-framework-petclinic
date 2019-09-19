@@ -16,17 +16,17 @@ pipeline {
              xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
-        stage('publish') {
+        /*stage('publish') {
             steps {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }
-        }
-         stage('deploy') {
+        }*/
+         /*stage('deploy') {
             steps {
        xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-war/1.0', serverCredentials: 'admin -credentials'
        } 
             
-     }
+     }*/
         
     }
 }
