@@ -66,6 +66,7 @@ pipeline {
                 
                 }
             }
+        }
 
         /*stage('deployment package') {
             steps {
