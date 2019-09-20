@@ -20,7 +20,7 @@ pipeline {
 
       }
 
-        stage('deployment package') {
+        stage('create deployment package') {
             steps {
              xldCreatePackage artifactsPath: 'target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }

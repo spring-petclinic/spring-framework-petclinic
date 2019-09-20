@@ -3,14 +3,15 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="http://localhost:8081/repository/petclinic-repo/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war">
-      <credentials ref="Configuration/nexus-credentials" />
+    <tomcat.War name="/petclinic"  >
+      <fileUri>http://localhost:8081/repository/petclinic-repo/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war</fileUri>
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
       <placeholders />
       <checksum>7e21b7dd23d96a0b1da9abdbe1a2b6a56467e175</checksum>
-    </jee.War>
+      <credentials ref="Configuration/nexus-credentials" />
+    </tomcat.War>
   </deployables>
   <applicationDependencies />
   <dependencyResolution>LATEST</dependencyResolution>
