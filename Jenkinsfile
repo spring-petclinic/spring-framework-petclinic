@@ -11,7 +11,7 @@ pipeline {
                echo '${VERSION}'            
             }
         }
-        stage('build') {
+       /* stage('build') {
             steps {
                 sh 'mvn clean package'
             }
@@ -40,7 +40,7 @@ pipeline {
        xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/${VERSION}', serverCredentials: 'admin -credentials'
        } 
             
-     }
+     }*/
         
     }
 }
