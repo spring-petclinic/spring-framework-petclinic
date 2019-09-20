@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="5.1.1" encoding="UTF-8"?>
 <udm.DeploymentPackage version="5.1.1" application="PetClinic-new">
   <application />
   <orchestrator />
