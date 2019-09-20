@@ -3,7 +3,8 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="maven:org.springframework.samples:spring-framework-petclinic:5.1.5.war">
+    <jee.War name="/petclinic" file="http://localhost:8081/repository/petclinic-repo/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war">
+      <credentials ref="Configuration/nexus-credentials" />
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
@@ -18,4 +19,3 @@
   <boundTemplates />
 </udm.DeploymentPackage>
 
-http://localhost:8081/repository/petcilinic-repo/AcademicBureau/AcademicBureau/${BUILD_NUMBER}/AcademicBureau-${BUILD_NUMBER}.war
