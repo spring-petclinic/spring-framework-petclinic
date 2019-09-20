@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('publish to nexus') {
+/*        stage('publish to nexus') {
             steps {
                 script {
                     // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
@@ -67,14 +67,21 @@ pipeline {
                 
                 }
             }
-        }
-        stage('deployment package') {
+        }*/
+      stage('Push to Nexus') { 
+      steps {
+             nexusArtifactUploader artifacts: [[artifactId: 'spring-framework-petclinic', classifier: '', file: 'petclinic.war', type: 'war']], credentialsId: '0ce39687-e65a-4039-9d75-66e7db9e279e', groupId: 'org.springframework.samples', nexusUrl: 'localhost:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'petclinic-repo', version:'5.1.1'
+       } 
+
+      }
+
+        /*stage('deployment package') {
             steps {
              xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
 
-        /*stage('publish') {
+        stage('publish') {
             steps {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }

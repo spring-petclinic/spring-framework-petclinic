@@ -17,3 +17,5 @@
   <templates />
   <boundTemplates />
 </udm.DeploymentPackage>
+
+http://localhost:8081/repository/petcilinic-repo/AcademicBureau/AcademicBureau/${BUILD_NUMBER}/AcademicBureau-${BUILD_NUMBER}.war
