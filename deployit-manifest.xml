@@ -4,7 +4,7 @@
   <orchestrator />
   <deployables>
     <tomcat.War name="/petclinic"  >
-      <fileUri>http://localhost:8081/repository/petclinic-repo/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war</fileUri>
+      <fileUri>http://localhost:8081/repository/maven-repo-petclinic/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war</fileUri>
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
