@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
      stages {
         stage('checkout') {
             steps {
@@ -66,7 +66,7 @@ pipeline {
 
         stage('deployment package') {
             steps {
-             xldCreatePackage artifactsPath: 'target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
+             xldCreatePackage artifactsPath: '', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
 
