@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('publish') {
+         stage('publish') {
             steps {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }
