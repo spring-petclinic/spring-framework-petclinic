@@ -8,7 +8,7 @@ pipeline {
         stage('checkout') {
             steps {
                checkout scm    
-               ${VERSION}          
+               echo ${VERSION}          
             }
         }
        /* stage('build') {
