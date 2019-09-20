@@ -28,6 +28,7 @@ pipeline {
             steps {
                 xldDeploy environmentId: 'Environments/QA-ENV', packageId: echo 'Applications/PetClinic-new/${env.VERSION}', serverCredentials: 'admin -credentials'
        } 
+         }
             
      }
         
