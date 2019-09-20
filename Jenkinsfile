@@ -24,7 +24,7 @@ pipeline {
              groupId: 'org.springframework.samples', nexusUrl: 'localhost:8081',
              nexusVersion: 'nexus3', protocol: 'http', 
              repository: 'maven-repo-petclinic', 
-             version:'nitish'+VERSION
+             version:VERSION
             } 
 
         }
@@ -34,17 +34,17 @@ pipeline {
              xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
-        /*stage('publish to xldDeploy') {
+        stage('publish to xldDeploy') {
             steps {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }
         }
          stage('deploy to xldDeploy') {
             steps {
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/${VERSION}', serverCredentials: 'admin -credentials'
+       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/'+VERSION, serverCredentials: 'admin -credentials'
        } 
             
-     }*/
+     }
         
     }
 }
