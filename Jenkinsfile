@@ -3,12 +3,8 @@ pipeline {
      environment {
         VERSION = readMavenPom().getVersion()
     }
-<<<<<<< HEAD
-
     stages {
-=======
         stages {
->>>>>>> b4fad7477c9013a0bab6362aa0ef375b81091cf1
         stage('checkout') {
             steps {
                checkout scm                 
@@ -46,23 +42,13 @@ pipeline {
         }
          stage('deploy to xldDeploy') {
             steps {
-<<<<<<< HEAD
+       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/'+VERSION, serverCredentials: 'admin -credentials'            
 
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/'+VERSION, serverCredentials: 'admin -credentials'
-
-                
-=======
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/'+VERSION, serverCredentials: 'admin -credentials'
->>>>>>> b4fad7477c9013a0bab6362aa0ef375b81091cf1
        } 
          }
             
      }
         
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> b4fad7477c9013a0bab6362aa0ef375b81091cf1
 }
 
