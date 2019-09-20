@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        VERSION = readMavenPom().getVersion()
+           }
     stages {
         stage('checkout') {
             steps {
@@ -23,7 +26,7 @@ pipeline {
         }
          stage('deploy') {
             steps {
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-war/1.0', serverCredentials: 'admin -credentials'
+       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/VERSION', serverCredentials: 'admin -credentials'
        } 
             
      }
