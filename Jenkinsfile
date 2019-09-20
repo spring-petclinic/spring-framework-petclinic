@@ -31,7 +31,7 @@ pipeline {
 
         stage('Create deployment package') {
             steps {
-             xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
+             xldCreatePackage artifactsPath: 'target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
         stage('publish to xldDeploy') {

@@ -5,12 +5,12 @@
   <deployables>
     <tomcat.War name="/petclinic"  >
       <fileUri>http://localhost:8081/repository/maven-repo-petclinic/org/springframework/samples/spring-framework-petclinic/5.1.1/spring-framework-petclinic-5.1.1.war</fileUri>
+      <credentials ref="Configuration/nexus-credentials" />
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
       <placeholders />
-      <checksum>7e21b7dd23d96a0b1da9abdbe1a2b6a56467e175</checksum>
-      <credentials ref="Configuration/nexus-credentials" />
+      <checksum>7e21b7dd23d96a0b1da9abdbe1a2b6a56467e175</checksum>   
     </tomcat.War>
   </deployables>
   <applicationDependencies />
