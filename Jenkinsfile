@@ -1,19 +1,7 @@
 pipeline {
     agent any
-    environment {
-        // This can be nexus3
-        NEXUS_VERSION = "nexus3"
-        // This can be http or https
-        NEXUS_PROTOCOL = "http"
-        // Where your Nexus is running
-        NEXUS_URL = "localhost:8081"
-        // Repository where we will upload the artifact
-        NEXUS_REPOSITORY = "petclinic-repo"
-        // Jenkins credential id to authenticate to Nexus OSS
-        NEXUS_CREDENTIAL_ID = "0ce39687-e65a-4039-9d75-66e7db9e279e"
-    }
-
-    stages {
+    
+     stages {
         stage('checkout') {
             steps {
                checkout scm                 
@@ -68,6 +56,7 @@ pipeline {
                 }
             }
         }*/
+
       stage('Push to Nexus') { 
       steps {
              nexusArtifactUploader artifacts: [[artifactId: 'spring-framework-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: '0ce39687-e65a-4039-9d75-66e7db9e279e', groupId: 'org.springframework.samples', nexusUrl: 'localhost:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'petclinic-repo', version:'5.1.1'
@@ -77,7 +66,7 @@ pipeline {
 
         stage('deployment package') {
             steps {
-             xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
+             xldCreatePackage artifactsPath: 'target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
             }
         }
 
@@ -88,7 +77,7 @@ pipeline {
         }
          stage('deploy') {
             steps {
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/${pom.version}', serverCredentials: 'admin -credentials'
+       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/5.1.1', serverCredentials: 'admin -credentials'
        } 
             
      }
