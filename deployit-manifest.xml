@@ -3,7 +3,7 @@
   <application />
   <orchestrator />
   <deployables>
-    <jee.War name="/petclinic" file="/petclinic.war">
+    <jee.War name="/petclinic" file="maven:org.springframework.samples:spring-framework-petclinic:5.1.5.war">
       <tags />
       <scanPlaceholders>false</scanPlaceholders>
       <preScannedPlaceholders>true</preScannedPlaceholders>
