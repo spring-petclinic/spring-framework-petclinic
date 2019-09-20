@@ -3,7 +3,6 @@ pipeline {
      environment {
         VERSION = readMavenPom().getVersion()
     }
-    stages {
         stages {
         stage('checkout') {
             steps {
@@ -50,5 +49,5 @@ pipeline {
      }
         
     }
-}
+
 
