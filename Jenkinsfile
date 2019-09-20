@@ -24,7 +24,7 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-       
+
         stage('publish to nexus') {
             steps {
                 script {
@@ -68,17 +68,23 @@ pipeline {
                 }
             }
         }
-        /*stage('publish') {
+        stage('deployment package') {
+            steps {
+             xldCreatePackage artifactsPath: '/target/', darPath: 'petclinic-test.dar', manifestPath: 'deployit-manifest.xml'   
+            }
+        }
+
+        stage('publish') {
             steps {
                 xldPublishPackage darPath: 'petclinic-test.dar', serverCredentials: 'admin -credentials'
             }
-        }*/
-         /*stage('deploy') {
+        }
+         stage('deploy') {
             steps {
-       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-war/1.0', serverCredentials: 'admin -credentials'
+       xldDeploy environmentId: 'Environments/QA-ENV', packageId: 'Applications/PetClinic-new/${pom.version}', serverCredentials: 'admin -credentials'
        } 
             
-     }*/
+     }
         
     }
 }
