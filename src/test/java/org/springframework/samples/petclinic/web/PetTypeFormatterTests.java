@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Colin But
  */
 @ExtendWith(MockitoExtension.class)
-public class PetTypeFormatterTests {
+class PetTypeFormatterTests {
 
     @Mock
     private ClinicService clinicService;
@@ -31,12 +31,12 @@ public class PetTypeFormatterTests {
     private PetTypeFormatter petTypeFormatter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         petTypeFormatter = new PetTypeFormatter(clinicService);
     }
 
     @Test
-    public void testPrint() {
+    void testPrint() {
         PetType petType = new PetType();
         petType.setName("Hamster");
         String petTypeName = petTypeFormatter.print(petType, Locale.ENGLISH);
@@ -44,14 +44,14 @@ public class PetTypeFormatterTests {
     }
 
     @Test
-    public void shouldParse() throws ParseException {
+    void shouldParse() throws ParseException {
         Mockito.when(clinicService.findPetTypes()).thenReturn(makePetTypes());
         PetType petType = petTypeFormatter.parse("Bird", Locale.ENGLISH);
         assertEquals("Bird", petType.getName());
     }
 
     @Test
-    public void shouldThrowParseException() throws ParseException {
+    void shouldThrowParseException() throws ParseException {
         Mockito.when(clinicService.findPetTypes()).thenReturn(makePetTypes());
         Assertions.assertThrows(ParseException.class, () -> {
             petTypeFormatter.parse("Fish", Locale.ENGLISH);

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Test class for the {@link VetController}
  */
 @SpringJUnitWebConfig(locations = {"classpath:spring/mvc-core-config.xml", "classpath:spring/mvc-test-config.xml"})
-public class VetControllerTests {
+class VetControllerTests {
 
     @Autowired
     private VetController vetController;
@@ -33,7 +33,7 @@ public class VetControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(vetController).build();
 
         Vet james = new Vet();
@@ -52,7 +52,7 @@ public class VetControllerTests {
     }
 
     @Test
-    public void testShowVetListHtml() throws Exception {
+    void testShowVetListHtml() throws Exception {
         mockMvc.perform(get("/vets.html"))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("vets"))
@@ -60,7 +60,7 @@ public class VetControllerTests {
     }
 
     @Test
-    public void testShowResourcesVetList() throws Exception {
+    void testShowResourcesVetList() throws Exception {
         ResultActions actions = mockMvc.perform(get("/vets.json").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
         actions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -68,7 +68,7 @@ public class VetControllerTests {
     }
 
     @Test
-    public void testShowVetListXml() throws Exception {
+    void testShowVetListXml() throws Exception {
         mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))

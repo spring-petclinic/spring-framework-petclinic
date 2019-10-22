@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Colin But
  */
 @SpringJUnitWebConfig(locations = {"classpath:spring/mvc-core-config.xml", "classpath:spring/mvc-test-config.xml"})
-public class CrashControllerTests {
+class CrashControllerTests {
 
     @Autowired
     private CrashController crashController;
@@ -28,7 +28,7 @@ public class CrashControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.mockMvc = MockMvcBuilders
             .standaloneSetup(crashController)
             .setHandlerExceptionResolvers(simpleMappingExceptionResolver)
@@ -36,7 +36,7 @@ public class CrashControllerTests {
     }
 
     @Test
-    public void testTriggerException() throws Exception {
+    void testTriggerException() throws Exception {
         mockMvc.perform(get("/oups"))
             .andExpect(view().name("exception"))
             .andExpect(model().attributeExists("exception"))
