@@ -45,7 +45,7 @@
         <!-- Persistence -->
         <spring-data-releasetrain.version>Moore-RELEASE</spring-data-releasetrain.version>
         <hibernate.version>5.4.6.Final</hibernate.version>
-        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
         <hsqldb.version>2.5.0</hsqldb.version>
 
         <!-- Logging -->
