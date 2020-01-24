@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.repository.jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 

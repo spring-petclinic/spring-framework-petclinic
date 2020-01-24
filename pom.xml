@@ -24,7 +24,6 @@
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM -->
         <!-- https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml -->
         <spring-framework.version>5.2.3.RELEASE</spring-framework.version>
-        <spring-data-jdbc.version>2.0.0.M1</spring-data-jdbc.version>
 
         <!-- Web dependencies -->
         <!-- Version update should also be done in wro.xml, petclinic.less and static resources: htmlHeader.tag and footer.tag-->
@@ -140,19 +139,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jdbc-core</artifactId>
-            <version>${spring-data-jdbc.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <!--  because Spring Data usually comes with a slightly older version of Spring -->
-            </exclusions>
         </dependency>
 
         <dependency>
