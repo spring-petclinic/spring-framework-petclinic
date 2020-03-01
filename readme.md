@@ -86,7 +86,7 @@ Before do this, would be good to check properties defined in PostgreSQL profile 
     <jdbc.password>petclinic</jdbc.password>
 </properties>
 ```
-You could alos start PostgreSQL locally with whatever installer works for your OS, or with docker:
+You could also start PostgreSQL locally with whatever installer works for your OS, or with docker:
 
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
