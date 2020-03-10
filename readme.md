@@ -42,7 +42,7 @@ Our issue tracker is available here: https://github.com/spring-petclinic/spring-
 
 In its default configuration, Petclinic uses an in-memory database (HSQLDB) which
 gets populated at startup with data.
-A similar setups is provided for MySql and PostgreSQL in case a persistent database configuration is needed.
+A similar setups is provided for MySQL and PostgreSQL in case a persistent database configuration is needed.
 To run petclinic locally using persistent database, it is needed to run with profile defined in main pom.xml file.
 
 For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
@@ -63,10 +63,10 @@ Before do this, would be good to check properties defined in MySQL profile insid
 </properties>
 ```      
 
-You could start MySql locally with whatever installer works for your OS, or with docker:
+You could start MySQL locally with whatever installer works for your OS, or with docker:
 
 ```
-docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
+docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
 ```
 
 For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.

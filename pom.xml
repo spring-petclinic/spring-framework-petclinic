@@ -60,7 +60,7 @@
         <junit-jupiter.version>5.6.0</junit-jupiter.version>
 
         <!-- JDBC Drivers -->
-        <mysql-driver.version>8.0.11</mysql-driver.version>
+        <mysql-driver.version>8.0.19</mysql-driver.version>
         <postgresql-driver.version>9.4.1211.jre7</postgresql-driver.version>
 
         <!-- Others -->
@@ -498,7 +498,7 @@
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
-                <jdbc.username>root</jdbc.username>
+                <jdbc.username>petclinic</jdbc.username>
                 <jdbc.password>petclinic</jdbc.password>
             </properties>
             <dependencies>
