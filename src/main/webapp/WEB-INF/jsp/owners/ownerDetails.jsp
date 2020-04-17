@@ -6,10 +6,9 @@
 
 <petclinic:layout pageName="owners">
 
-    <h2>Owner Information</h2>
+    <h2 id="ownerInformation">Owner Information</h2>
 
-
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="ownerInformation">
         <tr>
             <th>Name</th>
             <td><b><c:out value="${owner.firstName} ${owner.lastName}"/></b></td>
@@ -41,9 +40,9 @@
     <br/>
     <br/>
     <br/>
-    <h2>Pets and Visits</h2>
+    <h2 id="petsAndVisits">Pets and Visits</h2>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="petsAndVisits">
         <c:forEach var="pet" items="${owner.pets}">
 
             <tr>
