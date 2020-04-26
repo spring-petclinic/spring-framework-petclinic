@@ -16,14 +16,14 @@
     <jsp:body>
         <h2><c:if test="${visit['new']}">New </c:if>Visit</h2>
 
-        <b>Pet</b>
-        <table class="table table-striped">
+        <span id="pet"><strong>Pet</strong></span>
+        <table class="table table-striped" aria-describedby="pet">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Birth Date</th>
-                <th>Type</th>
-                <th>Owner</th>
+                <th scope="col">Name</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Type</th>
+                <th scope="col">Owner</th>
             </tr>
             </thead>
             <tr>
@@ -49,11 +49,11 @@
         </form:form>
 
         <br/>
-        <b>Previous Visits</b>
-        <table class="table table-striped">
+        <strong id="previousVisits">Previous Visits</strong>
+        <table class="table table-striped" aria-describedby="previousVisits">
             <tr>
-                <th>Date</th>
-                <th>Description</th>
+                <th scope="col">Date</th>
+                <th scope="col">Description</th>
             </tr>
             <c:forEach var="visit" items="${visit.pet.visits}">
                 <c:if test="${!visit['new']}">
