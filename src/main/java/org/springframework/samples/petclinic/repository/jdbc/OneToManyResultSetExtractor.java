@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -86,7 +85,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 		this.expectedResults = expectedResults == null ? ExpectedResults.ANY : expectedResults;
 	}
 
-	public List<R> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<R> extractData(ResultSet rs) throws SQLException {
 		List<R> results = new ArrayList<R>();
 		int row = 0;
 		boolean more = rs.next();

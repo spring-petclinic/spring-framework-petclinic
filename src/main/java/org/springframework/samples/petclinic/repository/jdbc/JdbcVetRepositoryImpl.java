@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -56,7 +55,7 @@ public class JdbcVetRepositoryImpl implements VetRepository {
      * Refresh the cache of Vets that the ClinicService is holding.
      */
     @Override
-    public Collection<Vet> findAll() throws DataAccessException {
+    public Collection<Vet> findAll() {
         List<Vet> vets = new ArrayList<>();
         // Retrieve the list of all vets.
         vets.addAll(this.jdbcTemplate.query(
