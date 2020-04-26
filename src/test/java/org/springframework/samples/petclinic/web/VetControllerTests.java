@@ -72,7 +72,7 @@ class VetControllerTests {
         mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))
-            .andExpect(content().node(hasXPath("/vets/vetList[id=1]/id")));
+            .andExpect(content().node(hasXPath("/vets/vet[id=1]/id")));
     }
 
 }
