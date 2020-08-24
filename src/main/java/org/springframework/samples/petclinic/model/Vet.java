@@ -54,7 +54,7 @@ public class Vet extends Person {
             this.specialties = new HashSet<>();
         }
         return this.specialties;
-    }
+    } 
 
     protected void setSpecialtiesInternal(Set<Specialty> specialties) {
         this.specialties = specialties;
