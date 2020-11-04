@@ -35,8 +35,7 @@
         <!-- Java EE / Java SE dependencies -->
         <tomcat.version>9.0.39</tomcat.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-core.version>2.3.0.1</jaxb-core.version>
-        <jaxb-impl.version>2.3.2</jaxb-impl.version>
+        <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
         <javax-activation.version>1.2.0</javax-activation.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <taglibs-standard.version>1.2.5</taglibs-standard.version>
@@ -279,14 +278,9 @@
             <version>${jaxb-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>${jaxb-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jaxb-impl.version}</version>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb-runtime.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
