@@ -40,8 +40,8 @@ Our issue tracker is available here: https://github.com/spring-petclinic/spring-
 
 ## Database configuration
 
-In its default configuration, Petclinic uses an in-memory database (HSQLDB) which
-gets populated at startup with data.
+In its default configuration, Petclinic uses an in-memory database (H2) which gets populated at startup with data.
+
 A similar setups is provided for MySQL and PostgreSQL in case a persistent database configuration is needed.
 To run petclinic locally using persistent database, it is needed to run with profile defined in main pom.xml file.
 

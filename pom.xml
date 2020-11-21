@@ -45,6 +45,7 @@
         <hibernate.version>5.4.22.Final</hibernate.version>
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <hsqldb.version>2.5.1</hsqldb.version>
+        <h2database.version>1.4.200</h2database.version>
 
         <!-- Logging -->
         <slf4j.version>1.7.30</slf4j.version>
@@ -464,10 +465,29 @@
 
     <profiles>
         <profile>
-            <id>HSQLDB</id>
+            <id>H2</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <db.script>h2</db.script>
+                <jpa.database>H2</jpa.database>
+                <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:h2:mem:petclinic</jdbc.url>
+                <jdbc.username>sa</jdbc.username>
+                <jdbc.password/>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <version>${h2database.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>HSQLDB</id>
             <properties>
                 <db.script>hsqldb</db.script>
                 <jpa.database>HSQL</jpa.database>
