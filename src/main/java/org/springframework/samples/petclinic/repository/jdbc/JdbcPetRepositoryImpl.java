@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,7 +33,6 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
-import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
 
@@ -55,11 +53,8 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 
     private OwnerRepository ownerRepository;
 
-    private VisitRepository visitRepository;
-
-
     @Autowired
-    public JdbcPetRepositoryImpl(DataSource dataSource, OwnerRepository ownerRepository, VisitRepository visitRepository) {
+    public JdbcPetRepositoryImpl(DataSource dataSource, OwnerRepository ownerRepository) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
         this.insertPet = new SimpleJdbcInsert(dataSource)
@@ -67,11 +62,10 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .usingGeneratedKeyColumns("id");
 
         this.ownerRepository = ownerRepository;
-        this.visitRepository = visitRepository;
     }
 
     @Override
-    public List<PetType> findPetTypes() throws DataAccessException {
+    public List<PetType> findPetTypes() {
         Map<String, Object> params = new HashMap<>();
         return this.namedParameterJdbcTemplate.query(
             "SELECT id, name FROM types ORDER BY name",
@@ -80,7 +74,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public Pet findById(int id) throws DataAccessException {
+    public Pet findById(int id) {
         Integer ownerId;
         try {
             Map<String, Object> params = new HashMap<>();
@@ -94,7 +88,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public void save(Pet pet) throws DataAccessException {
+    public void save(Pet pet) {
         if (pet.isNew()) {
             Number newKey = this.insertPet.executeAndReturnKey(
                 createPetParameterSource(pet));

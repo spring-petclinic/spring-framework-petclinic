@@ -32,6 +32,7 @@ package org.springframework.samples.petclinic.config;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Profiles;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.MultiValueMap;
 
@@ -48,7 +49,7 @@ class NotProfileCondition implements Condition {
 			MultiValueMap<String, Object> attrs = metadata.getAllAnnotationAttributes(NotProfile.class.getName());
 			if (attrs != null) {
 				for (Object value : attrs.get("value")) {
-					if (context.getEnvironment().acceptsProfiles(((String[]) value))) {
+					if (context.getEnvironment().acceptsProfiles(Profiles.of((String[]) value))) {
 						return false;
 					}
 				}

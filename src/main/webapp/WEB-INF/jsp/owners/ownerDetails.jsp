@@ -6,34 +6,33 @@
 
 <petclinic:layout pageName="owners">
 
-    <h2>Owner Information</h2>
+    <h2 id="ownerInformation">Owner Information</h2>
 
-
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="ownerInformation">
         <tr>
-            <th>Name</th>
-            <td><b><c:out value="${owner.firstName} ${owner.lastName}"/></b></td>
+            <th id="name">Name</th>
+            <td headers="name"><strong><c:out value="${owner.firstName} ${owner.lastName}"/></strong></td>
         </tr>
         <tr>
-            <th>Address</th>
-            <td><c:out value="${owner.address}"/></td>
+            <th id="address">Address</th>
+            <td headers="address"><c:out value="${owner.address}"/></td>
         </tr>
         <tr>
-            <th>City</th>
-            <td><c:out value="${owner.city}"/></td>
+            <th id="city">City</th>
+            <td headers="city"><c:out value="${owner.city}"/></td>
         </tr>
         <tr>
-            <th>Telephone</th>
-            <td><c:out value="${owner.telephone}"/></td>
+            <th id="telephone">Telephone</th>
+            <td headers="telephone"><c:out value="${owner.telephone}"/></td>
         </tr>
     </table>
 
-    <spring:url value="{ownerId}/edit.html" var="editUrl">
+    <spring:url value="{ownerId}/edit" var="editUrl">
         <spring:param name="ownerId" value="${owner.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Owner</a>
 
-    <spring:url value="{ownerId}/pets/new.html" var="addUrl">
+    <spring:url value="{ownerId}/pets/new" var="addUrl">
         <spring:param name="ownerId" value="${owner.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(addUrl)}" class="btn btn-default">Add New Pet</a>
@@ -41,13 +40,13 @@
     <br/>
     <br/>
     <br/>
-    <h2>Pets and Visits</h2>
+    <h2 id="petsAndVisits">Pets and Visits</h2>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="petsAndVisits">
         <c:forEach var="pet" items="${owner.pets}">
 
             <tr>
-                <td valign="top">
+                <th scope="col">
                     <dl class="dl-horizontal">
                         <dt>Name</dt>
                         <dd><c:out value="${pet.name}"/></dd>
@@ -56,19 +55,19 @@
                         <dt>Type</dt>
                         <dd><c:out value="${pet.type.name}"/></dd>
                     </dl>
-                </td>
-                <td valign="top">
-                    <table class="table-condensed">
+                </th>
+                <td>
+                    <table class="table-condensed" aria-describedby="petsAndVisits">
                         <thead>
                         <tr>
-                            <th>Visit Date</th>
-                            <th>Description</th>
+                            <th id="visitDate">Visit Date</th>
+                            <th id="visitDescription">Description</th>
                         </tr>
                         </thead>
                         <c:forEach var="visit" items="${pet.visits}">
                             <tr>
-                                <td><petclinic:localDate date="${visit.date}" pattern="yyyy-MM-dd"/></td>
-                                <td><c:out value="${visit.description}"/></td>
+                                <td headers="visitDate"><petclinic:localDate date="${visit.date}" pattern="yyyy-MM-dd"/></td>
+                                <td headers="visitDescription"><c:out value="${visit.description}"/></td>
                             </tr>
                         </c:forEach>
                         <tr>

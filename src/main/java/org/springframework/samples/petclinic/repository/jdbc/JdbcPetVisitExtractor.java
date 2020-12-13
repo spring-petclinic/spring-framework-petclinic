@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import org.springframework.data.jdbc.core.OneToManyResultSetExtractor;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.samples.petclinic.model.Visit;
 

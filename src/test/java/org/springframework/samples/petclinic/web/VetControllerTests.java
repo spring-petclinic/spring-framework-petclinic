@@ -36,7 +36,7 @@ public class VetControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(vetController).build();
 
         Vet james = new Vet();
@@ -55,7 +55,7 @@ public class VetControllerTests {
     }
 
     @Test
-    public void testShowVetListHtml() throws Exception {
+    void testShowVetListHtml() throws Exception {
         mockMvc.perform(get("/vets.html"))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("vets"))
@@ -63,19 +63,19 @@ public class VetControllerTests {
     }
 
     @Test
-    public void testShowResourcesVetList() throws Exception {
+    void testShowResourcesVetList() throws Exception {
         ResultActions actions = mockMvc.perform(get("/vets.json").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
-        actions.andExpect(content().contentType("application/json;charset=UTF-8"))
+        actions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.vetList[0].id").value(1));
     }
 
     @Test
-    public void testShowVetListXml() throws Exception {
+    void testShowVetListXml() throws Exception {
         mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))
-            .andExpect(content().node(hasXPath("/vets/vetList[id=1]/id")));
+            .andExpect(content().node(hasXPath("/vets/vet[id=1]/id")));
     }
 
 }

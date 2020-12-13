@@ -31,7 +31,7 @@ public class CrashControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.mockMvc = MockMvcBuilders
             .standaloneSetup(crashController)
             .setHandlerExceptionResolvers(handlerExceptionResolver)
@@ -39,7 +39,7 @@ public class CrashControllerTests {
     }
 
     @Test
-    public void testTriggerException() throws Exception {
+    void testTriggerException() throws Exception {
         mockMvc.perform(get("/oups"))
             .andExpect(view().name("exception"))
             .andExpect(model().attributeExists("exception"))

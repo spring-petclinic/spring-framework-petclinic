@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @SpringJUnitConfig(BusinessConfig.class)
 @ActiveProfiles("jdbc")
-public class ClinicServiceJdbcTests extends AbstractClinicServiceTests {
+class ClinicServiceJdbcTests extends AbstractClinicServiceTests {
 
 
 }

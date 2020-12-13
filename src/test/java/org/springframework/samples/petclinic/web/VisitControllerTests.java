@@ -36,21 +36,21 @@ public class VisitControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(visitController).build();
 
         given(this.clinicService.findPetById(TEST_PET_ID)).willReturn(new Pet());
     }
 
     @Test
-    public void testInitNewVisitForm() throws Exception {
+    void testInitNewVisitForm() throws Exception {
         mockMvc.perform(get("/owners/*/pets/{petId}/visits/new", TEST_PET_ID))
             .andExpect(status().isOk())
             .andExpect(view().name("pets/createOrUpdateVisitForm"));
     }
 
     @Test
-    public void testProcessNewVisitFormSuccess() throws Exception {
+    void testProcessNewVisitFormSuccess() throws Exception {
         mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
             .param("name", "George")
             .param("description", "Visit Description")
@@ -60,7 +60,7 @@ public class VisitControllerTests {
     }
 
     @Test
-    public void testProcessNewVisitFormHasErrors() throws Exception {
+    void testProcessNewVisitFormHasErrors() throws Exception {
         mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
             .param("name", "George")
         )
@@ -70,7 +70,7 @@ public class VisitControllerTests {
     }
 
     @Test
-    public void testShowVisits() throws Exception {
+    void testShowVisits() throws Exception {
         mockMvc.perform(get("/owners/*/pets/{petId}/visits", TEST_PET_ID))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("visits"))

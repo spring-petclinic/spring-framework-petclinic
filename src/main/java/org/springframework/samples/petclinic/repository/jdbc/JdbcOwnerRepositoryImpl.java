@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -74,7 +73,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      * already loaded.
      */
     @Override
-    public Collection<Owner> findByLastName(String lastName) throws DataAccessException {
+    public Collection<Owner> findByLastName(String lastName) {
         Map<String, Object> params = new HashMap<>();
         params.put("lastName", lastName + "%");
         List<Owner> owners = this.namedParameterJdbcTemplate.query(
@@ -91,7 +90,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      * for the corresponding owner, if not already loaded.
      */
     @Override
-    public Owner findById(int id) throws DataAccessException {
+    public Owner findById(int id) {
         Owner owner;
         try {
             Map<String, Object> params = new HashMap<>();
@@ -124,7 +123,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
     }
 
     @Override
-    public void save(Owner owner) throws DataAccessException {
+    public void save(Owner owner) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(owner);
         if (owner.isNew()) {
             Number newKey = this.insertOwner.executeAndReturnKey(parameterSource);
@@ -137,7 +136,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         }
     }
 
-    public Collection<PetType> getPetTypes() throws DataAccessException {
+    public Collection<PetType> getPetTypes() {
         return this.namedParameterJdbcTemplate.query(
             "SELECT id, name FROM types ORDER BY name", new HashMap<String, Object>(),
             BeanPropertyRowMapper.newInstance(PetType.class));

@@ -17,7 +17,6 @@ package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Owner;
 
@@ -40,7 +39,7 @@ public interface OwnerRepository {
      * @return a <code>Collection</code> of matching <code>Owner</code>s (or an empty <code>Collection</code> if none
      * found)
      */
-    Collection<Owner> findByLastName(String lastName) throws DataAccessException;
+    Collection<Owner> findByLastName(String lastName);
 
     /**
      * Retrieve an <code>Owner</code> from the data store by id.
@@ -49,7 +48,7 @@ public interface OwnerRepository {
      * @return the <code>Owner</code> if found
      * @throws org.springframework.dao.DataRetrievalFailureException if not found
      */
-    Owner findById(int id) throws DataAccessException;
+    Owner findById(int id);
 
 
     /**
@@ -58,7 +57,7 @@ public interface OwnerRepository {
      * @param owner the <code>Owner</code> to save
      * @see BaseEntity#isNew
      */
-    void save(Owner owner) throws DataAccessException;
+    void save(Owner owner);
 
 
 }

@@ -16,7 +16,6 @@
 package org.springframework.samples.petclinic.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -59,7 +58,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
 
     @Override
-    public void save(Visit visit) throws DataAccessException {
+    public void save(Visit visit) {
         if (visit.isNew()) {
             Number newKey = this.insertVisit.executeAndReturnKey(
                 createVisitParameterSource(visit));

@@ -1,4 +1,8 @@
-# Spring PetClinic Sample Application [![Build Status](https://travis-ci.org/spring-petclinic/spring-framework-petclinic.svg?branch=master)](https://travis-ci.org/spring-petclinic/spring-framework-petclinic/)
+# Spring PetClinic Sample Application
+
+[![Build Status](https://travis-ci.org/spring-petclinic/spring-framework-petclinic.svg?branch=master)](https://travis-ci.org/spring-petclinic/spring-framework-petclinic/) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=spring-petclinic_spring-framework-petclinic&metric=alert_status)](https://sonarcloud.io/dashboard?id=spring-petclinic_spring-framework-petclinic)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=spring-petclinic_spring-framework-petclinic&metric=coverage)](https://sonarcloud.io/dashboard?id=spring-petclinic_spring-framework-petclinic)
 
 Approved by the Spring team, this repo is a fork of the [spring-projects/spring-petclinic](https://github.com/spring-projects/spring-petclinic).
 It allows the Spring community to maintain a Petclinic version with a plain old **Spring Framework configuration**
@@ -7,13 +11,22 @@ The "canonical" implementation is now based on Spring Boot, Thymeleaf and [aggre
 
 
 ## Understanding the Spring Petclinic application with a few diagrams
+
 [See the presentation here](http://fr.slideshare.net/AntoineRey/spring-framework-petclinic-sample-application) (2017 update)
 
 ## Running petclinic locally
+
+### With Maven command line
 ```
-	git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
-	cd spring-framework-petclinic
-	./mvnw jetty:run-war
+git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
+cd spring-framework-petclinic
+./mvnw jetty:run-war
+# For Windows : ./mvnw.cmd jetty:run-war
+```
+
+### With Docker
+```
+docker run -p 8080:8080 springcommunity/spring-framework-petclinic
 ```
 
 You can then access petclinic here: [http://localhost:8080/](http://localhost:8080/)
@@ -21,14 +34,15 @@ You can then access petclinic here: [http://localhost:8080/](http://localhost:80
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
 
 ## In case you find a bug/suggested improvement for Spring Petclinic
+
 Our issue tracker is available here: https://github.com/spring-petclinic/spring-framework-petclinic/issues
 
 
 ## Database configuration
 
-In its default configuration, Petclinic uses an in-memory database (HSQLDB) which
-gets populated at startup with data.
-A similar setups is provided for MySql and PostgreSQL in case a persistent database configuration is needed.
+In its default configuration, Petclinic uses an in-memory database (H2) which gets populated at startup with data.
+
+A similar setups is provided for MySQL and PostgreSQL in case a persistent database configuration is needed.
 To run petclinic locally using persistent database, it is needed to run with profile defined in main pom.xml file.
 
 For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
@@ -44,15 +58,15 @@ Before do this, would be good to check properties defined in MySQL profile insid
     <jpa.database>MYSQL</jpa.database>
     <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
     <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
-    <jdbc.username>root</jdbc.username>
+    <jdbc.username>petclinic</jdbc.username>
     <jdbc.password>petclinic</jdbc.password>
 </properties>
 ```      
 
-You could start MySql locally with whatever installer works for your OS, or with docker:
+You could start MySQL locally with whatever installer works for your OS, or with docker:
 
 ```
-docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
+docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
 ```
 
 For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
@@ -72,17 +86,28 @@ Before do this, would be good to check properties defined in PostgreSQL profile 
     <jdbc.password>petclinic</jdbc.password>
 </properties>
 ```
-You could alos start PostgreSQL locally with whatever installer works for your OS, or with docker:
+You could also start PostgreSQL locally with whatever installer works for your OS, or with docker:
 
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
 
+## Persistence layer choice
+
+The persistence layer habve 3 available implementations: JPA (default), JDBC and Spring Data JPA.
+The default JPA implementation could be changed by using a Spring profile: `jdbc`, `spring-data-jpa` and `jpa`.  
+As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to start the application with the JDBC implementation.
+
+```
+./mvnw jetty:run-war -Dspring.profiles.active=jdbc
+```
+
+
 ## Working with Petclinic in your IDE
 
 ### Prerequisites
 The following items should be installed in your system:
-* Java 8 (waiting the [wro4j JDK 9 compatibility fix](https://github.com/wro4j/wro4j/issues/1039) for Java 9, 10 and 11 support)
+* Java 8 or above
 * Maven 3.3+ (http://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
 * Jetty 9.4+ or Tomcat 9+
@@ -148,6 +173,32 @@ The following items should be installed in your system:
 | JDBC | [JdbcConfig.java](src/main/java/org/springframework/samples/petclinic/config/JdbcConfig.java), [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdbc) |
 | JPA | [JpaConfig.java](src/main/java/org/springframework/samples/petclinic/config/JpaConfig.java), [SharedJpaConfig.java](src/main/java/org/springframework/samples/petclinic/config/SharedJpaConfig.java), [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
 | Spring Data JPA | [SpringDataJpaConfig.java](src/main/java/org/springframework/samples/petclinic/config/SpringDataJpaConfig.java),  [SharedJpaConfig.java](src/main/java/org/springframework/samples/petclinic/config/SharedJpaConfig.java), [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
+
+
+## Publishing a Docker image
+
+This application uses [Google Jib]([https://github.com/GoogleContainerTools/jib) to build an optimized Docker image
+into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-framework-petclinic/)
+repository.
+The [pom.xml](pom.xml) has been configured to publish the image with a the `springcommunity/spring-framework-petclinic` image name.
+
+Jib containerizes this WAR project by using the [distroless Jetty](https://github.com/GoogleContainerTools/distroless/tree/master/java/jetty) as a base image.
+
+Build and push the container image of Petclinic to the Docker Hub registry:
+```
+mvn jib:build
+```
+
+
+## Interesting Spring Petclinic forks
+
+The Spring Petclinic master branch in the main [spring-projects](https://github.com/spring-projects/spring-petclinic)
+GitHub org is the "canonical" implementation, currently based on Spring Boot and Thymeleaf.
+
+This [spring-framework-petclinic](https://github.com/spring-petclinic/spring-framework-petclinic) project is one of the [several forks](https://spring-petclinic.github.io/docs/forks.html) 
+hosted in a special GitHub org: [spring-petclinic](https://github.com/spring-petclinic).
+If you have a special interest in a different technology stack
+that could be used to implement the Pet Clinic then please join the community there.
 
 
 ## Interaction with other open source projects

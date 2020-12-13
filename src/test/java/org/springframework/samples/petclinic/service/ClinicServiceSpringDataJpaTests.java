@@ -13,6 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(BusinessConfig.class)
 @ActiveProfiles("spring-data-jpa")
-public class ClinicServiceSpringDataJpaTests extends AbstractClinicServiceTests {
+class ClinicServiceSpringDataJpaTests extends AbstractClinicServiceTests {
 
 }
