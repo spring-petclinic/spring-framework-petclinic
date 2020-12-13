@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>5.3.1</version>
+    <version>5.3.2</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -23,7 +23,7 @@
         <!-- Spring -->
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM -->
         <!-- https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/build.gradle -->
-        <spring-framework.version>5.3.1</spring-framework.version>
+        <spring-framework.version>5.3.2</spring-framework.version>
 
         <!-- Web dependencies -->
         <!-- Version update should also be done in wro.xml, petclinic.less and static resources: htmlHeader.tag and footer.tag-->
@@ -41,8 +41,8 @@
         <taglibs-standard.version>1.2.5</taglibs-standard.version>
 
         <!-- Persistence -->
-        <spring-data.version>2020.0.0</spring-data.version>
-        <hibernate.version>5.4.22.Final</hibernate.version>
+        <spring-data.version>2020.0.2</spring-data.version>
+        <hibernate.version>5.4.25.Final</hibernate.version>
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <hsqldb.version>2.5.1</hsqldb.version>
         <h2database.version>1.4.200</h2database.version>
