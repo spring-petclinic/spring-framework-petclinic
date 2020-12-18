@@ -1,5 +1,5 @@
 fix release
-htfix prod
+hotfix prod
 
 # TP INSA
 
