@@ -30,14 +30,11 @@
  */
 package org.springframework.samples.petclinic.config;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
@@ -46,6 +43,8 @@ import org.springframework.samples.petclinic.web.PetTypeFormatter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import java.util.List;
 
 /**
  * <p>
@@ -59,7 +58,6 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
  */
 @Configuration
 @EnableWebMvc
-@Import(MvcViewConfig.class)
 // POJOs labeled with the @Controller and @Service annotations are
 // auto-detected.
 @ComponentScan(basePackages = { "org.springframework.samples.petclinic.web" })
@@ -71,10 +69,8 @@ public class MvcCoreConfig implements WebMvcConfigurer {
 	@Override
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
-		configurer.ignoreAcceptHeader(true);
+		configurer.ignoreAcceptHeader(false);
 		configurer.defaultContentType(MediaType.TEXT_HTML);
-		configurer.mediaType("html", MediaType.TEXT_HTML);
-		configurer.mediaType("xml", MediaType.APPLICATION_XML);
 	}
 
 	@Override
@@ -99,11 +95,11 @@ public class MvcCoreConfig implements WebMvcConfigurer {
 		// all resources inside folder src/main/webapp/resources are mapped so
 		// they can be refered to inside JSP files (see header.jsp for more
 		// details)
-		registry.addResourceHandler("/resources/**").addResourceLocations(
-				"/resources/");
+		registry.addResourceHandler("/resources/**")
+            .addResourceLocations("/resources/");
 		// uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, jQuery...)
-		registry.addResourceHandler("/webjars/**").addResourceLocations(
-				"classpath:/META-INF/resources/webjars/");
+		registry.addResourceHandler("/webjars/**")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
     @Override
@@ -123,10 +119,6 @@ public class MvcCoreConfig implements WebMvcConfigurer {
 	/**
 	 * Resolves specific types of exceptions to corresponding logical view names
 	 * for error views.
-	 *
-	 * <p>
-	 * View name resolved using bean of type InternalResourceViewResolver
-	 * (declared in {@link MvcViewConfig}).
 	 */
 	@Override
 	public void configureHandlerExceptionResolvers(
@@ -139,4 +131,8 @@ public class MvcCoreConfig implements WebMvcConfigurer {
 		exceptionResolvers.add(exceptionResolver);
 	}
 
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.jsp("/WEB-INF/jsp/", ".jsp");
+    }
 }
