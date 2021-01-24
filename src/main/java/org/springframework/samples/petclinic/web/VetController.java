@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.stereotype.Controller;
@@ -45,22 +46,31 @@ public class VetController {
     public String showVetList(Map<String, Object> model) {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet objects
         // so it is simpler for Object-Xml mapping
-        Vets vets = new Vets();
-        vets.getVetList().addAll(this.clinicService.findVets());
+        Vets vets = getVets();
         model.put("vets", vets);
         return "vets/vetList";
     }
 
-    @GetMapping(value = { "/vets.json", "/vets.xml"})
-    public
+    @GetMapping(value = { "/vets.json"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    Vets showResourcesVetList() {
+    public
+    Vets showJsonVetList() {
+        return getVets();
+    }
+
+    @GetMapping(value = { "/vets.xml"}, produces = MediaType.APPLICATION_XML_VALUE)
+    @ResponseBody
+    public
+    Vets showXmlVetList() {
+        return getVets();
+    }
+
+    private Vets getVets() {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet objects
         // so it is simpler for JSon/Object mapping
         Vets vets = new Vets();
         vets.getVetList().addAll(this.clinicService.findVets());
         return vets;
     }
-
 
 }
