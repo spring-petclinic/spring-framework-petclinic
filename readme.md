@@ -94,7 +94,7 @@ docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_
 
 ## Persistence layer choice
 
-The persistence layer habve 3 available implementations: JPA (default), JDBC and Spring Data JPA.
+The persistence layer have 3 available implementations: JPA (default), JDBC and Spring Data JPA.
 The default JPA implementation could be changed by using a Spring profile: `jdbc`, `spring-data-jpa` and `jpa`.  
 As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to start the application with the JDBC implementation.
 
