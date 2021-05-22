@@ -107,7 +107,7 @@ As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to sta
 
 ### Prerequisites
 The following items should be installed in your system:
-* Java 8 or above
+* Java 8 or newer (full JDK not a JRE)
 * Maven 3.3+ (http://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
 * Jetty 9.4+ or Tomcat 9+
