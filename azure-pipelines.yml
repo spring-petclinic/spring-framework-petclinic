@@ -12,10 +12,10 @@ variables:
   azureSubscription: '97073ab9-8d6c-48b6-a0c2-6d7f73900d2b'
 
   # Web app name
-  webAppName: 'popliu-csa-java-app-name'
+  webAppName: 'popcsajava'
 
   # Environment name
-  environmentName: 'popliu-csa-java-app-name'
+  environmentName: 'popcsajava'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
