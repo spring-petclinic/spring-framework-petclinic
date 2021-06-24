@@ -511,8 +511,8 @@
                 <db.script>mysql</db.script>
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql:/mahi-rds.cipi3argi3pf.us-west-1.rds.amazonaws.com/:3306/mahidb?useUnicode=true</jdbc.url>
-                <jdbc.username>kasu</jdbc.username>
+                <jdbc.url>jdbc:mysql://database-1default-sun-n-g.cqru5o8exhtl.us-east-1.rds.amazonaws.com:3306/testdb?useUnicode=true</jdbc.url>
+                <jdbc.username>testuser</jdbc.username>
                 <jdbc.password>9573972811Mahi</jdbc.password>
             </properties>
             <dependencies>
