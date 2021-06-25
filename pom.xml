@@ -512,7 +512,7 @@
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:mysql://database-2.cluster-covxsgk1tuni.us-east-1.rds.amazonaws.com:3306/babul?useUnicode=true</jdbc.url>
-                <jdbc.username>babulcuser</jdbc.username>
+                <jdbc.username>babuluser</jdbc.username>
                 <jdbc.password>b98eLkdGWz2dFGmmnbbzxq</jdbc.password>
             </properties>
             <dependencies>
