@@ -28,8 +28,9 @@ stages:
     displayName: Maven Package and Publish Artifacts
     pool:
       # vmImage: $(vmImageName)
-      name: 'MyAgentPool'
+      # name: 'MyAgentPool'
       # name: 'LinuxVMScaleSetAgentPool'
+      name: 'buildagentvmss'
     steps:
     - task: Maven@3
       displayName: 'Maven Package'
