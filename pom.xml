@@ -511,9 +511,9 @@
                 <db.script>mysql</db.script>
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://database-2.cluster-covxsgk1tuni.us-east-1.rds.amazonaws.com:3306/babul?useUnicode=true</jdbc.url>
-                <jdbc.username>babuluser</jdbc.username>
-                <jdbc.password>b98eLkdGWz2dFGmmnbbzxq</jdbc.password>
+                <jdbc.url>jdbc:mysql://database-1.cvegrwmgr2np.us-east-2.rds.amazonaws.com:3306/k8s?useUnicode=true</jdbc.url>
+                <jdbc.username>k8suser</jdbc.username>
+                <jdbc.password>Deep9999</jdbc.password>
             </properties>
             <dependencies>
                 <dependency>
