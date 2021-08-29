@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>5.3.8</version>
+    <version>5.3.9</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -23,7 +23,7 @@
         <!-- Spring -->
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM -->
         <!-- https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/build.gradle -->
-        <spring-framework.version>5.3.8</spring-framework.version>
+        <spring-framework.version>5.3.9</spring-framework.version>
 
         <!-- Web dependencies -->
         <!-- Version update should also be done in wro.xml, petclinic.less and static resources: htmlHeader.tag and footer.tag-->
@@ -42,19 +42,19 @@
 
         <!-- Persistence -->
         <spring-data.version>2021.0.1</spring-data.version>
-        <hibernate.version>5.4.31.Final</hibernate.version>
+        <hibernate.version>5.5.6.Final</hibernate.version>
         <hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
         <hsqldb.version>2.5.2</hsqldb.version>
         <h2database.version>1.4.200</h2database.version>
 
         <!-- Logging -->
-        <slf4j.version>1.7.30</slf4j.version>
-        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.5</logback.version>
 
         <!-- Test -->
-        <assertj.version>3.19.0</assertj.version>
-        <json-path.version>2.5.0</json-path.version>
-        <mockito.version>3.9.0</mockito.version>
+        <assertj.version>3.20.2</assertj.version>
+        <json-path.version>2.6.0</json-path.version>
+        <mockito.version>3.11.2</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
 
@@ -63,11 +63,11 @@
         <postgresql-driver.version>9.4.1211.jre7</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>2.12.1</jackson.version>
-        <aspectj.version>1.9.5</aspectj.version>
+        <jackson.version>2.12.4</jackson.version>
+        <aspectj.version>1.9.7</aspectj.version>
 
         <!-- Maven plugins -->
-        <jetty-maven-plugin.version>9.4.24.v20191120</jetty-maven-plugin.version>
+        <jetty-maven-plugin.version>9.4.43.v20210629</jetty-maven-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
