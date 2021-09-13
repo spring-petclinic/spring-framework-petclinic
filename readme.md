@@ -226,4 +226,72 @@ For pull requests, editor preferences are available in the [editor config](.edit
 
 
 
+# Prepare scenario: AS-IS
 
+## Install Tomcat
+
+Ubuntu: https://linuxize.com/post/how-to-install-tomcat-9-on-ubuntu-20-04/
+
+Centos: https://linuxize.com/post/how-to-install-tomcat-9-on-centos-7/ 
+
+**Don't forget** to add your user to group tomcat:
+ `usermod -a -G virtualdomLabUser tomcat` 
+and add r/w permissions to group: `chmod 775 -R /opt/tomcat/`
+
+## Build and deploy app
+
+export TOMCAT_WEBAPPS_HOME=/opt/tomcat/latest/webapps/
+
+export SOURCE_CODE=<YOUR_PETCLINIC_SOURCE_CODE>
+
+Locally: `cd $SOURCE_CODE && mvn clean package`
+
+Copy to webapp directory in tomcat: `cp $SOURCE_CODE/target/petclinic.war $TOMCAT_WEBAPPS_HOME`
+
+# Prepare scenario: TO-BE
+
+## Azure migrate apps
+
+### Download and install Azure Migrate App Containerization tool
+
+* Download: https://go.microsoft.com/fwlink/?linkid=2134571
+
+* Install: Launch PowerShell in administrator mode and run: `.\AppContainerizationInstaller.ps1`
+
+### Access tool
+
+Get your hostname: `export HOST=$(hostname)`
+
+Access url: `echo https://$HOST:44369/`
+
+
+## Migrate app to App Service
+
+### Create App Service Plan
+
+TODO: Create service plan 
+
+### Migrate app
+
+TODO: get screnshoots if needed to list all the steps
+
+## Migrate app to AKS
+
+### Simple AKS install
+
+az group create --location eastus2 --resource-group aks-basic-rg
+
+TODO: install registry (next command already use an existing ACR)
+
+az aks create \
+    --resource-group aks-basic-rg \
+    --name aks-basic \
+    --node-count 2 \
+    --generate-ssh-keys \
+    --attach-acr dsanchor \
+    --enable-addons http_application_routing,monitoring \
+    --location westeurope
+
+### Migrate app
+
+TODO: get screnshoots if needed to list all the steps
