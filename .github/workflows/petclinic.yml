@@ -30,4 +30,6 @@ jobs:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
-          script: cp /tmp/petclinic/target/petclinic.war /opt/tomcat/latest/webapps/
+          script: | 
+            sudo mv /tmp/petclinic/target/petclinic.war /opt/tomcat/latest/webapps/
+            sudo rm /opt/tomcat/latest/webapps/petclinic.war
