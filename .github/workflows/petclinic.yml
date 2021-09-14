@@ -13,6 +13,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
       - name: Check if the .war exists
-        run: ls . 
+        run: ls target 
 
      
