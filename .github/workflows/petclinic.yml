@@ -23,4 +23,4 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
           source: "target/petclinic.war"
-          target: "/opt/tomcat/latest/webapps/petclinic"
+          target: "/tmp/petclinic"
