@@ -1,5 +1,8 @@
 name: Build and deploy Pet Clinic App
-on: [push]
+on: 
+  push:
+  workflow_dispatch:
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
