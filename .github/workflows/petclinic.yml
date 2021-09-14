@@ -16,7 +16,7 @@ jobs:
         run: mvn clean package
       - name: Check if the .war exists
         run: ls target
-      - name: SSH Remote Commands
+      - name: Copy war into the VM
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.VM_IP }}
@@ -24,3 +24,10 @@ jobs:
           password: ${{ secrets.VM_PASSWORD }}
           source: "target/petclinic.war"
           target: "/tmp/petclinic"
+      - name: Deploy .war in Tomcat
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USERNAME }}
+          password: ${{ secrets.VM_PASSWORD }}
+          script: cp /tmp/petclinic/target/petclinic.war /opt/tomcat/latest/webapps/
