@@ -15,12 +15,10 @@ jobs:
       - name: Check if the .war exists
         run: ls target
       - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
-          script: |
-            TOMCAT_WEBAPPS_HOME=/opt/tomcat/latest/webapps/            
-            cp target/petclinic.war $TOMCAT_WEBAPPS_HOME
-
+          source: "target/petclinic.war"
+          target: /opt/tomcat/latest/webapps/
