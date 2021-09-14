@@ -7,6 +7,7 @@ variable "location" {
 }
 
 variable "scfile" {
-  type    = string
-  default = "scripts\\install-tomcat.sh"
+  type = string
+  #default = "scripts\\install-tomcat.sh" #Windows
+  default = "scripts//install-tomcat.sh"
 }

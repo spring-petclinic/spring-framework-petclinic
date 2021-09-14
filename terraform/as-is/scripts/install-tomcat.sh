@@ -21,6 +21,10 @@ sudo ln -s /opt/tomcat/apache-tomcat-${VERSION} /opt/tomcat/latest
 sudo chown -R tomcat: /opt/tomcat
 sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
 
+echo "Added your user to tomcat group"
+usermod -a -G as-is-user tomcat
+chmod 775 -R /opt/tomcat/
+
 cat > /etc/systemd/system/tomcat.service <<EOL
 [Unit]
 Description=Tomcat 9 servlet container
