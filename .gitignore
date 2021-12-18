@@ -10,3 +10,6 @@ bin/
 
 # Maven
 target/
+
+# OS
+.DS_Store

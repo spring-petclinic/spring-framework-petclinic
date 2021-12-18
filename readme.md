@@ -1,6 +1,6 @@
 # Spring PetClinic Sample Application
 
-[![Build Status](https://travis-ci.org/spring-petclinic/spring-framework-petclinic.svg?branch=master)](https://travis-ci.org/spring-petclinic/spring-framework-petclinic/) 
+[![Java CI with Maven](https://github.com/spring-petclinic/spring-framework-petclinic/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-framework-petclinic/actions/workflows/maven-build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=spring-petclinic_spring-framework-petclinic&metric=alert_status)](https://sonarcloud.io/dashboard?id=spring-petclinic_spring-framework-petclinic)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=spring-petclinic_spring-framework-petclinic&metric=coverage)](https://sonarcloud.io/dashboard?id=spring-petclinic_spring-framework-petclinic)
 
@@ -94,7 +94,7 @@ docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_
 
 ## Persistence layer choice
 
-The persistence layer habve 3 available implementations: JPA (default), JDBC and Spring Data JPA.
+The persistence layer have 3 available implementations: JPA (default), JDBC and Spring Data JPA.
 The default JPA implementation could be changed by using a Spring profile: `jdbc`, `spring-data-jpa` and `jpa`.  
 As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to start the application with the JDBC implementation.
 
@@ -107,7 +107,7 @@ As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to sta
 
 ### Prerequisites
 The following items should be installed in your system:
-* Java 8 or above
+* Java 8 or newer (full JDK not a JRE)
 * Maven 3.3+ (http://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
 * Jetty 9.4+ or Tomcat 9+
