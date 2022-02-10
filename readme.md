@@ -107,10 +107,10 @@ As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to sta
 
 ### Prerequisites
 The following items should be installed in your system:
-* Java 8 or newer (full JDK not a JRE)
-* Maven 3.3+ (http://maven.apache.org/install.html)
+* Java 17 or newer (full JDK not a JRE)
+* Maven 3.5+ (https://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
-* Jetty 9.4+ or Tomcat 9+
+* Jetty 11.0+ or Tomcat 10+
 * Your prefered IDE 
   * Eclipse with the m2e plugin. Note: when m2e is available, there is an m2 icon in Help -> About dialog. If m2e is not there, just follow the install process here: http://www.eclipse.org/m2e/
   * [Spring Tools Suite](https://spring.io/tools) (STS)
