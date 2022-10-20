@@ -1,9 +1,13 @@
 pipeline {
     agent  { label 'JDK11' }
+      parameters {
+        choice(name: 'CHOICE', choices: ['REL_INT_1.0'], description: 'CHOICE')
+      }
+        
     stages {
         stage('vcs') {
             steps {
-                git branch: 'REL_INT_1.0', url: 'https://github.com/satishnamgadda/spring-framework-petclinic.git'
+                git branch: '${params.CHOICE}', url: 'https://github.com/satishnamgadda/spring-framework-petclinic.git'
             }
 
         }
