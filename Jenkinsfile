@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('vcs') {
             steps {
-                git branch: '${params.CHOICE}', url: 'https://github.com/satishnamgadda/spring-framework-petclinic.git'
+                git branch: "${params.CHOICE}", url: 'https://github.com/satishnamgadda/spring-framework-petclinic.git'
             }
 
         }
