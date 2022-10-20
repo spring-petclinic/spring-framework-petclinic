@@ -15,7 +15,7 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh '/usr/share/maven/bin/mvn "${params.MAVEN_GOAL}"'
+                sh "/usr/share/maven/bin/mvn ${params.MAVEN_GOAL}"
             }
         }
         stage('artifacts') {
