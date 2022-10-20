@@ -14,7 +14,7 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh '/usr/share/maven/bin/"${params.CHOICE1"'
+                sh '/usr/share/maven/bin/"${params.CHOICE1"}'
             }
         }
         stage('artifacts') {
