@@ -2,6 +2,7 @@ pipeline {
     agent  { label 'JDK11' }
       parameters {
         choice(name: 'CHOICE', choices: ['REL_INT_1.0'], description: 'CHOICE')
+        string(name: 'MAVEN_GOAL', defaultValue: 'package', description: 'mvn goal') 
         
       }
         
@@ -14,7 +15,7 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh '/usr/share/maven/bin/mvn package'
+                sh '/usr/share/maven/bin/mvn "${params.MAVEN_GOAL}"'
             }
         }
         stage('artifacts') {
