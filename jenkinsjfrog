@@ -17,7 +17,18 @@ pipeline{
         stage('archive'){
             steps{
                 junit '**/surefire-reports/*.xml'
-                archiveArtifacts artifacts:'**/target/*.jar'
+                //archiveArtifacts artifacts:'**/target/*.jar'
+            }
+        }
+        stage('jfrog artifactory'){
+            steps{
+                rtMavenDeployer (
+                    id: 'MAVEN_DEPLOYER',
+                    serverId: 'jfrog_ubutnu',
+                    releaseRepo: 'test_mvn-libs-release-local',
+                    snapshotRepo: 'test_mvn-libs-snapshot-local',
+                    
+                )
             }
         }
     }
