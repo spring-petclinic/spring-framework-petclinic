@@ -15,14 +15,14 @@ pipeline{
                     tool:'MAVEN_DEFAULT',
                     pom:'pom.xml',
                     goals:'clean install',
-                    deployerId:'MAVEN_DEPLOYER'
+                    //deployerId:'MAVEN_DEPLOYER'
                 )
             }
         }
          stage('jfrog artifactory'){
             steps{
                 rtMavenDeployer (
-                    id: 'MAVEN_DEPLOYER',
+                    //id: 'MAVEN_DEFAULT',
                     serverId: 'jfrog_ubutnu',
                     releaseRepo: 'test_mvn-libs-release-local',
                     snapshotRepo: 'test_mvn-libs-snapshot-local',
