@@ -11,16 +11,15 @@ pipeline{
         }
         stage('build'){
             steps{
-                sh 'mvn clean install'
+                rtMavenRun(
+                    tool:'MAVEN_DEFAULT',
+                    pom:'pom.xml',
+                    goals:'clean install',
+                    deployerid:'MAVEN_DEPLOYER'
+                )
             }
         }
-        stage('archive'){
-            steps{
-                junit '**/surefire-reports/*.xml'
-                //archiveArtifacts artifacts:'**/target/*.jar'
-            }
-        }
-        stage('jfrog artifactory'){
+         stage('jfrog artifactory'){
             steps{
                 rtMavenDeployer (
                     id: 'MAVEN_DEPLOYER',
@@ -31,5 +30,12 @@ pipeline{
                 )
             }
         }
+        stage('archive'){
+            steps{
+                junit '**/surefire-reports/*.xml'
+                archiveArtifacts artifacts:'**/target/*.war'
+            }
+        }
+       
     }
 }
