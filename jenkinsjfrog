@@ -1,0 +1,24 @@
+pipeline{
+    agent {label ""}
+    parameters{
+        choice(name:'jfrog',choices:['jfrog','master'],description:'select the branch to run')
+    }
+    stages{
+        stage('git clone'){
+            steps{
+                git branch: '${params.jfrog}', url:'https://github.com/vamsibakka/spring-framework-petclinic.git'
+            }
+        }
+        stage('build'){
+            steps{
+                sh 'mvn clean install'
+            }
+        }
+        stage('archive'){
+            steps{
+                junit '**/surefire-reports/*.xml'
+                archiveArtificats artifacts:'**/target/*.jar'
+            }
+        }
+    }
+}
