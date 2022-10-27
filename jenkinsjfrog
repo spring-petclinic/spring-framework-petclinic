@@ -1,12 +1,12 @@
 pipeline{
     agent {label "java_11"}
     parameters{
-        choice(name:'jfrog',choices:['jfrog','master'],description:'select the branch to run')
+        choice(name:'JFROG',choices:['jfrog','master'],description:'select the branch to run')
     }
     stages{
         stage('git clone'){
             steps{
-                git branch: '${params.jfrog}', url:'https://github.com/vamsibakka/spring-framework-petclinic.git'
+                git branch: "${params.JFROG}", url:'https://github.com/vamsibakka/spring-framework-petclinic.git'
             }
         }
         stage('build'){
