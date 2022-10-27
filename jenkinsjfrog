@@ -15,7 +15,7 @@ pipeline{
                     tool:'MAVEN_DEFAULT',
                     pom:'pom.xml',
                     goals:'clean install',
-                    deployerid:'MAVEN_DEPLOYER'
+                    deployerId:'MAVEN_DEPLOYER'
                 )
             }
         }
