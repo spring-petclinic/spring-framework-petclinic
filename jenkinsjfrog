@@ -1,5 +1,5 @@
 pipeline{
-    agent {label ""}
+    agent {label "java_11"}
     parameters{
         choice(name:'jfrog',choices:['jfrog','master'],description:'select the branch to run')
     }
