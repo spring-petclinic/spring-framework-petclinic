@@ -1,41 +1,41 @@
 pipeline{
-    agent {label "java_11"}
+    agent {label "java_11" }
     parameters{
-        choice(name:'JFROG',choices:['jfrog','master'],description:'select the branch to run')
+        choice(name: 'JFROG', choices: ['jfrog', 'master'], description: 'select the branch to run')
     }
     stages{
         stage('git clone'){
             steps{
-                git branch: "${params.JFROG}", url:'https://github.com/vamsibakka/spring-framework-petclinic.git'
+                git branch: "${params.JFROG}", url: 'https://github.com/vamsibakka/spring-framework-petclinic.git'
             }
         }
         stage('build'){
             steps{
                 rtMavenRun(
-                    tool:'MAVEN_DEFAULT',
-                    pom:'pom.xml',
-                    goals:'clean install',
-                    //deployerId:'MAVEN_DEPLOYER'
+                    tool: 'MAVEN_DEFAULT',
+                    pom: 'pom.xml',
+                    goals: 'clean package',
+                    deployerId: 'MAVEN_DEPLOYER'
                 )
             }
         }
-         stage('jfrog artifactory'){
+        stage('jfrog artifactory'){
             steps{
-                rtMavenDeployer (
-                    //id: 'MAVEN_DEFAULT',
+                rtMavenDeployer(
+                    id: 'MAVEN_DEPLOYER',
                     serverId: 'jfrog_ubutnu',
                     releaseRepo: 'test_mvn-libs-release-local',
                     snapshotRepo: 'test_mvn-libs-snapshot-local',
-                    
+
                 )
             }
         }
         stage('archive'){
             steps{
                 junit '**/surefire-reports/*.xml'
-                archiveArtifacts artifacts:'**/target/*.war'
+                archiveArtifacts artifacts: '**/target/*.war'
             }
         }
-       
+
     }
 }
