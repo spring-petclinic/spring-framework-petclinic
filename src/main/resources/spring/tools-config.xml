@@ -37,10 +37,13 @@
     <!-- Enables scanning for @Cacheable annotation -->
     <cache:annotation-driven/>
 
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
-        p:cacheManager-ref="ehcache"/>
-
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-        p:configLocation="classpath:cache/ehcache.xml"/>
+    <bean id="cacheManager" class="org.springframework.cache.caffeine.CaffeineCacheManager">
+        <property name="cacheNames">
+            <set>
+                <value>default</value>
+                <value>vets</value>
+            </set>
+        </property>
+    </bean>
 
 </beans>
