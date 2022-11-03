@@ -30,9 +30,9 @@
  */
 package org.springframework.samples.petclinic.config;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,13 +48,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 @Configuration
 @Profile({"jpa", "spring-data-jpa"})
 public class SharedJpaConfig {
-	
+
     @Autowired
     private Environment        env;
-    
+
 	@Autowired
 	private DataSource dataSource;
-	
+
     @Bean
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -66,7 +66,7 @@ public class SharedJpaConfig {
         em.afterPropertiesSet();
         return em.getObject();
     }
-    
+
     @Bean
     public JpaVendorAdapter jpaVendorAdaper() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -77,14 +77,14 @@ public class SharedJpaConfig {
         vendorAdapter.setShowSql(env.getProperty("jpa.showSql", Boolean.class));
         return vendorAdapter;
     }
-    
+
     @Bean(name="transactionManager")
     public JpaTransactionManager jpaTransactionManager() {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory());
         return jpaTransactionManager;
     }
-    
+
     @Bean
     public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor() {
     	return new PersistenceExceptionTranslationPostProcessor();
