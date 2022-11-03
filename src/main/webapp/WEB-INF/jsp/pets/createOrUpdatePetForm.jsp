@@ -5,6 +5,13 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="owners">
+    <jsp:attribute name="customScript">
+        <link rel="stylesheet" href="/webjars/flatpickr/4.6.13/dist/flatpickr.min.css">
+        <script src="/webjars/flatpickr/4.6.13/dist/flatpickr.js"></script>
+        <script>
+            flatpickr("#birthDate", {});
+        </script>
+    </jsp:attribute>
     <jsp:body>
         <h2>
             <c:if test="${pet['new']}">New </c:if> Pet

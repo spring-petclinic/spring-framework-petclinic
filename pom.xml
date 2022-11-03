@@ -28,6 +28,7 @@
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.1.3</webjars-bootstrap.version>
         <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
+        <webjars-flatpickr.version>4.6.13</webjars-flatpickr.version>
 
         <!-- Jakarta EE / Java SE dependencies -->
         <tomcat.version>10.0.14</tomcat.version>
@@ -243,6 +244,11 @@
             <groupId>org.webjars.npm</groupId>
             <artifactId>font-awesome</artifactId>
             <version>${webjars-font-awesome.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>flatpickr</artifactId>
+            <version>${webjars-flatpickr.version}</version>
         </dependency>
 
         <!-- Test Artifacts -->
