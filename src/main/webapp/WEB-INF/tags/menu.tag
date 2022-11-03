@@ -4,38 +4,32 @@
 <%@ attribute name="name" required="true" rtexprvalue="true"
               description="Name of the active menu: home, owners, vets or error" %>
 
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-                <span class="sr-only"><os-p>Toggle navigation</os-p></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="navbar-collapse collapse" id="main-navbar">
-            <ul class="nav navbar-nav navbar-right">
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navbar" style>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <petclinic:menuItem active="${name eq 'home'}" url="/" title="home page">
-                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                <petclinic:menuItem active="${name eq 'home'}" url="/" title="home page" glyph="fa-home">
                     <span>Home</span>
                 </petclinic:menuItem>
 
-                <petclinic:menuItem active="${name eq 'owners'}" url="/owners/find" title="find owners">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                <petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"
+                                    title="find owners" glyph="fa-search">
                     <span>Find owners</span>
                 </petclinic:menuItem>
 
-                <petclinic:menuItem active="${name eq 'vets'}" url="/vets" title="veterinarians">
-                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                <petclinic:menuItem active="${name eq 'vets'}" url="/vets"
+                                    title="veterinarians" glyph="fa-th-list">
                     <span>Veterinarians</span>
                 </petclinic:menuItem>
 
                 <petclinic:menuItem active="${name eq 'error'}" url="/oups"
-                            title="trigger a RuntimeException to see how it is handled">
-                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                            title="trigger a RuntimeException to see how it is handled"
+                            glyph="exclamation-triangle">
                     <span>Error</span>
                 </petclinic:menuItem>
 

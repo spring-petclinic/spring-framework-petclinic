@@ -28,7 +28,7 @@
         (see htmlHeader.jsp for more details) -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
-    <!-- uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, jQuery...) -->
+    <!-- uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, Font Awesome...) -->
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
 

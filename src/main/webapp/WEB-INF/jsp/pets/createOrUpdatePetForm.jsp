@@ -5,13 +5,6 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="owners">
-    <jsp:attribute name="customScript">
-        <script>
-            $(function () {
-                $("#birthDate").datepicker({dateFormat: 'yy/mm/dd'});
-            });
-        </script>
-    </jsp:attribute>
     <jsp:body>
         <h2>
             <c:if test="${pet['new']}">New </c:if> Pet
@@ -36,16 +29,14 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <c:choose>
                         <c:when test="${pet['new']}">
-                            <button class="btn btn-default" type="submit">Add Pet</button>
+                            <button class="btn btn-primary" type="submit">Add Pet</button>
                         </c:when>
                         <c:otherwise>
-                            <button class="btn btn-default" type="submit">Update Pet</button>
+                            <button class="btn btn-primary" type="submit">Update Pet</button>
                         </c:otherwise>
                     </c:choose>
                 </div>
             </div>
         </form:form>
-        <c:if test="${!pet['new']}">
-        </c:if>
     </jsp:body>
 </petclinic:layout>
