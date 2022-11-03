@@ -75,6 +75,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
         <jacoco-maven-plugin>0.8.7</jacoco-maven-plugin>
+        <libsass-maven-plugin.version>0.2.26</libsass-maven-plugin.version>
 
         <!-- Docker image -->
         <docker.jib-maven-plugin.version>2.6.0</docker.jib-maven-plugin.version>
@@ -538,6 +539,57 @@
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>css</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <?m2e execute onConfiguration,onIncremental?>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.webjars.npm</groupId>
+                                            <artifactId>bootstrap</artifactId>
+                                            <version>${webjars-bootstrap.version}</version>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/webjars</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.gitlab.haynes</groupId>
+                        <artifactId>libsass-maven-plugin</artifactId>
+                        <version>${libsass-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <?m2e execute onConfiguration,onIncremental?>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <inputPath>${basedir}/src/main/webapp/resources/scss/</inputPath>
+                            <outputPath>${basedir}/src/main/webapp/resources/css/</outputPath>
+                            <includePath>${project.build.directory}/webjars/META-INF/resources/webjars/bootstrap/${webjars-bootstrap.version}/scss/</includePath>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
    </profiles>
 
