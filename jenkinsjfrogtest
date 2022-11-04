@@ -1,7 +1,7 @@
 pipeline{
-    agent {label 'java_11' }
+    agent {label 'mvn_node' }
     parameters{
-        choice(name: 'JFROG', choices: ['master', 'jfrog'], description: 'select the branch to run')
+        choice(name:'JFROG', choices: ['master', 'jfrog'], description: 'select the branch to run')
     }
     stages{
         stage('git clone'){
