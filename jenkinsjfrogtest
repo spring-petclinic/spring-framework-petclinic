@@ -1,7 +1,7 @@
 pipeline{
     agent {label 'java_11' }
     parameters{
-        choice(name: 'JFROG', choices: ['jfrog', 'master'], description: 'select the branch to run')
+        choice(name: 'JFROG', choices: ['master', 'jfrog'], description: 'select the branch to run')
     }
     stages{
         stage('git clone'){
@@ -19,21 +19,21 @@ pipeline{
                 )
             }
         }
-        stage('jfrog artifactory'){
+        stage('jfrog artifactory') {
             steps{
                 rtMavenDeployer(
                     id: 'MAVEN_DEPLOYER',
                     serverId: 'jfrog_ubutnu',
-                    releaseRepo: 'test_mvn-libs-release-local',
-                    snapshotRepo: 'test_mvn-libs-snapshot-local',
+                    releaseRepo: 'testmaven-libs-release-local',
+                    snapshotRepo: 'testmaven-libs-snapshot-local'
 
                 )
             }
         }
         stage('archive'){
             steps{
-                junit '**/surefire-reports/*.xml'
-                archiveArtifacts artifacts: '**/target/*.war'
+                junit '**/surefire-reports/*.xml',
+                    archiveArtifacts artifacts '**/target/*.jar'
             }
         }
 
