@@ -79,10 +79,10 @@ public class VisitController {
     public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
         if (result.hasErrors()) {
             return "pets/createOrUpdateVisitForm";
-        } else {
-            this.clinicService.saveVisit(visit);
-            return "redirect:/owners/{ownerId}";
         }
+
+        this.clinicService.saveVisit(visit);
+        return "redirect:/owners/{ownerId}";
     }
 
     @GetMapping(value = "/owners/*/pets/{petId}/visits")
