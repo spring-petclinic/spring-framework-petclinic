@@ -78,7 +78,7 @@
         <libsass-maven-plugin.version>0.2.26</libsass-maven-plugin.version>
 
         <!-- Docker image -->
-        <docker.jib-maven-plugin.version>2.6.0</docker.jib-maven-plugin.version>
+        <docker.jib-maven-plugin.version>3.3.1</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
 
     </properties>
