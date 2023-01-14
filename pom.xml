@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>6.0.3</version>
+    <version>6.0.4</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -23,7 +23,7 @@
         <!-- Spring -->
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot-dependencies/build.gradle -->
-        <spring-framework.version>6.0.3</spring-framework.version>
+        <spring-framework.version>6.0.4</spring-framework.version>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.1.3</webjars-bootstrap.version>
