@@ -15,9 +15,9 @@ sh 'mvn package'
 }
 stage('Results'){
 steps{
- junit testResults: '**/surefire-reports/TEST-*.xml',
- archiveArtifacts artifacts: '**/target/gameoflife.war',
+ junit testResults: '**/surefire-reports/TEST   -*.xml',
+ archiveArtifacts artifacts: '**/target/springPetClinic.war',
   onlyIfSuccessful: true
-}}
+}
 }
 }
