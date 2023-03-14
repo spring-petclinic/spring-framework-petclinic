@@ -19,9 +19,6 @@ steps{
  archiveArtifacts artifacts: '**/target/springPetClinic.war',
   onlyIfSuccessful: true
 }
- junit testResults: '**/surefire-reports/TEST-*.xml',
- archiveArtifacts artifacts: 'SpringPetClinic/*.war',
-}}
-
+}
 }
 }
