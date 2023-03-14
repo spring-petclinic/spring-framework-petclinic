@@ -5,9 +5,19 @@ stages{
 stage('git clone'){
 steps{
 git url:'https://github.com/glaxma/spring-framework-petclinic.git',
-branch:'main'
+branch:'dev'
 }
 }
-stage('mvn ')
+stage('build'){
+steps{
+sh 'mvn package'
+}
+}
+stage('Results'){
+steps{
+ junit testResults: '**/surefire-reports/TEST-*.xml',
+ archiveArtifacts artifacts: '**/target/gameoflife.war',
+  onlyIfSuccessful: true
+}}
 }
 }
