@@ -15,15 +15,13 @@ sh 'mvn package'
 }
 stage('Results'){
 steps{
-<<<<<<< HEAD
  junit testResults: '**/surefire-reports/TEST   -*.xml',
  archiveArtifacts artifacts: '**/target/springPetClinic.war',
   onlyIfSuccessful: true
 }
-=======
  junit testResults: '**/surefire-reports/TEST-*.xml',
  archiveArtifacts artifacts: 'SpringPetClinic/*.war',
 }}
->>>>>>> 20d7bbebb834cdede8f9b05f0dd9976c1461d5ab
+
 }
 }
