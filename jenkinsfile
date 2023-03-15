@@ -1,0 +1,23 @@
+pipeline{
+agent any
+triggers{pollSCM('* * * * *') }
+stages{
+stage('git clone'){
+steps{
+git url:'https://github.com/glaxma/spring-framework-petclinic.git',
+branch:'dev'
+}
+}
+stage('build'){
+steps{
+sh 'mvn package'
+}
+}
+stage('Results'){
+steps{
+ junit testResults: '**/surefire-reports/TEST-*.xml'
+ archiveArtifacts artifacts: '**/petclinic.war', followSymlinks: false
+     }
+}
+}
+}
