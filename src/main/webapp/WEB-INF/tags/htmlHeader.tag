@@ -17,8 +17,8 @@ PetClinic :: a Spring Framework demonstration
     <title>PetClinic :: a Spring Framework demonstration</title>
 
     <%-- CSS generated from SCSS --%>
-    <link href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/resources/css/petclinic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/petclinic.css" rel="stylesheet"/>
 
     <%-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --%>
     <!--[if lt IE 9]>
