@@ -26,4 +26,4 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Djacoco.skip=true
+      run: mvn -B package --file pom.xml -Djacoco.skip=true -Dsurefire.useFile=false -DdisableXmlReport=true
