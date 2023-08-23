@@ -23,8 +23,9 @@ steps:
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
     goals: package
-- task: PublishBuildArtifacts@1
+
+- task: PublishPipelineArtifact@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/target/'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    targetPath: '$(Pipeline.Workspace)/target'
+    artifact: '*.war'
+    publishLocation: 'pipeline'
