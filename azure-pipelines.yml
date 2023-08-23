@@ -27,5 +27,5 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Pipeline.Workspace)/target'
-    artifact: '*.war'
+    artifact: 'petclinic'
     publishLocation: 'pipeline'
