@@ -13,7 +13,7 @@ pool:
 stages:
 - stage: BuildIt 
   jobs:
-  - job: Run_java_build
+  - job: Runjavabuild
     displayName: Petclinic
     steps:
     - task: Maven@4
@@ -30,7 +30,7 @@ stages:
         goals: package
 - stage: Publish results
   jobs:
-  - job: Publish_Test_Results
+  - job: PublishTestResults
     displayName: Publish Test Results Petclinic
     steps:
     - task: PublishTestResults@2
@@ -39,7 +39,7 @@ stages:
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
 - stage: Copy Files 
   jobs:
-  - job: Copy_war_File
+  - job: CopywarFile
     displayName: Copy war File  Petclinic
     steps:
     - task: CopyFiles@2
@@ -49,7 +49,7 @@ stages:
         TargetFolder: '$(build.artifactstagingdirectory)'
 - stage: Publish Artifacts
   jobs:
-  - job: Publish_Artifacts
+  - job: PublishArtifacts
     displayName: Publish Artifacts
     steps:      
     - task: PublishBuildArtifacts@1
