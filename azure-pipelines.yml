@@ -28,18 +28,20 @@ stages:
           sonar.projectKey=gnishanth0728_spring-framework-petclinic
     - task: Maven@4
       inputs:
-       mavenPomFile: 'pom.xml'
-       publishJUnitResults: true
-       testResultsFiles: '**/surefire-reports/TEST-*.xml'
-       javaHomeOption: 'JDKVersion'
-       mavenVersionOption: 'Default'
-       mavenAuthenticateFeed: false
-       effectivePomSkip: false
-       sonarQubeRunAnalysis: true
-       sqMavenPluginVersionChoice: 'latest'
-       checkStyleRunAnalysis: true
-       pmdRunAnalysis: true
-       findBugsRunAnalysis: true
+        mavenPomFile: 'pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.17'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: true
+        sqMavenPluginVersionChoice: 'latest'
+        checkStyleRunAnalysis: true
+        pmdRunAnalysis: true
+        findBugsRunAnalysis: true
+        goals: package
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
