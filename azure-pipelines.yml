@@ -56,7 +56,7 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'  
     
-- stage: DockerBuild
+- stage: DockerBuildAndPush
   jobs:
   - job: BuildPetclinicImage
     displayName: PetclinicDokerImage
