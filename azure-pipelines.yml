@@ -28,7 +28,7 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
         goals: package
-- stage: PublishResults
+- stage: PublishTestResults
   jobs:
   - job: PublishTestResults
     displayName: Publish Test Results Petclinic
