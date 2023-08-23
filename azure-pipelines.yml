@@ -28,7 +28,7 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
         goals: package
-- stage: Publish results
+- stage: PublishResults
   jobs:
   - job: PublishTestResults
     displayName: Publish Test Results Petclinic
@@ -37,7 +37,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-- stage: Copy Files 
+- stage: CopyFiles 
   jobs:
   - job: CopywarFile
     displayName: Copy war File  Petclinic
@@ -47,7 +47,7 @@ stages:
         SourceFolder: 'target'
         Contents: '*.war'
         TargetFolder: '$(build.artifactstagingdirectory)'
-- stage: Publish Artifacts
+- stage: PublishArtifacts
   jobs:
   - job: PublishArtifacts
     displayName: Publish Artifacts
