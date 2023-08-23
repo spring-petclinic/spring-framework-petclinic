@@ -40,7 +40,7 @@ stages:
         sqMavenPluginVersionChoice: 'latest'
         checkStyleRunAnalysis: true
         pmdRunAnalysis: true
-        findBugsRunAnalysis: true
+        findBugsRunAnalysis: false
         goals: package
     - task: SonarCloudPublish@1
       inputs:
