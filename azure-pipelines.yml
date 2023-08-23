@@ -32,25 +32,27 @@ stages:
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/target'
         Contents: '*.war'
-        TargetFolder: '$(build.artifactstagingdirectory)' 
-
-- stage: PublishTestResults
-  jobs:
-  - job: PublishTestResults
-    displayName: Publish Test Results Petclinic
-    steps:
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-
-- stage: PublishArtifacts
-  jobs:
-  - job: PublishArtifacts
-    displayName: Publish Artifacts
-    steps:      
+        TargetFolder: '$(build.artifactstagingdirectory)'      
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
-        publishLocation: 'Container'
+        publishLocation: 'Container'  
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'      
+
+- stage: DownloadArtifacts
+  jobs:
+  - job: DownloadArtifacts
+    displayName: ArtifactsDownload
+    steps:
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        itemPattern: '*.war'
+        downloadPath: '$(System.ArtifactsDirectory)'
