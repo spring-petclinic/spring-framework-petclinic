@@ -71,13 +71,17 @@ stages:
       inputs:
         command: 'login'
         containerRegistry: 'azuredockerregistry'
-            
     - task: Docker@2
       inputs:
-        containerRegistry: 'azuredockerregistry'
+        containerRegistry: 'dockerhubazure'
         repository: 'petclinic'
-        command: 'buildAndPush'
+        command: 'build'
         Dockerfile: '**/Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dockerhubazure'
+        repository: 'petclinic'
+        command: 'push'
         
 - stage: DownloadArtifacts
   jobs:
