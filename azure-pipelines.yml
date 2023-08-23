@@ -23,6 +23,10 @@ steps:
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
     goals: package
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'target'
