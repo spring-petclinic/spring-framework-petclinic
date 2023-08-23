@@ -28,6 +28,15 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
         goals: package
+  - job: CopywarFile
+    displayName: Copy war File  Petclinic
+    steps:
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)/target'
+        Contents: '*.war'
+        TargetFolder: '$(build.artifactstagingdirectory)' 
+
 - stage: PublishTestResults
   jobs:
   - job: PublishTestResults
@@ -37,16 +46,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-- stage: CopyFiles 
-  jobs:
-  - job: CopywarFile
-    displayName: Copy war File  Petclinic
-    steps:
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '/home/vsts/work/1/s/target'
-        Contents: '*.war'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+
 - stage: PublishArtifacts
   jobs:
   - job: PublishArtifacts
