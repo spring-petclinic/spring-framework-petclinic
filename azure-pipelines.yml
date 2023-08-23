@@ -28,9 +28,6 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
         goals: package
-  - job: CopywarFile
-    displayName: Copy war File  Petclinic
-    steps:
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/target'
