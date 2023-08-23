@@ -13,21 +13,9 @@ pool:
 stages:
 - stage: BuildIt 
   jobs:
-  - job: Runjavabuild
+  - job: RunJavaBuild
     displayName: Petclinic
     steps:
-    - task: Maven@4
-      inputs:
-        mavenPomFile: 'pom.xml'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: false
-        goals: package
     - task: SonarCloudPrepare@1
       inputs:
         SonarCloud: 'sonarcloudazure'
@@ -38,12 +26,24 @@ stages:
           # Put one key=value per line, example:
           # sonar.exclusions=**/*.bin
           sonar.projectKey=gnishanth0728_spring-framework-petclinic
-    - task: SonarCloudAnalyze@1
+    - task: Maven@4
       inputs:
-        jdkversion: 'JAVA_HOME_17_X64'
+       mavenPomFile: 'pom.xml'
+       publishJUnitResults: true
+       testResultsFiles: '**/surefire-reports/TEST-*.xml'
+       javaHomeOption: 'JDKVersion'
+       mavenVersionOption: 'Default'
+       mavenAuthenticateFeed: false
+       effectivePomSkip: false
+       sonarQubeRunAnalysis: true
+       sqMavenPluginVersionChoice: 'latest'
+       checkStyleRunAnalysis: true
+       pmdRunAnalysis: true
+       findBugsRunAnalysis: true
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/target'
