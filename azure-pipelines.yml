@@ -58,15 +58,13 @@ stages:
     
 - stage: DockerBuild
   jobs:
-  - job: Docker Login
-    steps:
+  - job: BuildPetclinicImage
+    displayName: PetclinicDokerImage
+    steps: 
     - task: Docker@2
       inputs:
         containerRegistry: 'dockerhubazure'
         command: 'login'
-  - job: BuildPetclinicImage
-    displayName: PetclinicDokerImage
-    steps: 
     - task: Docker@2
       inputs:
         containerRegistry: 'dockerhubazure'
