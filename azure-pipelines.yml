@@ -62,6 +62,10 @@ stages:
     displayName: PetclinicDokerImage
     steps: 
     - task: Docker@2
+      inputs:
+        containerRegistry: 'dockerhubazure'
+        command: 'logout'
+    - task: Docker@2
       displayName: Login to ACR
       inputs:
         command: login
