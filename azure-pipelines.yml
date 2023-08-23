@@ -42,7 +42,22 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'      
+        testResultsFiles: '**/surefire-reports/TEST-*.xml' 
+    - task: SonarQubePrepare@5
+      inputs:
+        SonarQube: 'azuresonartoken'
+        scannerMode: 'Other'
+        extraProperties: |
+          # Additional properties that will be passed to the scanner, 
+          # Put one key=value per line, example:
+          # sonar.exclusions=**/*.bin
+          sonar.projectKey=gnishanth0728_spring-framework-petclinic
+    - task: SonarQubeAnalyze@5
+      inputs:
+        jdkversion: 'JAVA_HOME_11_X64'
+    - task: SonarQubePublish@5
+      inputs:
+        pollingTimeoutSec: '300'
 
 - stage: DownloadArtifacts
   jobs:
