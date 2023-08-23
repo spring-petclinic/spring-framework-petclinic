@@ -10,6 +10,16 @@
     <packaging>war</packaging>
     <description>A Spring Framework application based on JSP, Spring MVC, Spring Data JPA, Hibernate and JDBC</description>
     <url>https://spring-petclinic.github.io/</url>
+    <repository>
+  <id>udz1kor</id>
+  <url>https://pkgs.dev.azure.com/udz1kor/_packaging/udz1kor/maven/v1</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
 
     <properties>
 
