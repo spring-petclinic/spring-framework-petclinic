@@ -57,7 +57,18 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'  
     
-
+- stage: DockerBuild
+  jobs:
+  - job: BuildPetclinicImage
+    displayName: PetclinicDokerImage
+    steps: 
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dockerhubazure'
+        repository: 'petclinic'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        
 - stage: DownloadArtifacts
   jobs:
   - job: DownloadArtifacts
