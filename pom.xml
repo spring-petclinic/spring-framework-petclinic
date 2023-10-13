@@ -31,7 +31,7 @@
         <webjars-flatpickr.version>4.6.13</webjars-flatpickr.version>
 
         <!-- Jakarta EE / Java SE dependencies -->
-        <tomcat.version>10.0.14</tomcat.version>
+        <tomcat.version>10.0.27</tomcat.version>
         <jaxb-api.version>3.0.0</jaxb-api.version>
         <jaxb-runtime.version>3.0.2</jaxb-runtime.version>
         <jakarta-activation.version>2.0.1</jakarta-activation.version>
@@ -44,7 +44,7 @@
         <hibernate.version>6.1.4.Final</hibernate.version>
         <hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
         <hsqldb.version>2.7.1</hsqldb.version>
-        <h2database.version>2.2.220</h2database.version>
+        <h2database.version>2.2.224</h2database.version>
         <caffeine.version>3.1.1</caffeine.version>
 
         <!-- Logging -->
@@ -63,7 +63,7 @@
         <postgresql-driver.version>42.5.1</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>2.14.0-rc2</jackson.version>
+        <jackson.version>2.15.3</jackson.version>
         <aspectj.version>1.9.9.1</aspectj.version>
 
         <!-- Maven plugins -->
