@@ -16,3 +16,7 @@ target/
 
 # OS
 .DS_Store
+
+# Tomcat
+tomcat.*
+
