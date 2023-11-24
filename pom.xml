@@ -607,9 +607,9 @@
     </repositories>
      <distributionManagement>
     <repository>
-            <id>maven-hosted</id>
-            <name>maven-hosted</name>
-	    <url>http://localhost:8081/repository/maven-hosted/</url>
+            <id>maven-releases</id>
+            <name>maven-releases</name>
+	    <url>http://localhost:8081/repository/maven-releases/</url>
           </repository>
 	  </distributionManagement>
 
