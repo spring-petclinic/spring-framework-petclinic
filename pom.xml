@@ -598,5 +598,19 @@
             </build>
         </profile>
    </profiles>
+     <repositories>
+      <repository>
+	    <id>maven</id>
+	    <name>maven</name>
+	    <url>http://localhost:8081/repository/maven/</url>
+      </repository>
+    </repositories>
+     <distributionManagement>
+    <repository>
+            <id>maven-hosted</id>
+            <name>maven-hosted</name>
+	    <url>http://localhost:8081/repository/maven-hosted/</url>
+          </repository>
+	  </distributionManagement>
 
 </project>
