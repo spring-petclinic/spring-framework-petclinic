@@ -348,6 +348,37 @@
             </testResource>
         </testResources>
         <plugins>
+
+	<plugin>
+	    <groupId>org.codehaus.cargo</groupId>
+	    <artifactId>cargo-maven3-plugin</artifactId>
+	    <version>1.9.11</version>
+	    <configuration>
+		<container>
+		    <containerId>tomcat9x</containerId>
+		    <type>installed</type>
+		    <home>${TOMCAT_HOME}</home>
+		</container>
+		<configuration>
+		    <type>existing</type>
+		    <home>${TOMCAT_HOME}</home>
+		</configuration>
+		<deployables>
+		    <deployable>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.artifactId}</artifactId>
+			<type>war</type>
+			<properties>
+			    <context>/</context>
+			</properties>
+		    </deployable>
+		</deployables>
+	    </configuration>
+	</plugin>
+
+
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -469,9 +500,6 @@
     <profiles>
         <profile>
             <id>H2</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <db.script>h2</db.script>
                 <jpa.database>H2</jpa.database>
@@ -508,15 +536,18 @@
                 </dependency>
             </dependencies>
         </profile>
-        <profile>
-            <id>MySQL</id>
+	<profile>
+			<id>MySQL</id>
+		<activation>
+			<activeByDefault>true</activeByDefault>
+		</activation>
             <properties>
                 <db.script>mysql</db.script>
                 <jpa.database>MYSQL</jpa.database>
                 <jdbc.driverClassName>com.mysql.cj.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
-                <jdbc.username>petclinic</jdbc.username>
-                <jdbc.password>petclinic</jdbc.password>
+		<jdbc.url>jdbc:mysql://${env.MYSQL_HOST}:3306/petclinic?useUnicode=true</jdbc.url>
+		<jdbc.username>${env.MYSQL_ADMIN}</jdbc.username>
+		<jdbc.password>${env.MYSQL_PASSWORD}</jdbc.password>
             </properties>
             <dependencies>
                 <dependency>
