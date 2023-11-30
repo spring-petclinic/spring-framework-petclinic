@@ -8,7 +8,7 @@ RUN mv apache-tomcat-10.1.16 tomcat
 RUN rm -rf tomcat/webapps/ROOT*
 
 RUN mv ./target/petclinic.war ./target/ROOT.war
-COPY ./target/ROOT.war /usr/local/tomcat/webapps/
+COPY target/ROOT.war /usr/local/tomcat/webapps/
 
 WORKDIR /usr/local/tomcat
 
