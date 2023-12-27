@@ -15,18 +15,11 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.petclinic.model.Owner;
@@ -36,6 +29,10 @@ import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A simple JDBC-based implementation of the {@link OwnerRepository} interface.
@@ -51,18 +48,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcClient jdbcClient;
 
-    private SimpleJdbcInsert insertOwner;
+    private final SimpleJdbcInsert insertOwner;
 
     @Autowired
-    public JdbcOwnerRepositoryImpl(DataSource dataSource) {
+    public JdbcOwnerRepositoryImpl(DataSource dataSource, JdbcClient jdbcClient) {
 
         this.insertOwner = new SimpleJdbcInsert(dataSource)
             .withTableName("owners")
             .usingGeneratedKeyColumns("id");
 
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.jdbcClient = jdbcClient;
 
     }
 
@@ -74,13 +71,14 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Collection<Owner> findByLastName(String lastName) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("lastName", lastName + "%");
-        List<Owner> owners = this.namedParameterJdbcTemplate.query(
-            "SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like :lastName",
-            params,
-            BeanPropertyRowMapper.newInstance(Owner.class)
-        );
+        List<Owner> owners = this.jdbcClient.sql("""
+                SELECT id, first_name, last_name, address, city, telephone
+                FROM owners
+                WHERE last_name like :lastName
+                """)
+            .param("lastName", lastName + "%")
+            .query(BeanPropertyRowMapper.newInstance(Owner.class))
+            .list();
         loadOwnersPetsAndVisits(owners);
         return owners;
     }
@@ -93,13 +91,13 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
     public Owner findById(int id) {
         Owner owner;
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", id);
-            owner = this.namedParameterJdbcTemplate.queryForObject(
-                "SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE id= :id",
-                params,
-                BeanPropertyRowMapper.newInstance(Owner.class)
-            );
+            owner = this.jdbcClient.sql("""
+                    SELECT id, first_name, last_name, address, city, telephone
+                    FROM owners WHERE id = :id
+                    """)
+                .param("id", id)
+                .query(BeanPropertyRowMapper.newInstance(Owner.class))
+                .single();
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Owner.class, id);
         }
@@ -108,13 +106,13 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
     }
 
     public void loadPetsAndVisits(final Owner owner) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", owner.getId());
-        final List<JdbcPet> pets = this.namedParameterJdbcTemplate.query(
-            "SELECT pets.id, name, birth_date, type_id, owner_id, visits.id as visit_id, visit_date, description, pet_id FROM pets LEFT OUTER JOIN visits ON pets.id = pet_id WHERE owner_id=:id ORDER BY pet_id",
-            params,
-            new JdbcPetVisitExtractor()
-        );
+        final List<JdbcPet> pets = this.jdbcClient.sql("""
+            SELECT pets.id, name, birth_date, type_id, owner_id, visits.id as visit_id, visit_date, description, pet_id
+            FROM pets LEFT OUTER JOIN visits ON pets.id = pet_id
+            WHERE owner_id=:id ORDER BY pet_id
+            """)
+            .param("id", owner.getId())
+            .query(new JdbcPetVisitExtractor());
         Collection<PetType> petTypes = getPetTypes();
         for (JdbcPet pet : pets) {
             pet.setType(EntityUtils.getById(petTypes, PetType.class, pet.getTypeId()));
@@ -129,17 +127,20 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
             Number newKey = this.insertOwner.executeAndReturnKey(parameterSource);
             owner.setId(newKey.intValue());
         } else {
-            this.namedParameterJdbcTemplate.update(
-                "UPDATE owners SET first_name=:firstName, last_name=:lastName, address=:address, " +
-                    "city=:city, telephone=:telephone WHERE id=:id",
-                parameterSource);
+            this.jdbcClient.sql("""
+                    UPDATE owners
+                    SET first_name=:firstName, last_name=:lastName, address=:address, city=:city, telephone=:telephone
+                    WHERE id=:id
+                    """)
+                .paramSource(parameterSource)
+                .update();
         }
     }
 
     public Collection<PetType> getPetTypes() {
-        return this.namedParameterJdbcTemplate.query(
-            "SELECT id, name FROM types ORDER BY name", new HashMap<String, Object>(),
-            BeanPropertyRowMapper.newInstance(PetType.class));
+        return this.jdbcClient.sql("SELECT id, name FROM types ORDER BY name")
+            .query(BeanPropertyRowMapper.newInstance(PetType.class))
+            .list();
     }
 
     /**
@@ -153,6 +154,5 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
             loadPetsAndVisits(owner);
         }
     }
-
 
 }
