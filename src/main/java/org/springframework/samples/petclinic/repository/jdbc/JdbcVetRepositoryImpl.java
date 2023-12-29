@@ -15,20 +15,20 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepository;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A simple JDBC-based implementation of the {@link VetRepository} interface.
@@ -40,15 +40,16 @@ import org.springframework.stereotype.Repository;
  * @author Thomas Risberg
  * @author Mark Fisher
  * @author Michael Isvy
+ * @author Antoine Rey
  */
 @Repository
 public class JdbcVetRepositoryImpl implements VetRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcClient jdbcClient;
 
     @Autowired
-    public JdbcVetRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcVetRepositoryImpl(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
     }
 
     /**
@@ -56,28 +57,30 @@ public class JdbcVetRepositoryImpl implements VetRepository {
      */
     @Override
     public Collection<Vet> findAll() {
-        List<Vet> vets = new ArrayList<>();
         // Retrieve the list of all vets.
-        vets.addAll(this.jdbcTemplate.query(
-            "SELECT id, first_name, last_name FROM vets ORDER BY last_name,first_name",
-            BeanPropertyRowMapper.newInstance(Vet.class)));
+        List<Vet> vets = new ArrayList<>(this.jdbcClient.sql(
+                "SELECT id, first_name, last_name FROM vets ORDER BY last_name,first_name")
+            .query(BeanPropertyRowMapper.newInstance(Vet.class))
+            .list());
 
         // Retrieve the list of all possible specialties.
-        final List<Specialty> specialties = this.jdbcTemplate.query(
-            "SELECT id, name FROM specialties",
-            BeanPropertyRowMapper.newInstance(Specialty.class));
+        final List<Specialty> specialties = this.jdbcClient.sql("SELECT id, name FROM specialties")
+            .query(BeanPropertyRowMapper.newInstance(Specialty.class))
+            .list();
 
         // Build each vet's list of specialties.
         for (Vet vet : vets) {
-            final List<Integer> vetSpecialtiesIds = this.jdbcTemplate.query(
-                "SELECT specialty_id FROM vet_specialties WHERE vet_id=?",
-                new BeanPropertyRowMapper<Integer>() {
-                    @Override
-                    public Integer mapRow(ResultSet rs, int row) throws SQLException {
-                        return rs.getInt(1);
+            final List<Integer> vetSpecialtiesIds = this.jdbcClient.sql(
+                    "SELECT specialty_id FROM vet_specialties WHERE vet_id=?")
+                .param(vet.getId())
+                .query(
+                    new BeanPropertyRowMapper<Integer>() {
+                        @Override
+                        public Integer mapRow(ResultSet rs, int row) throws SQLException {
+                            return rs.getInt(1);
+                        }
                     }
-                },
-                vet.getId());
+                ).list();
             for (int specialtyId : vetSpecialtiesIds) {
                 Specialty specialty = EntityUtils.getById(specialties, Specialty.class, specialtyId);
                 vet.addSpecialty(specialty);
