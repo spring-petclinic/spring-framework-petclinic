@@ -466,7 +466,14 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>${docker.jib-maven-plugin.version}</version>
+                <!-- See https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin -->
                 <configuration>
+                    <from>
+                        <image>jetty:11.0-jdk17</image>
+                    </from>
+                    <container>
+                        <entrypoint>java,-jar,/usr/local/jetty/start.jar</entrypoint>
+                    </container>
                     <to>
                         <image>docker.io/${docker.image.prefix}/${project.artifactId}</image>
                         <tags>
