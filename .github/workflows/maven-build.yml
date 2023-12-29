@@ -7,7 +7,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -25,5 +25,8 @@ jobs:
         java-version: ${{matrix.java}}
         distribution: 'adopt'
         cache: maven
-    - name: Build with Maven
-      run: ./mvnw -B package
+    - name: Build and analyze
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic_spring-framework-petclinic
