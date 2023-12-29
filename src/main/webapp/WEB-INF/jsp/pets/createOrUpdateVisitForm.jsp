@@ -7,10 +7,10 @@
 
 <petclinic:layout pageName="owners">
     <jsp:attribute name="customScript">
+        <link rel="stylesheet" href="/webjars/flatpickr/4.6.13/dist/flatpickr.min.css">
+        <script src="/webjars/flatpickr/4.6.13/dist/flatpickr.js"></script>
         <script>
-            $(function () {
-                $("#date").datepicker({dateFormat: 'yy/mm/dd'});
-            });
+            flatpickr("#date", {});
         </script>
     </jsp:attribute>
     <jsp:body>
@@ -43,7 +43,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input type="hidden" name="petId" value="${visit.pet.id}"/>
-                    <button class="btn btn-default" type="submit">Add Visit</button>
+                    <button class="btn btn-primary" type="submit">Add Visit</button>
                 </div>
             </div>
         </form:form>

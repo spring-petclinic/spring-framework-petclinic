@@ -16,10 +16,9 @@ PetClinic :: a Spring Framework demonstration
 
     <title>PetClinic :: a Spring Framework demonstration</title>
 
-    <%-- CSS generated from LESS --%>
-    <spring:url value="/resources/css/petclinic.css" var="petclinicCss"/>
-    <link href="${petclinicCss}" rel="stylesheet"/>
-
+    <%-- CSS generated from SCSS --%>
+    <link href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/petclinic.css" rel="stylesheet"/>
 
     <%-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --%>
     <!--[if lt IE 9]>
@@ -27,9 +26,4 @@ PetClinic :: a Spring Framework demonstration
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- Only datepicker is used -->
-    <spring:url value="/webjars/jquery-ui/1.12.1/jquery-ui.min.css" var="jQueryUiCss"/>
-    <link href="${jQueryUiCss}" rel="stylesheet"/>
-    <spring:url value="/webjars/jquery-ui/1.12.1/jquery-ui.theme.min.css" var="jQueryUiThemeCss"/>
-    <link href="${jQueryUiThemeCss}" rel="stylesheet"/>
 </head>

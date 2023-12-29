@@ -6,10 +6,10 @@
 
 <petclinic:layout pageName="owners">
     <jsp:attribute name="customScript">
+        <link rel="stylesheet" href="/webjars/flatpickr/4.6.13/dist/flatpickr.min.css">
+        <script src="/webjars/flatpickr/4.6.13/dist/flatpickr.js"></script>
         <script>
-            $(function () {
-                $("#birthDate").datepicker({dateFormat: 'yy/mm/dd'});
-            });
+            flatpickr("#birthDate", {});
         </script>
     </jsp:attribute>
     <jsp:body>
@@ -36,16 +36,14 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <c:choose>
                         <c:when test="${pet['new']}">
-                            <button class="btn btn-default" type="submit">Add Pet</button>
+                            <button class="btn btn-primary" type="submit">Add Pet</button>
                         </c:when>
                         <c:otherwise>
-                            <button class="btn btn-default" type="submit">Update Pet</button>
+                            <button class="btn btn-primary" type="submit">Update Pet</button>
                         </c:otherwise>
                     </c:choose>
                 </div>
             </div>
         </form:form>
-        <c:if test="${!pet['new']}">
-        </c:if>
     </jsp:body>
 </petclinic:layout>

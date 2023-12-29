@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,10 +64,10 @@ public class OwnerController {
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-        } else {
-            this.clinicService.saveOwner(owner);
-            return "redirect:/owners/" + owner.getId();
         }
+
+        this.clinicService.saveOwner(owner);
+        return "redirect:/owners/" + owner.getId();
     }
 
     @GetMapping(value = "/owners/find")
@@ -112,11 +112,11 @@ public class OwnerController {
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-        } else {
-            owner.setId(ownerId);
-            this.clinicService.saveOwner(owner);
-            return "redirect:/owners/{ownerId}";
         }
+
+        owner.setId(ownerId);
+        this.clinicService.saveOwner(owner);
+        return "redirect:/owners/{ownerId}";
     }
 
     /**

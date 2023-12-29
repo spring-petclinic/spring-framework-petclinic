@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,11 +84,11 @@ public class PetController {
         if (result.hasErrors()) {
             model.put("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-        } else {
-            owner.addPet(pet);
-            this.clinicService.savePet(pet);
-            return "redirect:/owners/{ownerId}";
         }
+
+        owner.addPet(pet);
+        this.clinicService.savePet(pet);
+        return "redirect:/owners/{ownerId}";
     }
 
     @GetMapping(value = "/pets/{petId}/edit")
@@ -103,11 +103,11 @@ public class PetController {
         if (result.hasErrors()) {
             model.put("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-        } else {
-            owner.addPet(pet);
-            this.clinicService.savePet(pet);
-            return "redirect:/owners/{ownerId}";
         }
+
+        owner.addPet(pet);
+        this.clinicService.savePet(pet);
+        return "redirect:/owners/{ownerId}";
     }
 
 }

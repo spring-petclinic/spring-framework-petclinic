@@ -102,6 +102,12 @@ As an example, you may use the `-Dspring.profiles.active=jdbc` VM options to sta
 ./mvnw jetty:run-war -Dspring.profiles.active=jdbc
 ```
 
+## Compiling the CSS
+
+There is a `petclinic.css` in `src/main/webapp/resources/resources/css`. 
+It was generated from the `petclinic.scss` source, combined with the [Bootstrap](https://getbootstrap.com/) library.
+If you make changes to the `scss`, or upgrade Bootstrap, you will need to re-compile the CSS resources
+using the Maven profile "css", i.e. `./mvnw generate-resources -P css`.
 
 ## Working with Petclinic in your IDE
 
