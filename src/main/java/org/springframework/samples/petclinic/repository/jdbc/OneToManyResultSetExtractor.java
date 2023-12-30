@@ -64,7 +64,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 	 * @param rootMapper {@link RowMapper} to map the root entity, must not be {@literal null}.
 	 * @param childMapper {@link RowMapper} to map the root entities, must not be {@literal null}.
 	 */
-	public OneToManyResultSetExtractor(RowMapper<R> rootMapper, RowMapper<C> childMapper) {
+	protected OneToManyResultSetExtractor(RowMapper<R> rootMapper, RowMapper<C> childMapper) {
 		this(rootMapper, childMapper, null);
 	}
 
@@ -75,7 +75,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 	 * @param childMapper {@link RowMapper} to map the root entities, must not be {@literal null}.
 	 * @param expectedResults
 	 */
-	public OneToManyResultSetExtractor(RowMapper<R> rootMapper, RowMapper<C> childMapper, ExpectedResults expectedResults) {
+    protected OneToManyResultSetExtractor(RowMapper<R> rootMapper, RowMapper<C> childMapper, ExpectedResults expectedResults) {
 
 		Assert.notNull(rootMapper, "Root RowMapper must not be null!");
 		Assert.notNull(childMapper, "Child RowMapper must not be null!");
@@ -86,7 +86,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 	}
 
 	public List<R> extractData(ResultSet rs) throws SQLException {
-		List<R> results = new ArrayList<R>();
+		List<R> results = new ArrayList<>();
 		int row = 0;
 		boolean more = rs.next();
 		if (more) {
@@ -117,7 +117,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 			throw new IncorrectResultSizeDataAccessException(1, results.size());
 		}
 		if ((expectedResults == ExpectedResults.ONE_AND_ONLY_ONE || expectedResults == ExpectedResults.AT_LEAST_ONE) &&
-				results.size() < 1) {
+				results.isEmpty()) {
 			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
 		return results;

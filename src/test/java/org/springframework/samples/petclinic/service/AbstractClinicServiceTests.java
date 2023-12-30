@@ -58,17 +58,17 @@ abstract class AbstractClinicServiceTests {
     @Test
     void shouldFindOwnersByLastName() {
         Collection<Owner> owners = this.clinicService.findOwnerByLastName("Davis");
-        assertThat(owners.size()).isEqualTo(2);
+        assertThat(owners).hasSize(2);
 
         owners = this.clinicService.findOwnerByLastName("Daviss");
-        assertThat(owners.isEmpty()).isTrue();
+        assertThat(owners).isEmpty();
     }
 
     @Test
     void shouldFindSingleOwnerWithPet() {
         Owner owner = this.clinicService.findOwnerById(1);
         assertThat(owner.getLastName()).startsWith("Franklin");
-        assertThat(owner.getPets().size()).isEqualTo(1);
+        assertThat(owner.getPets()).hasSize(1);
         assertThat(owner.getPets().get(0).getType()).isNotNull();
         assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
     }
@@ -86,10 +86,10 @@ abstract class AbstractClinicServiceTests {
         owner.setCity("Wollongong");
         owner.setTelephone("4444444444");
         this.clinicService.saveOwner(owner);
-        assertThat(owner.getId().longValue()).isNotEqualTo(0);
+        assertThat(owner.getId().longValue()).isNotZero();
 
         owners = this.clinicService.findOwnerByLastName("Schultz");
-        assertThat(owners.size()).isEqualTo(found + 1);
+        assertThat(owners).hasSize(found + 1);
     }
 
     @Test
@@ -137,13 +137,13 @@ abstract class AbstractClinicServiceTests {
         pet.setType(EntityUtils.getById(types, PetType.class, 2));
         pet.setBirthDate(LocalDate.now());
         owner6.addPet(pet);
-        assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+        assertThat(owner6.getPets()).hasSize(found + 1);
 
         this.clinicService.savePet(pet);
         this.clinicService.saveOwner(owner6);
 
         owner6 = this.clinicService.findOwnerById(6);
-        assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+        assertThat(owner6.getPets()).hasSize(found + 1);
         // checks that id has been generated
         assertThat(pet.getId()).isNotNull();
     }
@@ -185,14 +185,14 @@ abstract class AbstractClinicServiceTests {
         this.clinicService.savePet(pet7);
 
         pet7 = this.clinicService.findPetById(7);
-        assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
+        assertThat(pet7.getVisits()).hasSize(found + 1);
         assertThat(visit.getId()).isNotNull();
     }
 
     @Test
     void shouldFindVisitsByPetId() throws Exception {
         Collection<Visit> visits = this.clinicService.findVisitsByPetId(7);
-        assertThat(visits.size()).isEqualTo(2);
+        assertThat(visits).hasSize(2);
         Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
         assertThat(visitArr[0].getPet()).isNotNull();
         assertThat(visitArr[0].getDate()).isNotNull();
