@@ -16,9 +16,7 @@
 package org.springframework.samples.petclinic.service;
 
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * <p> Integration test using the jdbc profile.
