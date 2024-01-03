@@ -1,0 +1,16 @@
+{
+  "name": "Spring Framework Petclinic",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+        "version": "17",
+        "installMaven": "true",
+        "mavenVersion": "3.8.6"
+    }
+  },
+  "extensions": [
+    "vscjava.vscode-java-pack",
+    "redhat.vscode-xml",
+    "vmware.vscode-boot-dev-pack"
+  ]
+}

@@ -15,17 +15,11 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.petclinic.model.Owner;
@@ -36,6 +30,9 @@ import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.util.List;
+
 /**
  * @author Ken Krebs
  * @author Juergen Hoeller
@@ -43,19 +40,20 @@ import org.springframework.stereotype.Repository;
  * @author Sam Brannen
  * @author Thomas Risberg
  * @author Mark Fisher
+ * @author Antoine Rey
  */
 @Repository
 public class JdbcPetRepositoryImpl implements PetRepository {
 
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcClient jdbcClient;
 
-    private SimpleJdbcInsert insertPet;
+    private final SimpleJdbcInsert insertPet;
 
-    private OwnerRepository ownerRepository;
+    private final OwnerRepository ownerRepository;
 
     @Autowired
-    public JdbcPetRepositoryImpl(DataSource dataSource, OwnerRepository ownerRepository) {
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    public JdbcPetRepositoryImpl(JdbcClient jdbcClient, DataSource dataSource, OwnerRepository ownerRepository) {
+        this.jdbcClient = jdbcClient;
 
         this.insertPet = new SimpleJdbcInsert(dataSource)
             .withTableName("pets")
@@ -66,20 +64,21 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 
     @Override
     public List<PetType> findPetTypes() {
-        Map<String, Object> params = new HashMap<>();
-        return this.namedParameterJdbcTemplate.query(
-            "SELECT id, name FROM types ORDER BY name",
-            params,
-            BeanPropertyRowMapper.newInstance(PetType.class));
+        return this.jdbcClient
+            .sql("SELECT id, name FROM types ORDER BY name")
+            .query(BeanPropertyRowMapper.newInstance(PetType.class))
+            .list();
     }
 
     @Override
     public Pet findById(int id) {
-        Integer ownerId;
+        int ownerId;
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", id);
-            ownerId = this.namedParameterJdbcTemplate.queryForObject("SELECT owner_id FROM pets WHERE id=:id", params, Integer.class);
+            ownerId = this.jdbcClient
+                .sql("SELECT owner_id FROM pets WHERE id=:id")
+                .param("id", id)
+                .query(Integer.class)
+                .single();
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Pet.class, id);
         }
@@ -94,10 +93,14 @@ public class JdbcPetRepositoryImpl implements PetRepository {
                 createPetParameterSource(pet));
             pet.setId(newKey.intValue());
         } else {
-            this.namedParameterJdbcTemplate.update(
-                "UPDATE pets SET name=:name, birth_date=:birth_date, type_id=:type_id, " +
-                    "owner_id=:owner_id WHERE id=:id",
-                createPetParameterSource(pet));
+            this.jdbcClient
+                .sql("""
+                    UPDATE pets
+                    SET name=:name, birth_date=:birth_date, type_id=:type_id, owner_id=:owner_id
+                    WHERE id=:id
+                    """)
+                .paramSource(createPetParameterSource(pet))
+                .update();
         }
     }
 

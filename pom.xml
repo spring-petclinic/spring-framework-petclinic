@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>6.0.9</version>
+    <version>6.1.2</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -21,65 +21,72 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <!-- SonarQube configuration -->
+        <sonar.organization>spring-petclinic</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
         <!-- Spring -->
-        <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM -->
+        <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM and to the gradle.properties -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot-dependencies/build.gradle -->
-        <spring-framework.version>6.0.9</spring-framework.version>
+        <!-- https://github.com/spring-projects/spring-boot/blob/main/gradle.properties -->
+        <spring-framework.version>6.1.2</spring-framework.version>
 
         <!-- Web dependencies -->
-        <webjars-bootstrap.version>5.1.3</webjars-bootstrap.version>
+        <webjars-bootstrap.version>5.3.2</webjars-bootstrap.version> <!-- Report bootstrap version to the footer.tag -->
         <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
         <webjars-flatpickr.version>4.6.13</webjars-flatpickr.version>
 
         <!-- Jakarta EE / Java SE dependencies -->
-        <tomcat.version>10.0.14</tomcat.version>
-        <jaxb-api.version>3.0.0</jaxb-api.version>
-        <jaxb-runtime.version>3.0.2</jaxb-runtime.version>
-        <jakarta-activation.version>2.0.1</jakarta-activation.version>
+        <tomcat.version>10.1.17</tomcat.version>
+        <jaxb-api.version>4.0.1</jaxb-api.version>
+        <jaxb-runtime.version>4.0.4</jaxb-runtime.version>
+        <jakarta-activation.version>2.1.2</jakarta-activation.version>
         <servlet-api.version>6.0.0</servlet-api.version>
-        <jstl-api.version>2.0.0</jstl-api.version>
-        <jpa-api.version>3.0.0</jpa-api.version>
+        <jstl-api.version>3.0.0</jstl-api.version>
+        <jstl-glassfish.version>3.0.1</jstl-glassfish.version>
+        <jpa-api.version>3.1.0</jpa-api.version>
 
         <!-- Persistence -->
-        <spring-data.version>2022.0.0</spring-data.version>
-        <hibernate.version>6.1.4.Final</hibernate.version>
-        <hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
-        <hsqldb.version>2.7.1</hsqldb.version>
-        <h2database.version>2.2.220</h2database.version>
-        <caffeine.version>3.1.1</caffeine.version>
+        <spring-data.version>2023.1.1</spring-data.version>
+        <hibernate.version>6.4.1.Final</hibernate.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <hsqldb.version>2.7.2</hsqldb.version>
+        <h2database.version>2.2.224</h2database.version>
+        <caffeine.version>3.1.8</caffeine.version>
 
         <!-- Logging -->
-        <slf4j.version>2.0.3</slf4j.version>
-        <logback.version>1.4.4</logback.version>
+        <slf4j.version>2.0.9</slf4j.version>
+        <logback.version>1.4.14</logback.version>
 
         <!-- Test -->
-        <assertj.version>3.23.1</assertj.version>
-        <json-path.version>2.7.0</json-path.version>
-        <mockito.version>4.8.1</mockito.version>
+        <assertj.version>3.24.2</assertj.version>
+        <json-path.version>2.8.0</json-path.version>
+        <mockito.version>5.8.0</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <junit-jupiter.version>5.9.1</junit-jupiter.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
 
         <!-- JDBC Drivers -->
-        <mysql-driver.version>8.0.28</mysql-driver.version>
-        <postgresql-driver.version>42.5.1</postgresql-driver.version>
+        <mysql-driver.version>8.1.0</mysql-driver.version>
+        <postgresql-driver.version>42.6.0</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>2.14.0-rc2</jackson.version>
-        <aspectj.version>1.9.9.1</aspectj.version>
+        <jackson.version>2.16.0</jackson.version>
+        <aspectj.version>1.9.21</aspectj.version>
 
         <!-- Maven plugins -->
-        <jetty-maven-plugin.version>11.0.12</jetty-maven-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
+        <jetty-maven-plugin.version>11.0.18</jetty-maven-plugin.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
-        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
-        <jacoco-maven-plugin>0.8.7</jacoco-maven-plugin>
-        <libsass-maven-plugin.version>0.2.26</libsass-maven-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <jacoco-maven-plugin>0.8.11</jacoco-maven-plugin>
+        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+        <libsass-maven-plugin.version>0.2.29</libsass-maven-plugin.version>
 
         <!-- Docker image -->
-        <docker.jib-maven-plugin.version>3.3.1</docker.jib-maven-plugin.version>
+        <docker.jib-maven-plugin.version>3.4.0</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
 
     </properties>
@@ -126,7 +133,7 @@
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-            <version>${jstl-api.version}</version>
+            <version>${jstl-glassfish.version}</version>
         </dependency>
 
         <!--  Json -->
@@ -353,6 +360,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <!-- Required since Spring Framework 6.1 -->
+                    <parameters>true</parameters>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -419,6 +430,7 @@
                 <version>${jacoco-maven-plugin}</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -429,6 +441,11 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -440,6 +457,7 @@
                 <version>${maven-resources-plugin.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
+                    <propertiesEncoding>UTF-8</propertiesEncoding>
                 </configuration>
             </plugin>
 
@@ -453,7 +471,14 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>${docker.jib-maven-plugin.version}</version>
+                <!-- See https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin -->
                 <configuration>
+                    <from>
+                        <image>jetty:11.0-jdk17</image>
+                    </from>
+                    <container>
+                        <entrypoint>java,-jar,/usr/local/jetty/start.jar</entrypoint>
+                    </container>
                     <to>
                         <image>docker.io/${docker.image.prefix}/${project.artifactId}</image>
                         <tags>
@@ -462,6 +487,26 @@
                         </tags>
                     </to>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.8.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
