@@ -14,7 +14,7 @@ parameters:
     type: string
     default: 'hub.docker.com/openjdk:22-ea-17-oracle'
   - name: PET_CLINIC_APP  
-    displayName: Pet Clinic 
+    displayName: Pet_clinic 
     type: object
     default:
     - name: pet Clinic
