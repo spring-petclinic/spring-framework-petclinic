@@ -22,7 +22,8 @@ parameters:
         enabled: true
         setup_env: ../../../custom/jobs/build/setup_env_build.yml 
         docker_image: default_image
-        pool: default_pool
+        pool: 
+         name: Default
           
 resources:
  containers:
@@ -30,8 +31,7 @@ resources:
     image: ${{ parameters.DOCKER_BUILD_IMAGE }}
 variables:    
 - name: default_pool
-  value: 'vmss-ubuntu-2004'
-   
+  value: 'vmss-ubuntu-2004'   
 stages:
 - ${{ each app in parameters.PET_CLINIC_APP }}:
   - template: ../lib/app/stages/build/build.yml
