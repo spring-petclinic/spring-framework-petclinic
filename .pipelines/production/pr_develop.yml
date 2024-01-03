@@ -9,7 +9,7 @@ pr:
     include:
     - main
 parameters:
-  - name:  DOCKER_BUILD_IMAGE
+  - name: DOCKER_BUILD_IMAGE
     displayName: Docker image
     type: string
     default: 'hub.docker.com/openjdk:22-ea-17-oracle'
@@ -21,7 +21,7 @@ parameters:
       build:
         enabled: true
         setup_env: ../../../custom/jobs/build/setup_env_build.yml 
-        pool: default        
+        pool: default_pool        
 resources:
  containers:
   - container: default_image
