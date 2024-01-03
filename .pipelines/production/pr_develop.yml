@@ -21,11 +21,12 @@ parameters:
       build:
         enabled: true
         setup_env: ../../../custom/jobs/build/setup_env_build.yml 
+        docker_image: default_image
         pool: default_pool        
 resources:
  containers:
   - container: default_image
-    image: ${{ parameters.DOCKER_BULID_IMAGE }}
+    image: ${{ parameters.DOCKER_BUILD_IMAGE }}
 variables:
  - name: default_pool
    value: 'ubuntu-latest' 
