@@ -23,7 +23,7 @@ parameters:
         setup_env: ../../../custom/jobs/build/setup_env_build.yml 
         docker_image: default_image
         pool:
-          name: default     
+          name: Azure Pipelines
 resources:
  containers:
   - container: default_image
