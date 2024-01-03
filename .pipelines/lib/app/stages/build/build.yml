@@ -1,0 +1,19 @@
+parameters:
+- name: APP
+  type: object
+jobs:
+- job: build_${{ parameters.APP.name }}
+  pool:
+    name: $[ variables.${{ parameters.APP.build.pool }}]
+  workspace:
+    clean: all
+  container: default_image
+  condition: eq(${{ parameters.APP.build.enabled }}, 'true')
+  steps:
+  - checkout: self 
+    clean: true
+    submodules: recursive
+    path: $(code_repo_name)
+  - template:
+    parameters:
+       APP: ${{ parameters.APP }}       

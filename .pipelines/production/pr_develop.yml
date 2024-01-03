@@ -1,0 +1,39 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger: none
+pr:
+  branches:
+    include:
+    - main
+parameters:
+  - name:  DOCKER_BUILD_IMAGE
+    displayName: Docker image
+    type: string
+    default: 'hub.docker.com/openjdk:22-ea-17-oracle'
+  - name: PET_CLINIC_APP  
+    displayName: Pet Clinic 
+    type: object
+    default:
+    - name: pet Clinic
+      build:
+        enabled: true
+        setup_env: ../../../custom/jobs/build/setup_env_build.yml 
+        pool: default        
+resources:
+ containers:
+  - container: default_image
+    image: ${{ parameters.DOCKER_BULID_IMAGE }}
+variables:
+ - name: default_pool
+   value: 'ubuntu-latest' 
+stages:
+- ${{ each app in parameters.PET_CLINIC_APP }}:
+  - template: ../lib/app/stages/build/build.yml
+    parameters:
+      APP: ${{ app }}     
+    
+
+
