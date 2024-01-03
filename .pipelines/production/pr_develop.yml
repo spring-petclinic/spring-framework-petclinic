@@ -14,10 +14,10 @@ parameters:
     type: string
     default: 'hub.docker.com/openjdk:22-ea-17-oracle'
   - name: PET_CLINIC_APP  
-    displayName: Pet_clinic 
+    displayName: Petclinic 
     type: object
     default:
-    - name: pet Clinic
+    - name: petClinic
       build:
         enabled: true
         setup_env: ../../../custom/jobs/build/setup_env_build.yml 
