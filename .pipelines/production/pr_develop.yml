@@ -30,7 +30,7 @@ resources:
     image: ${{ parameters.DOCKER_BUILD_IMAGE }}
 variables:
  - name: default
-   value: 'ubuntu-latest' 
+   
 stages:
 - ${{ each app in parameters.PET_CLINIC_APP }}:
   - template: ../lib/app/stages/build/build.yml
