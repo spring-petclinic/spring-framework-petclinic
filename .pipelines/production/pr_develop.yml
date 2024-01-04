@@ -12,7 +12,7 @@ parameters:
   - name: DOCKER_BUILD_IMAGE
     displayName: Docker image
     type: string
-    default: 'hub.docker.com/openjdk:22-ea-17-oracle'
+    default: 'openjdk:22-ea-17-oracle'
   - name: PET_CLINIC_APP  
     displayName: Petclinic 
     type: object
