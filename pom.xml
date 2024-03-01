@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>6.1.2</version>
+    <version>6.1.4</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -28,7 +28,7 @@
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM and to the gradle.properties -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot-dependencies/build.gradle -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/gradle.properties -->
-        <spring-framework.version>6.1.2</spring-framework.version>
+        <spring-framework.version>6.1.4</spring-framework.version>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.3.2</webjars-bootstrap.version> <!-- Report bootstrap version to the footer.tag -->
@@ -36,7 +36,7 @@
         <webjars-flatpickr.version>4.6.13</webjars-flatpickr.version>
 
         <!-- Jakarta EE / Java SE dependencies -->
-        <tomcat.version>10.1.17</tomcat.version>
+        <tomcat.version>10.1.19</tomcat.version>
         <jaxb-api.version>4.0.1</jaxb-api.version>
         <jaxb-runtime.version>4.0.4</jaxb-runtime.version>
         <jakarta-activation.version>2.1.2</jakarta-activation.version>
@@ -47,29 +47,29 @@
 
         <!-- Persistence -->
         <spring-data.version>2023.1.1</spring-data.version>
-        <hibernate.version>6.4.1.Final</hibernate.version>
+        <hibernate.version>6.4.4.Final</hibernate.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <hsqldb.version>2.7.2</hsqldb.version>
         <h2database.version>2.2.224</h2database.version>
         <caffeine.version>3.1.8</caffeine.version>
 
         <!-- Logging -->
-        <slf4j.version>2.0.9</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <logback.version>1.4.14</logback.version>
 
         <!-- Test -->
-        <assertj.version>3.24.2</assertj.version>
+        <assertj.version>3.25.3</assertj.version>
         <json-path.version>2.9.0</json-path.version>
-        <mockito.version>5.8.0</mockito.version>
+        <mockito.version>5.10.0</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <junit-jupiter.version>5.10.1</junit-jupiter.version>
+        <junit-jupiter.version>5.10.2</junit-jupiter.version>
 
         <!-- JDBC Drivers -->
         <mysql-driver.version>8.1.0</mysql-driver.version>
         <postgresql-driver.version>42.7.2</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>2.16.0</jackson.version>
+        <jackson.version>2.16.1</jackson.version>
         <aspectj.version>1.9.21</aspectj.version>
 
         <!-- Maven plugins -->
