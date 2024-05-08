@@ -7,13 +7,14 @@
     <version>6.1.4</version>
 
     <name>Spring Framework Petclinic</name>
-    <packaging>war</packaging>
+    <packaging>${package}</packaging>
     <description>A Spring Framework application based on JSP, Spring MVC, Spring Data JPA, Hibernate and JDBC</description>
     <url>https://spring-petclinic.github.io/</url>
 
     <properties>
 
         <!-- Generic properties -->
+        <package>war</package>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
