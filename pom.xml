@@ -55,7 +55,7 @@
 
         <!-- Logging -->
         <slf4j.version>2.0.12</slf4j.version>
-        <logback.version>1.4.14</logback.version>
+        <logback.version>1.5.6</logback.version>
 
         <!-- Test -->
         <assertj.version>3.25.3</assertj.version>
