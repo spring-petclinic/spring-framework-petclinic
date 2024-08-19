@@ -21,8 +21,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- SonarQube configuration -->
-        <sonar.organization>spring-petclinic</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Spring -->
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM and to the gradle.properties -->
