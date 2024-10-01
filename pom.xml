@@ -70,7 +70,7 @@
 
         <!-- Others -->
         <jackson.version>2.16.1</jackson.version>
-        <aspectj.version>1.9.21</aspectj.version>
+        <aspectj.version>1.9.22.1</aspectj.version>
 
         <!-- Maven plugins -->
         <jetty-maven-plugin.version>11.0.18</jetty-maven-plugin.version>
