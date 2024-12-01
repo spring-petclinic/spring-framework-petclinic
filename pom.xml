@@ -60,7 +60,7 @@
         <!-- Test -->
         <assertj.version>3.25.3</assertj.version>
         <json-path.version>2.9.0</json-path.version>
-        <mockito.version>5.12.0</mockito.version>
+        <mockito.version>5.14.2</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
 
