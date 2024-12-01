@@ -69,7 +69,7 @@
         <postgresql-driver.version>42.7.3</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>2.16.1</jackson.version>
+        <jackson.version>2.18.2</jackson.version>
         <aspectj.version>1.9.22.1</aspectj.version>
 
         <!-- Maven plugins -->
