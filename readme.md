@@ -139,7 +139,7 @@ Configure a Jetty or a Tomcat web container then deploy the `spring-petclinic.wa
 
 3) Inside IntelliJ IDEA
 
-In the main menu, select `File > Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
+In the main menu, select `File > Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
 
 CSS files are generated from the Maven build. You can either build them on the command line `./mvnw generate-resources` 
 or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders`.
