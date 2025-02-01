@@ -41,7 +41,7 @@
         <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
         <jakarta-activation.version>2.1.3</jakarta-activation.version>
         <servlet-api.version>6.1.0</servlet-api.version>
-        <jstl-api.version>3.0.0</jstl-api.version>
+        <jstl-api.version>3.0.2</jstl-api.version>
         <jstl-glassfish.version>3.0.1</jstl-glassfish.version>
         <jpa-api.version>3.1.0</jpa-api.version>
 
