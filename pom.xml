@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>6.2.3</version>
+    <version>6.2.5</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
