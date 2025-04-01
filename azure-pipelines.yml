@@ -56,7 +56,7 @@ stages:
             displayName: 'Build Maven Package'
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'Package'
+              goals: 'package'
           
           - task: Docker@2
             displayName: 'Build and Tag Docker Image'
