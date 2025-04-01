@@ -7,13 +7,27 @@ pr:
 variables:
   dockerImagerepo: 'venkeyboda/spring-framework'
   dockerImagetag:  '$(Build.BuildId)' 
+  # SONAR_PROJECT_KEY: 'my-project'  # Update with your project key
+  # SONAR_PROJECT_NAME: 'my-project'
+  # SONAR_HOST_URL: 'http://20.124.94.59:9000'  # Update this
+  # SONAR_TOKEN: 'sqp_e279bfc0c9d7f5ec6937b68379ca57d495395cfe'
 
 stages:
   - stage: CI
     jobs:
       - job: Build
-        displayName: 'Building and Testing'
+        displayName: 'Build, Test & SonarQube Analysis'
         steps:
+          # - task: SonarQubePrepare@5
+          #   displayName: 'Prepare SonarQube Analysis'
+          #   inputs:
+          #     SonarQube: 'SonarQubeServiceConnection'  # Service connection name in Azure DevOps
+          #     scannerMode: 'CLI'
+          #     configMode: 'manual'
+          #     cliProjectKey: '$(SONAR_PROJECT_KEY)'
+          #     cliProjectName: '$(SONAR_PROJECT_NAME)'
+          #     cliSources: '.'
+              
           - task: Maven@4
             displayName: 'Compile Maven Code'
             inputs:
@@ -22,20 +36,13 @@ stages:
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-          # - task: SonarCloudPrepare@3
-          #   displayName: 'Prepare SonarQube Analysis'
-          #   inputs:
-          #     SonarQube: 'SONAR_CLOUD'
-          #     organization: 'azure-devops02'
-          #     scannerMode: 'other'
-
-          # - task: Maven@3
+          # - task: Maven@4
           #   displayName: 'Run SonarQube Analysis'
           #   inputs:
           #     mavenPomFile: 'pom.xml'
           #     goals: 'sonar:sonar'
 
-          # - task: SonarCloudPrepare@3
+          # - task: SonarQubePrepare@5
           #   displayName: 'Publish SonarQube Quality Gate Result'
           #   inputs:
           #     pollingTimeoutSec: '300'
