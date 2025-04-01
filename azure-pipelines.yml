@@ -1,0 +1,78 @@
+---
+pool: Default
+
+pr:
+  - develop
+
+variables:
+  dockerImagerepo: 'venkeyboda/spring-framework'
+  dockerImagetag:  '$(Build.BuildId)' 
+
+stages:
+  - stage: CI
+    jobs:
+      - job: Build
+        displayName: 'Building and Testing'
+        steps:
+          - task: Maven@4
+            displayName: 'Compile Maven Code'
+            inputs:
+              mavenPOMFile: 'pom.xml'
+              goals: 'Compile'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+
+          - task: SonarQubePrepare@5
+            displayName: 'Prepare SonarQube Analysis'
+            inputs:
+              SonarQube: 'SONAR_CLOUD'
+              organization: 'azure-devops02'
+              scannerMode: 'other'
+
+          - task: Maven@3
+            displayName: 'Run SonarQube Analysis'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'sonar:sonar'
+
+          - task: SonarQubePrepare@5
+            displayName: 'Publish SonarQube Quality Gate Result'
+            inputs:
+              pollingTimeoutSec: '300'
+
+          - script: |
+              trivy --version
+              ./trivy fs --exit-code 1 --severity HIGH,CRITICAL .
+            displayName: 'Run Trivy Vulnerability Scan on File System'      
+
+          - task: Maven@4
+            displayName: 'Build Maven Package'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'Package'
+          
+          - task: Docker@2
+            displayName: 'Build and Tag Docker Image'
+            inputs:
+              command: 'build'
+              Dockerfile: './Dockerfile'
+              repository: $(dockerImagerepo)
+              tags: |
+                $(dockerImagetag)
+          
+          - task: CmdLine@2
+            displayName: 'scanning the image'
+            inputs:
+              script: |
+                trivy image $(dockerImagerepo):$(dockerImagetag) -o trivy-report.xml        
+          
+          - task: Docker@2
+            displayName: 'pushing the docker image'
+            inputs:
+              containerRegistry: 'DOCKER_HUB'
+              command: 'push'
+              repository: $(dockerImagerepo)
+              tags: |
+                $(dockerImagetag)
+                
+
