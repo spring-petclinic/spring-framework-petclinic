@@ -49,7 +49,7 @@ stages:
 
           - script: |
               trivy --version
-              ./trivy fs --exit-code 1 --severity HIGH,CRITICAL .
+              trivy fs --exit-code 1 --severity HIGH,CRITICAL .
             displayName: 'Run Trivy Vulnerability Scan on File System'      
 
           - task: Maven@4
