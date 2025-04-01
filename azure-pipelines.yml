@@ -22,23 +22,23 @@ stages:
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-          - task: SonarCloudPrepare@3
-            displayName: 'Prepare SonarQube Analysis'
-            inputs:
-              SonarQube: 'SONAR_CLOUD'
-              organization: 'azure-devops02'
-              scannerMode: 'other'
+          # - task: SonarCloudPrepare@3
+          #   displayName: 'Prepare SonarQube Analysis'
+          #   inputs:
+          #     SonarQube: 'SONAR_CLOUD'
+          #     organization: 'azure-devops02'
+          #     scannerMode: 'other'
 
-          - task: Maven@3
-            displayName: 'Run SonarQube Analysis'
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: 'sonar:sonar'
+          # - task: Maven@3
+          #   displayName: 'Run SonarQube Analysis'
+          #   inputs:
+          #     mavenPomFile: 'pom.xml'
+          #     goals: 'sonar:sonar'
 
-          - task: SonarCloudPrepare@3
-            displayName: 'Publish SonarQube Quality Gate Result'
-            inputs:
-              pollingTimeoutSec: '300'
+          # - task: SonarCloudPrepare@3
+          #   displayName: 'Publish SonarQube Quality Gate Result'
+          #   inputs:
+          #     pollingTimeoutSec: '300'
 
           - script: |
               trivy --version
