@@ -18,7 +18,7 @@ stages:
             displayName: 'Compile Maven Code'
             inputs:
               mavenPOMFile: 'pom.xml'
-              goals: 'Compile'
+              goals: 'compile'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
