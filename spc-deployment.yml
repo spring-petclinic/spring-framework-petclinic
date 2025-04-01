@@ -15,7 +15,7 @@ spec:
         app: web-app
     spec:
       containers:
-        - name: web-app
+        - name: web-count
           image: venkeyboda/spring-framework:260
           resources:
             limits:

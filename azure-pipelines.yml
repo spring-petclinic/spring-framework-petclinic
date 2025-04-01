@@ -6,7 +6,7 @@ pr:
 
 variables:
   dockerImagerepo: 'venkeyboda/spring-framework'
-  dockerImagetag:  '$(Build.BuildNumber)' 
+  dockerImagetag:  '$(Build.BuildId)' 
   # SONAR_PROJECT_KEY: 'my-project'  # Update with your project key
   # SONAR_PROJECT_NAME: 'my-project'
   # SONAR_HOST_URL: 'http://20.124.94.59:9000'  # Update this
@@ -88,14 +88,21 @@ stages:
         displayName: deploy into dev environment
         steps:
           - task: Bash@3
-            displayName: 'terraform initialization'
+            displayName: 'Terraform Initialization and Apply'
             inputs:
               targetType: 'inline'
               script: |
+                cd ./infra
                 terraform init
-                terraform apply -var-file="test.tfvars" -auto-approve
+                
+                # Check if the AKS cluster exists
+                if ! terraform show | grep -q "azurerm_kubernetes_cluster"; then
+                  echo "Cluster does not exist, applying Terraform configuration..."
+                  terraform apply -var-file="test.tfvars" -auto-approve
+                else
+                  echo "Cluster already exists, skipping apply."
+                fi
               workingDirectory: './infra'
-
 
           - task: Bash@3
             displayName: 'aks initialization'
