@@ -22,7 +22,7 @@ stages:
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-          - task: SonarQubePrepare@5
+          - task: SonarCloudPrepare@3
             displayName: 'Prepare SonarQube Analysis'
             inputs:
               SonarQube: 'SONAR_CLOUD'
@@ -35,7 +35,7 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: 'sonar:sonar'
 
-          - task: SonarQubePrepare@5
+          - task: SonarCloudPrepare@3
             displayName: 'Publish SonarQube Quality Gate Result'
             inputs:
               pollingTimeoutSec: '300'
