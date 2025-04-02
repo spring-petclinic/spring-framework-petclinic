@@ -10,7 +10,7 @@ variables:
   # SONAR_PROJECT_KEY: 'my-project'  # Update with your project key
   # SONAR_PROJECT_NAME: 'my-project'
   # SONAR_HOST_URL: 'http://20.124.94.59:9000'  # Update this
-  # SONAR_TOKEN: 'sqp_e279bfc0c9d7f5ec6937b68379ca57d495395cfe'
+  # SONAR_TOKEN: '$(SONAR_TOKEN)'
 
 stages:
   - stage: CI
@@ -116,9 +116,5 @@ stages:
               targetType: 'inline'
               script: |
                 kubectl apply -f spc-deployement.yml
-                kubectl get svc  
-
-
-
-                
-
+                kubectl get all
+ 

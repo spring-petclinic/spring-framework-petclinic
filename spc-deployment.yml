@@ -14,18 +14,19 @@ spec:
       labels:
         app: web-app
     spec:
-      containers:
+      containers: 
         - name: web-count
-          image: venkeyboda/spring-framework:260
+          image: venkeyboda/spring-framework:260 
           resources:
-            limits:
+            limits: 
               cpu: 500m
               memory: 256M
             requests:
               cpu: 100m
               memory: 64M
           ports:
-            - containerPort: 8080
+            - name: spring-port
+              containerPort: 8080    
 
 --- 
 apiVersion: v1
