@@ -95,28 +95,20 @@ stages:
                 cd ./infra
                 terraform init
 
-                # Check if the resource group exists in Terraform state
-                if ! terraform state list | grep -q "azurerm_resource_group.base"; then
-                  echo "Resource group not found in Terraform state. Checking if it exists in Azure..."
-                  
-                  # Check if the resource group exists in Azure
-                  if az group show --name tf_akscluster --subscription 378c0d57-dbfd-4234-a90e-e479534fd83d &>/dev/null; then
-                    echo "Resource group exists in Azure. Importing into Terraform state..."
-                    terraform import azurerm_resource_group.base /subscriptions/378c0d57-dbfd-4234-a90e-e479534fd83d/resourceGroups/tf_akscluster
-                  else
-                    echo "Resource group does not exist in Azure. Running Terraform apply to create it..."
-                    terraform apply -var-file="test.tfvars" -auto-approve
-                  fi
+                # Check if the resource group exists in Azure
+                if az group show --name tf_akscluster --subscription 378c0d57-dbfd-4234-a90e-e479534fd83d &>/dev/null; then
+                  echo "Resource group already exists in Azure. Skipping creation."
                 else
-                  echo "Resource group is already managed by Terraform. Skipping import."
+                  echo "Resource group does not exist. Running Terraform to create it..."
+                  terraform apply -var-file="test.tfvars" -auto-approve
                 fi
 
-                # Check if the AKS cluster exists in Terraform state
-                if ! terraform state list | grep -q "azurerm_kubernetes_cluster"; then
-                  echo "Cluster does not exist in Terraform state. Applying Terraform to create it..."
-                  terraform apply -var-file="test.tfvars" -auto-approve
+                # Check if the AKS cluster exists in Azure
+                if az aks show --resource-group tf_akscluster --name my-aks-cluster --subscription 378c0d57-dbfd-4234-a90e-e479534fd83d &>/dev/null; then
+                  echo "AKS cluster already exists. Skipping creation."
                 else
-                  echo "Cluster already exists in Terraform state. Skipping apply."
+                  echo "AKS cluster does not exist. Running Terraform to create it..."
+                  terraform apply -var-file="test.tfvars" -auto-approve
                 fi
 
               workingDirectory: './infra'
