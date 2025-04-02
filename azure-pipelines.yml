@@ -92,25 +92,8 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                cd ./infra
                 terraform init
-
-                # Check if the resource group exists in Azure
-                if az group show --name tf_akscluster --subscription 378c0d57-dbfd-4234-a90e-e479534fd83d &>/dev/null; then
-                  echo "Resource group already exists in Azure. Skipping creation."
-                else
-                  echo "Resource group does not exist. Running Terraform to create it..."
-                  terraform apply -var-file="test.tfvars" -auto-approve
-                fi
-
-                # Check if the AKS cluster exists in Azure
-                if az aks show --resource-group tf_akscluster --name my-aks-cluster --subscription 378c0d57-dbfd-4234-a90e-e479534fd83d &>/dev/null; then
-                  echo "AKS cluster already exists. Skipping creation."
-                else
-                  echo "AKS cluster does not exist. Running Terraform to create it..."
-                  terraform apply -var-file="test.tfvars" -auto-approve
-                fi
-
+                terraform apply -var-file="test.tfvars" -auto-approve
               workingDirectory: './infra'
 
           - task: Bash@3
