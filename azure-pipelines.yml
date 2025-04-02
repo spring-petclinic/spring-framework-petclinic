@@ -115,6 +115,6 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                kubectl apply -f spc-deployement.yml
+                kubectl apply -f spc-deployment.yml
                 kubectl get all
  
