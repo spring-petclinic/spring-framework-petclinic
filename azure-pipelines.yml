@@ -106,7 +106,7 @@ stages:
                 # Check if the resource group exists and import it if not in state
                 if ! terraform state list | grep -q "azurerm_resource_group.base"; then
                   echo "Resource group not found in state, importing..."
-                  terraform import azurerm_resource_group.base /subscriptions/378c0d57-dbfd-4234-a90e-e479534fd83d/resourceGroups/tf_akscluster2
+                  terraform import azurerm_resource_group.base /subscriptions/378c0d57-dbfd-4234-a90e-e479534fd83d/resourceGroups/tf_akscluster
                 fi
               workingDirectory: './infra'
 
