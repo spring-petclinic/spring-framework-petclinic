@@ -73,7 +73,7 @@
         <aspectj.version>1.9.24</aspectj.version>
 
         <!-- Maven plugins -->
-        <jetty-maven-plugin.version>11.0.25</jetty-maven-plugin.version>
+        <jetty-maven-plugin.version>11.0.26</jetty-maven-plugin.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
