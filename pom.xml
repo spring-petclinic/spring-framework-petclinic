@@ -46,7 +46,7 @@
         <jpa-api.version>3.1.0</jpa-api.version>
 
         <!-- Persistence -->
-        <spring-data.version>2024.1.1</spring-data.version>
+        <spring-data.version>2025.0.3</spring-data.version>
         <hibernate.version>6.6.4.Final</hibernate.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
         <hsqldb.version>2.7.4</hsqldb.version>
