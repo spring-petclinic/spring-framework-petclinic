@@ -39,4 +39,4 @@ jobs:
           echo $GITHUB_WORKSPACE 
           cd $GITHUB_WORKSPACE
           chmod +x mvnw 
-          mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-framework-petclinic -Dsonar.projectName='spring-framework-petclinic'
+          ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-framework-petclinic -Dsonar.projectName='spring-framework-petclinic'
