@@ -28,7 +28,7 @@
         <!-- For framework compatibility, refer to the Spring Boot Dependencies BOM and to the gradle.properties -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot-dependencies/build.gradle -->
         <!-- https://github.com/spring-projects/spring-boot/blob/main/gradle.properties -->
-        <spring-framework.version>6.2.10</spring-framework.version>
+        <spring-framework.version>6.2.11</spring-framework.version>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.3.8</webjars-bootstrap.version> <!-- Report bootstrap version to the footer.tag -->
