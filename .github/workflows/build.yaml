@@ -19,6 +19,7 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
+        run: echo $JAVA_HOME
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
