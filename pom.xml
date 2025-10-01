@@ -66,7 +66,7 @@
 
         <!-- JDBC Drivers -->
         <mysql-driver.version>8.1.0</mysql-driver.version>
-        <postgresql-driver.version>42.7.7</postgresql-driver.version>
+        <postgresql-driver.version>42.7.8</postgresql-driver.version>
 
         <!-- Others -->
         <jackson.version>2.19.2</jackson.version>
