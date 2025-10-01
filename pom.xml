@@ -48,7 +48,7 @@
         <!-- Persistence -->
         <spring-data.version>2025.0.3</spring-data.version>
         <hibernate.version>6.6.4.Final</hibernate.version>
-        <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
         <hsqldb.version>2.7.4</hsqldb.version>
         <h2database.version>2.3.232</h2database.version>
         <caffeine.version>3.2.0</caffeine.version>
