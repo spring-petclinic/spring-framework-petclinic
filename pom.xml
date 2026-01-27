@@ -58,7 +58,7 @@
         <logback.version>1.5.20</logback.version>
 
         <!-- Test -->
-        <assertj.version>3.27.3</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <json-path.version>2.10.0</json-path.version>
         <mockito.version>5.20.0</mockito.version>
         <hamcrest.version>3.0</hamcrest.version>
