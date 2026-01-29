@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,8 +30,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlElement;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
 
 /**
  * Simple JavaBean domain object representing a veterinarian.
@@ -63,7 +62,7 @@ public class Vet extends Person {
     @XmlElement
     public List<Specialty> getSpecialties() {
         List<Specialty> sortedSpecs = new ArrayList<>(getSpecialtiesInternal());
-        PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
+        sortedSpecs.sort(Comparator.comparing(Specialty::getName, String.CASE_INSENSITIVE_ORDER));
         return Collections.unmodifiableList(sortedSpecs);
     }
 
