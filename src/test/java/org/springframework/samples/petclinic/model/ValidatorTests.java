@@ -8,6 +8,8 @@ import java.util.Set;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -19,10 +21,17 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
  */
 class ValidatorTests {
 
-    private Validator createValidator() {
-        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+    private LocalValidatorFactoryBean localValidatorFactoryBean;
+
+    @BeforeEach
+    void setUp() {
+        localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.afterPropertiesSet();
-        return localValidatorFactoryBean.getValidator();
+    }
+
+    @AfterEach
+    void tearDown() {
+        localValidatorFactoryBean.close();
     }
 
     @Test
@@ -36,10 +45,14 @@ class ValidatorTests {
         Validator validator = createValidator();
         Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person);
 
-        assertThat(constraintViolations.size()).isEqualTo(1);
+        assertThat(constraintViolations).hasSize(1);
         ConstraintViolation<Person> violation = constraintViolations.iterator().next();
-        assertThat(violation.getPropertyPath().toString()).isEqualTo("firstName");
+        assertThat(violation.getPropertyPath()).hasToString("firstName");
         assertThat(violation.getMessage()).isEqualTo("must not be empty");
+    }
+
+    private Validator createValidator() {
+        return localValidatorFactoryBean.getValidator();
     }
 
 }
