@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -44,7 +43,6 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     private final SimpleJdbcInsert insertVisit;
 
-    @Autowired
     public JdbcVisitRepositoryImpl(DataSource dataSource, JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
 

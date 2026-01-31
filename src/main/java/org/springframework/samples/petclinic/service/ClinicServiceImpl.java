@@ -17,7 +17,6 @@ package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -40,12 +39,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ClinicServiceImpl implements ClinicService {
 
-    private PetRepository petRepository;
-    private VetRepository vetRepository;
-    private OwnerRepository ownerRepository;
-    private VisitRepository visitRepository;
+    private final PetRepository petRepository;
+    private final VetRepository vetRepository;
+    private final OwnerRepository ownerRepository;
+    private final VisitRepository visitRepository;
 
-    @Autowired
     public ClinicServiceImpl(PetRepository petRepository, VetRepository vetRepository, OwnerRepository ownerRepository, VisitRepository visitRepository) {
         this.petRepository = petRepository;
         this.vetRepository = vetRepository;

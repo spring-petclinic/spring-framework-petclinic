@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -36,8 +35,6 @@ public class VetController {
 
     private final ClinicService clinicService;
 
-
-    @Autowired
     public VetController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }

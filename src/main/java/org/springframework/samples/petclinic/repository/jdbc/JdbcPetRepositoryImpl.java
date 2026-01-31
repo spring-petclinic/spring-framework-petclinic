@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -51,7 +50,6 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 
     private final OwnerRepository ownerRepository;
 
-    @Autowired
     public JdbcPetRepositoryImpl(JdbcClient jdbcClient, DataSource dataSource, OwnerRepository ownerRepository) {
         this.jdbcClient = jdbcClient;
 

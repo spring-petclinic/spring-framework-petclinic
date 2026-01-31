@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
@@ -43,7 +42,6 @@ public class PetController {
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private final ClinicService clinicService;
 
-    @Autowired
     public PetController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }

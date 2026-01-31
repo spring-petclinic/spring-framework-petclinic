@@ -20,7 +20,6 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.stereotype.Controller;
@@ -42,8 +41,6 @@ public class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final ClinicService clinicService;
 
-
-    @Autowired
     public OwnerController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }

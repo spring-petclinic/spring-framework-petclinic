@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -47,7 +46,6 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 
     private final JdbcClient jdbcClient;
 
-    @Autowired
     public JdbcVetRepositoryImpl(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }

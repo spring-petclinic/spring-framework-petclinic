@@ -19,7 +19,6 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -39,8 +38,6 @@ public class VisitController {
 
     private final ClinicService clinicService;
 
-
-    @Autowired
     public VisitController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }
@@ -57,7 +54,7 @@ public class VisitController {
      * - Since we do not use the session scope, make sure that Pet object always has an id
      * (Even though id is not part of the form fields)
      *
-     * @param petId
+     * @param petId the pet identifier from the URI
      * @return Pet
      */
     @ModelAttribute("visit")
