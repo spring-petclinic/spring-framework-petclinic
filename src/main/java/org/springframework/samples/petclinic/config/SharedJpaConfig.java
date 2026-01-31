@@ -33,7 +33,6 @@ package org.springframework.samples.petclinic.config;
 import javax.sql.DataSource;
 
 import jakarta.persistence.EntityManagerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -45,43 +44,39 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import static java.util.Objects.requireNonNull;
+
 @Configuration
 @Profile({"jpa", "spring-data-jpa"})
 public class SharedJpaConfig {
 
-    @Autowired
-    private Environment        env;
-
-	@Autowired
-	private DataSource dataSource;
-
     @Bean
-    public EntityManagerFactory entityManagerFactory() {
+    public EntityManagerFactory entityManagerFactory(DataSource dataSource, Environment env) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         // gDickens: BOTH Persistence Unit and Packages to Scan are NOT compatible, persistenceUnit will win
         em.setPersistenceUnitName("petclinic");
         em.setPackagesToScan("org.springframework.samples.petclinic");
-        em.setJpaVendorAdapter(jpaVendorAdaper());
+        em.setJpaVendorAdapter(jpaVendorAdaper(env));
         em.afterPropertiesSet();
         return em.getObject();
     }
 
     @Bean
-    public JpaVendorAdapter jpaVendorAdaper() {
+    public JpaVendorAdapter jpaVendorAdaper(Environment env) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         // the 'database' parameter refers to the database dialect being used.
     	// By default, Hibernate will use a 'HSQL' dialect because 'jpa.database' has been set to 'HSQL'
     	// inside file spring/data-access.properties
-        vendorAdapter.setDatabase(env.getProperty("jpa.database", Database.class));
-        vendorAdapter.setShowSql(env.getProperty("jpa.showSql", Boolean.class));
+        vendorAdapter.setDatabase(requireNonNull(env.getProperty("jpa.database", Database.class)));
+        vendorAdapter.setShowSql(Boolean.TRUE.equals(env.getProperty("jpa.showSql", Boolean.class)));
         return vendorAdapter;
     }
 
     @Bean(name="transactionManager")
-    public JpaTransactionManager jpaTransactionManager() {
+    public JpaTransactionManager jpaTransactionManager(DataSource dataSource, Environment env) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory());
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory(dataSource, env));
         return jpaTransactionManager;
     }
 

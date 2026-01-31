@@ -30,32 +30,35 @@
  */
 package org.springframework.samples.petclinic.config;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Profiles;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.MultiValueMap;
 
+import static java.util.Objects.*;
+
 /**
  * {@link Condition} that matches based on the value of a {@link NotProfile @NotProfile}
  * annotation.
  *
  */
+@NullMarked
 class NotProfileCondition implements Condition {
 
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		if (context.getEnvironment() != null) {
-			MultiValueMap<String, Object> attrs = metadata.getAllAnnotationAttributes(NotProfile.class.getName());
-			if (attrs != null) {
-				for (Object value : attrs.get("value")) {
-					if (context.getEnvironment().acceptsProfiles(Profiles.of((String[]) value))) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}
+        MultiValueMap<String, @Nullable Object> attrs = metadata.getAllAnnotationAttributes(NotProfile.class.getName());
+        if (attrs != null) {
+            for (Object value : attrs.get("value")) {
+                if (context.getEnvironment().acceptsProfiles(Profiles.of((String[]) requireNonNull(value)))) {
+                    return false;
+                }
+            }
+            return true;
+        }
 		return true;
 	}
 
