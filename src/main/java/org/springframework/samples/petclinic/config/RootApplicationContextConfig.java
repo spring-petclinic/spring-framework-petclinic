@@ -33,7 +33,6 @@ package org.springframework.samples.petclinic.config;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
@@ -44,8 +43,11 @@ public class RootApplicationContextConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(RootApplicationContextConfig.class);
 
-    @Autowired
-    private Environment         env;
+    private final Environment env;
+
+    public RootApplicationContextConfig(Environment env) {
+        this.env = env;
+    }
 
     /**
      * Application custom initialization code.

@@ -32,7 +32,6 @@ package org.springframework.samples.petclinic.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -46,21 +45,18 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 @ComponentScan("org.springframework.samples.petclinic.repository.jdbc")
 public class JdbcConfig {
 
-	@Autowired
-	private DataSource dataSource;
-
     @Bean(name="transactionManager")
-    public DataSourceTransactionManager dataSourceTransactionManager() {
+    public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
     	return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean
-    public JdbcClient jdbcClient() {
+    public JdbcClient jdbcClient(DataSource dataSource) {
     	return JdbcClient.create(dataSource);
     }
 
     @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
     	return new NamedParameterJdbcTemplate(dataSource);
     }
 

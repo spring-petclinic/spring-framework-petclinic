@@ -33,27 +33,31 @@ package org.springframework.samples.petclinic.config;
 import javax.sql.DataSource;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
+import static java.util.Objects.requireNonNull;
+
 @Configuration
 public class InitDataSourceConfig {
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
-	@Autowired
-	private DataSource dataSource;
+	private final DataSource dataSource;
 
-	@PostConstruct
+    public InitDataSourceConfig(Environment env, DataSource dataSource) {
+        this.env = env;
+        this.dataSource = dataSource;
+    }
+
+    @PostConstruct
 	public void init() {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-		databasePopulator.addScript(new ClassPathResource(env.getProperty("jdbc.initLocation")));
-		databasePopulator.addScript(new ClassPathResource(env.getProperty("jdbc.dataLocation")));
+		databasePopulator.addScript(new ClassPathResource(requireNonNull(env.getProperty("jdbc.initLocation"))));
+		databasePopulator.addScript(new ClassPathResource(requireNonNull(env.getProperty("jdbc.dataLocation"))));
 		DatabasePopulatorUtils.execute(databasePopulator, dataSource);
 	}
 

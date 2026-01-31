@@ -30,7 +30,6 @@
  */
 package org.springframework.samples.petclinic.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -63,10 +62,13 @@ import java.util.List;
 @ComponentScan(basePackages = { "org.springframework.samples.petclinic.web" })
 public class MvcCoreConfig implements WebMvcConfigurer {
 
-	@Autowired
-	private ClinicService clinicService;
+	private final ClinicService clinicService;
 
-	@Override
+    public MvcCoreConfig(ClinicService clinicService) {
+        this.clinicService = clinicService;
+    }
+
+    @Override
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
 		configurer.ignoreAcceptHeader(false);

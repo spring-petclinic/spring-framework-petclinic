@@ -33,7 +33,6 @@ package org.springframework.samples.petclinic.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -45,6 +44,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Import({DataSourceConfig.class, InitDataSourceConfig.class, JdbcConfig.class, SharedJpaConfig.class, JpaConfig.class, SpringDataJpaConfig.class})
 public class BusinessConfig {
-		
+
 
 }
