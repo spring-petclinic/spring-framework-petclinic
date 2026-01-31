@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -37,12 +37,11 @@ import org.springframework.samples.petclinic.service.ClinicService;
  * @author Juergen Hoeller
  * @author Michael Isvy
  */
+@NullMarked
 public class PetTypeFormatter implements Formatter<PetType> {
 
     private final ClinicService clinicService;
 
-
-    @Autowired
     public PetTypeFormatter(ClinicService clinicService) {
         this.clinicService = clinicService;
     }

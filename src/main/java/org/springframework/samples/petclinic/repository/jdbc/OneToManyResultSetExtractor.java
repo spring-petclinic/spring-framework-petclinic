@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
  * Address. This extractor is useful in that case.
  * <p>
  * This class comes from the Spring Data JDBC Extensions project that has been archived in 2019:
- * https://github.com/spring-projects/spring-data-jdbc-ext
+ * <a href="https://github.com/spring-attic/spring-data-jdbc-ext">Spring Data JDBC Extensions for the Oracle database</a>.
  *
  * @author Thomas Risberg
  * @author Keith Donald
@@ -73,7 +73,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 	 *
 	 * @param rootMapper {@link RowMapper} to map the root entity, must not be {@literal null}.
 	 * @param childMapper {@link RowMapper} to map the root entities, must not be {@literal null}.
-	 * @param expectedResults
+	 * @param expectedResults the expected results type
 	 */
     protected OneToManyResultSetExtractor(RowMapper<R> rootMapper, RowMapper<C> childMapper, ExpectedResults expectedResults) {
 

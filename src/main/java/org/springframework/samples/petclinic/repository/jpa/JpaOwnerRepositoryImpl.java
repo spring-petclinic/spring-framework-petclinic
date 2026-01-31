@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.repository.jpa;
 import java.util.Collection;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 import org.springframework.samples.petclinic.model.Owner;
@@ -37,15 +36,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JpaOwnerRepositoryImpl implements OwnerRepository {
 
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
+    public JpaOwnerRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
 
     /**
      * Important: in the current version of this method, we load Owners with all their Pets and Visits while
-     * we do not need Visits at all and we only need one property from the Pet objects (the 'name' property).
+     * we do not need Visits at all, and we only need one property from the Pet objects (the 'name' property).
      * There are some ways to improve it such as:
-     * - creating a Ligtweight class (example here: https://community.jboss.org/wiki/LightweightClass)
+     * - creating a Lightweight class
      * - Turning on lazy-loading and using the open session in view pattern
      */
     @SuppressWarnings("unchecked")
