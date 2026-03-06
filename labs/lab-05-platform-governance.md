@@ -72,12 +72,12 @@ This shifts governance from reactive (catching problems after they harm users) t
 
 ### Activity 1: Centralize Model Access
 
-**Current state (chaotic):** Each team calls OpenAI API, Azure OpenAI, or Anthropic directly.  
+**Current state (chaotic):** Each team calls OpenAI API, Microsoft Foundry / Azure OpenAI, or Anthropic directly.  
 **Goal state (controlled):** All model requests route through a central gateway.
 
 #### Step 1.1: Design the Gateway
 
-Create an abstraction layer. Teams don't call `new OpenAIClient()` directly. Instead:
+Create an abstraction layer. Teams don't instantiate provider SDK clients directly. Instead:
 
 ```typescript
 // Teams call the AI platform, not the model provider
@@ -98,37 +98,36 @@ The gateway translates `approved_reasoning` to whichever model you've chosen (Cl
 #### Step 1.2: Implement Authentication & Rate Limiting
 
 The gateway needs:
-- **API key validation:** Only approved teams/services can call the gateway
+- **Microsoft Entra ID / workload identity validation:** Only approved teams/services can call the gateway
+- **RBAC mapping:** Resolve the caller's principal to a team, service, and allowed use cases
 - **Rate limiting:** Per-team, per-minute quotas (prevent runaway requests)
 - **Quota management:** Monthly budgets; alert when approaching limits
 
+For Azure-hosted services, prefer managed identities or workload identity federation. Keep API keys only as a temporary fallback for legacy callers that haven't migrated yet.
+
+If the gateway fronts Microsoft Foundry models, assign the gateway's managed identity the **Cognitive Services User** role at the Foundry resource scope. If the gateway also provisions or updates Azure AI Search indexes, give that same identity **Search Service Contributor** plus **Search Index Data Contributor** for write paths, and reduce query-only callers to **Search Index Data Reader**.
+
 Example:
-```csharp
-public class AIGateway
-{
-    public async Task<GatewayResponse> InvokeAsync(InvocationRequest request)
-    {
-        // Validate caller
-        var team = await _authService.ValidateAsync(request.ApiKey);
-        if (team == null) throw new UnauthorizedException();
-        
-        // Check rate limit
-        if (!await _rateLimiter.AllowAsync(team.Id)) 
-            throw new RateLimitExceededException();
-        
-        // Check monthly budget
-        var monthlySpend = await _telemetry.GetMonthlySpendAsync(team.Id);
-        if (monthlySpend > team.MonthlyBudget)
-            throw new BudgetExceededException();
-        
-        // Forward to model provider
-        var result = await _modelClient.CallAsync(request);
-        
-        // Log for telemetry
-        await _telemetry.LogInvocationAsync(team.Id, request, result);
-        
-        return result;
+```java
+@Service
+public class AiGateway {
+
+  public GatewayResponse invoke(InvocationRequest request) {
+    TeamContext team = authService.validate(request.principalId())
+      .orElseThrow(UnauthorizedException::new);
+
+    if (!rateLimiter.allow(team.id())) {
+      throw new RateLimitExceededException();
     }
+
+    if (telemetry.getMonthlySpend(team.id()).compareTo(team.monthlyBudget()) > 0) {
+      throw new BudgetExceededException();
+    }
+
+    GatewayResponse result = modelClient.call(request);
+    telemetry.logInvocation(team.id(), request, result);
+    return result;
+  }
 }
 ```
 
@@ -145,13 +144,13 @@ approvedModels:
     maxTokens: 4000
     
   classification:
-    provider: "azure_openai"
+    provider: "foundry_models"
     model: "gpt-4o-mini"
     rationale: "Fast, cheap, good for routine categorization"
     maxTokens: 500
     
   vision:
-    provider: "azure_openai"
+    provider: "foundry_models"
     model: "gpt-4-vision"
     rationale: "Only approved model for image analysis"
     maxTokens: 1000
@@ -328,29 +327,23 @@ Prompts are code. Treat them like code:
 
 The gateway rejects any invocation with an unapproved prompt:
 
-```csharp
-public async Task<GatewayResponse> InvokeAsync(InvocationRequest request)
-{
-    // Option A: Request includes a prompt directly (not via library)
-    if (!string.IsNullOrEmpty(request.Prompt))
-    {
-        throw new PolicyViolationException(
-            "Direct prompts not allowed. Use an approved prompt from the library. " +
-            "Submit a PR to prompts/ to add a new prompt."
-        );
-    }
-    
-    // Option B: Request references a prompt by name, but it doesn't exist or is unapproved
-    var prompt = await _promptLibrary.GetAsync(request.PromptName, request.PromptVersion);
-    if (prompt == null || prompt.Status != PromptStatus.Approved)
-    {
-        throw new PolicyViolationException(
-            $"Prompt '{request.PromptName}' not found or not approved. " +
-            "View approved prompts at: https://prompts.petclinic.dev/"
-        );
-    }
-    
-    // Continue with invocation...
+```java
+public GatewayResponse invoke(InvocationRequest request) {
+  if (StringUtils.hasText(request.prompt())) {
+    throw new PolicyViolationException(
+      "Direct prompts are not allowed. Use an approved prompt from the library and submit a PR to prompts/ for new prompts."
+    );
+  }
+
+  PromptDefinition prompt = promptLibrary
+    .find(request.promptName(), request.promptVersion())
+    .filter(PromptDefinition::approved)
+    .orElseThrow(() -> new PolicyViolationException(
+      "Prompt '%s' was not found or is not approved. View approved prompts at https://prompts.petclinic.dev/."
+        .formatted(request.promptName())
+    ));
+
+  return modelClient.call(request.withResolvedPrompt(prompt));
 }
 ```
 
@@ -425,54 +418,50 @@ policies:
 
 Add policy checks to the gateway:
 
-```csharp
-public class PolicyEnforcer
-{
-    // Enforce PII redaction
-    public string RedactPII(string input)
-    {
-        return Regex.Replace(input, @"[\w\.-]+@[\w\.-]+\.\w+", "[EMAIL]")
-               .RegexReplace(@"\b\d{3}-\d{2}-\d{4}\b", "[SSN]")
-               // ... etc for phone, names, etc.
+```java
+@Component
+public class PolicyEnforcer {
+
+  public String redactPii(String input) {
+    return input
+      .replaceAll("[\\w.+-]+@[\\w.-]+", "[EMAIL]")
+      .replaceAll("\\b\\d{3}-\\d{2}-\\d{4}\\b", "[SSN]");
+  }
+
+  public List<SearchResult> isolateData(List<SearchResult> results, String requestedPetId) {
+    List<SearchResult> filtered = results.stream()
+      .filter(result -> requestedPetId.equals(result.entityId()))
+      .toList();
+
+    if (filtered.size() < results.size()) {
+      logger.warn("Filtered {} records due to isolation policy", results.size() - filtered.size());
     }
-    
-    // Enforce data isolation
-    public string IsolateData(string results, string requestedPetId)
-    {
-        // Parse results; remove any data not matching requestedPetId
-        var resultsObj = JsonConvert.DeserializeObject<List<SearchResult>>(results);
-        var filtered = resultsObj
-            .Where(r => r.EntityId == requestedPetId)
-            .ToList();
-        
-        if (filtered.Count < resultsObj.Count)
-            _logger.LogWarning($"Filtered {resultsObj.Count - filtered.Count} records due to isolation policy");
-        
-        return JsonConvert.SerializeObject(filtered);
+
+    return filtered;
+  }
+
+  public void validateConfidence(double confidence) {
+    double minimumConfidence = 0.6d;
+    if (confidence < minimumConfidence) {
+      throw new ConfidenceThresholdViolationException(
+        "Confidence %.2f below minimum %.2f. Escalate this request to a human reviewer."
+          .formatted(confidence, minimumConfidence)
+      );
     }
-    
-    // Enforce confidence threshold
-    public void ValidateConfidence(double confidence, string model)
-    {
-        const double MIN_CONFIDENCE = 0.6;
-        if (confidence < MIN_CONFIDENCE)
-            throw new ConfidenceThresholdViolationException(
-                $"Confidence {confidence} below minimum {MIN_CONFIDENCE}. Request must be escalated to human."
-            );
+  }
+
+  public void validateBudget(String teamId) {
+    BigDecimal monthlySpend = telemetry.getMonthlySpend(teamId);
+    BigDecimal budget = config.getTeamBudget(teamId);
+
+    if (monthlySpend.compareTo(budget) >= 0) {
+      throw new BudgetExceededException("Team %s has exhausted its monthly budget of %s".formatted(teamId, budget));
     }
-    
-    // Enforce cost controls
-    public async Task ValidateBudgetAsync(string teamId)
-    {
-        var monthlySpend = await _telemetry.GetMonthlySpendAsync(teamId);
-        var budget = await _config.GetTeamBudgetAsync(teamId);
-        
-        if (monthlySpend >= budget)
-            throw new BudgetExceededException($"Team {teamId} has exhausted monthly budget of ${budget}");
-        
-        if (monthlySpend > budget * 0.8)  // Alert at 80%
-            await _alerts.SendAsync($"Team {teamId} is at {(monthlySpend / budget):P0} of budget");
+
+    if (monthlySpend.compareTo(budget.multiply(BigDecimal.valueOf(0.8d))) > 0) {
+      alerts.send("Team %s is at %s of budget".formatted(teamId, monthlySpend.divide(budget)));
     }
+  }
 }
 ```
 
@@ -480,39 +469,34 @@ public class PolicyEnforcer
 
 When a policy is violated, don't silently drop the request. Make it visible:
 
-```csharp
-public class GatewayErrorHandler
-{
-    public ErrorResponse HandlePolicyViolation(PolicyViolationException ex, InvocationRequest request)
-    {
-        var errorId = Guid.NewGuid().ToString("N").Substring(0, 8);
-        
-        // Log violation
-        _logger.LogError(
-            "POLICY_VIOLATION {ErrorId}: {Policy} | Team: {Team} | Feature: {Feature} | Reason: {Reason}",
-            errorId, ex.PolicyName, request.TeamId, request.FeatureId, ex.Message
-        );
-        
-        // Alert security/governance team
-        if (ex.Severity == PolicyViolationSeverity.Critical)
-            await _alerts.SendToSecurityTeamAsync(new SecurityAlert
-            {
-                ErrorId = errorId,
-                Team = request.TeamId,
-                Violation = ex.PolicyName,
-                Details = ex.Message,
-                Timestamp = DateTime.UtcNow
-            });
-        
-        // Return error to calling team
-        return new ErrorResponse
-        {
-            ErrorId = errorId,
-            Message = ex.UserMessage,
-            SuggestedAction = ex.SuggestedAction,
-            DocumentationUrl = ex.DocumentationUrl
-        };
+```java
+@ControllerAdvice
+public class GatewayErrorHandler {
+
+  @ExceptionHandler(PolicyViolationException.class)
+  public ResponseEntity<ErrorResponse> handlePolicyViolation(
+    PolicyViolationException ex,
+    InvocationRequest request
+  ) {
+    String errorId = UUID.randomUUID().toString().substring(0, 8);
+
+    logger.error(
+      "POLICY_VIOLATION {}: {} | Team: {} | Feature: {} | Reason: {}",
+      errorId,
+      ex.policyName(),
+      request.teamId(),
+      request.featureId(),
+      ex.getMessage()
+    );
+
+    if (ex.severity() == PolicyViolationSeverity.CRITICAL) {
+      alerts.sendToSecurityTeam(new SecurityAlert(errorId, request.teamId(), ex.policyName(), ex.getMessage(), Instant.now()));
     }
+
+    return ResponseEntity.badRequest().body(
+      new ErrorResponse(errorId, ex.userMessage(), ex.suggestedAction(), ex.documentationUrl())
+    );
+  }
 }
 ```
 
@@ -550,45 +534,41 @@ Before moving forward:
 
 The gateway logs everything:
 
-```csharp
-public class TelemetryLogger
-{
-    public async Task LogInvocationAsync(
-        string teamId,
-        string featureId,
-        string promptName,
-        string model,
-        int inputTokens,
-        int outputTokens,
-        double costUsd,
-        string responseStatus,  // success | error | policy_violation
-        long durationMs,
-        Dictionary<string, object> metadata = null
-    )
-    {
-        var record = new InvocationRecord
-        {
-            Id = Guid.NewGuid(),
-            Timestamp = DateTime.UtcNow,
-            TeamId = teamId,
-            FeatureId = featureId,
-            PromptName = promptName,
-            Model = model,
-            InputTokens = inputTokens,
-            OutputTokens = outputTokens,
-            TotalTokens = inputTokens + outputTokens,
-            CostUsd = costUsd,
-            ResponseStatus = responseStatus,
-            DurationMs = durationMs,
-            Metadata = metadata ?? new Dictionary<string, object>()
-        };
-        
-        // Write to time-series database (e.g., InfluxDB, Azure Data Explorer)
-        await _timeSeries.WriteAsync(record);
-        
-        // Also write to data warehouse for later analysis
-        await _dataWarehouse.InsertAsync(record);
-    }
+```java
+@Component
+public class TelemetryLogger {
+
+  public void logInvocation(
+    String teamId,
+    String featureId,
+    String promptName,
+    String model,
+    int inputTokens,
+    int outputTokens,
+    BigDecimal costUsd,
+    String responseStatus,
+    long durationMs,
+    Map<String, Object> metadata
+  ) {
+    InvocationRecord record = new InvocationRecord(
+      UUID.randomUUID(),
+      Instant.now(),
+      teamId,
+      featureId,
+      promptName,
+      model,
+      inputTokens,
+      outputTokens,
+      inputTokens + outputTokens,
+      costUsd,
+      responseStatus,
+      durationMs,
+      metadata == null ? Map.of() : metadata
+    );
+
+    timeSeries.write(record);
+    dataWarehouse.insert(record);
+  }
 }
 ```
 
@@ -696,7 +676,7 @@ Before moving forward:
 Pick one team from Labs 1–4 (e.g., the team that built the diagnosis-assist agent in Lab 3) and ask: *"Can you use this platform?"*
 
 The team should:
-1. Authenticate with an API key
+1. Authenticate with Microsoft Entra ID (user) or workload identity federation / managed identity (service)
 2. Pick an approved model from the list
 3. Use an approved prompt from the prompt library
 4. Make an invocation through the gateway
@@ -745,7 +725,7 @@ Create a rubric:
 
 | Criterion | Measure | Target |
 |-----------|---------|--------|
-| Time to first invocation | From API key request to first successful call | < 2 hours |
+| Time to first invocation | From access request to first successful call | < 2 hours |
 | Onboarding documentation clarity | "Was the setup guide clear?" | ≥ 4/5 score |
 | Error message clarity | "When something broke, did you know how to fix it?" | ≥ 4/5 score |
 | Approval process speed | Time from prompt PR to approval | < 24 hours |
@@ -770,7 +750,7 @@ Based on the test team's experience, create a playbook:
 ### Step 1: Request Platform Access (30 min)
 - Contact: ai-platform@petclinic.dev
 - Provide: Team name, team lead, primary AI use case
-- Receive: API key, documentation
+- Receive: Entra group membership or RBAC assignment, documentation
 
 ### Step 2: Review Approved Resources (1 hour)
 - Browse approved models: https://platform.petclinic.dev/models
@@ -781,7 +761,7 @@ Based on the test team's experience, create a playbook:
 
 ### Step 3: Integrate with Gateway (1-2 hours)
 - Install SDK: `npm install @petclinic/ai-sdk`
-- Configure API key
+- Sign in with `az login` for local development, or configure managed identity / workload identity federation for automated callers
 - Make first invocation (example code provided)
 - Verify invocation appears in cost dashboard
 
@@ -811,7 +791,9 @@ Based on the test team's experience, create a playbook:
 ## Troubleshooting
 
 **"Access Denied"**
-- Your API key may be revoked. Contact ai-platform@petclinic.dev
+- Verify your Entra role or group assignment for the gateway
+- If access was just granted, allow a few minutes for RBAC propagation
+- If using federation, confirm the workload identity subject matches the platform configuration
 
 **"Prompt Not Found"**
 - Prompt doesn't exist or is not approved. Browse library: https://platform.petclinic.dev/prompts

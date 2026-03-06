@@ -92,63 +92,115 @@ Each retrieved chunk must carry:
 
 ### Azure AI Search & Semantic Kernel Integration Patterns
 
-**Index Creation (C# with Semantic Kernel):**
-```csharp
-// Create Azure AI Search index aligned to PetClinic data model
-var indexClient = new SearchIndexClient(endpoint, new AzureKeyCredential(key));
+**Index Creation (preferred Python bootstrap; Java app-native alternative):**
+```python
+from azure.identity import DefaultAzureCredential
+from azure.search.documents import SearchClient
+from azure.search.documents.indexes import SearchIndexClient
+from azure.search.documents.indexes.models import (
+    SearchFieldDataType,
+    SearchIndex,
+    SearchableField,
+    SemanticConfiguration,
+    SemanticField,
+    SemanticPrioritizedFields,
+    SemanticSearch,
+    SimpleField,
+)
 
-var index = new SearchIndex("petclinic-index")
-{
-    Fields = new FieldCollection
-    {
-        new SearchField("id", SearchFieldDataType.String) { IsKey = true },
-        new SearchField("entity_type", SearchFieldDataType.String) { IsFilterable = true },
-        new SearchField("entity_id", SearchFieldDataType.String) { IsFilterable = true, IsFacetable = true },
-        new SearchField("text", SearchFieldDataType.String) { IsSearchable = true, IsRetrievable = true },
-        new SearchField("summary", SearchFieldDataType.String) { IsSearchable = true },
-        new SearchField("embedding", SearchFieldDataType.Collection(SearchFieldDataType.Single)) { IsSearchable = true },
-        new SearchField("created_date", SearchFieldDataType.DateTimeOffset) { IsFilterable = true, IsSortable = true }
-    },
-    SemanticConfiguration = new SemanticConfiguration("default", ...)
-};
+credential = DefaultAzureCredential()
+index_client = SearchIndexClient(
+    endpoint=endpoint,
+    credential=credential,
+    audience="https://search.azure.com",
+)
+search_client = SearchClient(
+    endpoint=endpoint,
+    index_name="petclinic-index",
+    credential=credential,
+    audience="https://search.azure.com",
+)
 
-await indexClient.CreateIndexAsync(index);
+index = SearchIndex(
+    name="petclinic-index",
+    fields=[
+        SimpleField(name="id", type=SearchFieldDataType.String, key=True),
+        SimpleField(name="entity_type", type=SearchFieldDataType.String, filterable=True),
+        SimpleField(name="entity_id", type=SearchFieldDataType.String, filterable=True, facetable=True),
+        SearchableField(name="text", type=SearchFieldDataType.String),
+        SearchableField(name="summary", type=SearchFieldDataType.String),
+        SimpleField(name="created_date", type=SearchFieldDataType.DateTimeOffset, filterable=True, sortable=True),
+    ],
+    semantic_search=SemanticSearch(
+        configurations=[
+            SemanticConfiguration(
+                name="default",
+                prioritized_fields=SemanticPrioritizedFields(
+                    title_field=SemanticField(field_name="summary"),
+                    content_fields=[SemanticField(field_name="text")],
+                ),
+            )
+        ]
+    ),
+)
+
+index_client.create_or_update_index(index)
+```
+
+App-native Java services should use `DefaultAzureCredentialBuilder`, `SearchIndexClientBuilder`, and `SearchClientBuilder` with the same RBAC-enabled search service instead of key-based auth.
+
+```java
+TokenCredential credential = new DefaultAzureCredentialBuilder().build();
+
+SearchIndexClient indexClient = new SearchIndexClientBuilder()
+    .endpoint(endpoint)
+    .credential(credential)
+    .buildClient();
+
+SearchClient searchClient = new SearchClientBuilder()
+    .endpoint(endpoint)
+    .indexName("petclinic-index")
+    .credential(credential)
+    .buildClient();
 ```
 
 **RAG Kernel Implementation (Semantic Kernel):**
-```csharp
-// Build a RAG chain: user query → search → prompt → LLM
-var kernel = new KernelBuilder()
-    .WithAzureOpenAIChatCompletion(...)
-    .Build();
+```java
+OpenAIAsyncClient openAiClient = new OpenAIClientBuilder()
+    .endpoint(endpoint)
+    .credential(new DefaultAzureCredentialBuilder().build())
+    .buildAsyncClient();
 
-// Register Azure AI Search as a plugin
-var searchPlugin = kernel.ImportPluginFromObject(
-    new AzureAISearchPlugin(searchClient),
-    "search"
-);
+ChatCompletionService chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("petclinic-chat")
+    .withOpenAIAsyncClient(openAiClient)
+    .build();
 
-// Define RAG prompt
-var ragPrompt = @"
-You are a veterinary assistant. Answer the user's question using ONLY the provided 
-clinical records. If information is not in the records, say 'I don't have data on that.'
+AzureAiSearchPlugin searchPlugin = new AzureAiSearchPlugin(searchClient);
 
-Records:
-{{$retrieved_records}}
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(searchPlugin, "search"))
+    .build();
 
-Question: {{$question}}
+String result = kernel.invokePromptAsync(
+    """
+    You are a veterinary assistant. Answer the user's question using ONLY the provided
+    clinical records. If information is not in the records, say 'I don't have data on that.'
 
-Answer (with inline citations):";
+    Records:
+    {{$retrieved_records}}
 
-// Execute RAG chain
-var result = await kernel.InvokeAsync<string>(
-    ragPrompt,
-    new KernelArguments
-    {
-        { "question", userQuestion },
-        { "retrieved_records", await searchPlugin.SearchAsync(userQuestion) }
-    }
-);
+    Question: {{$question}}
+
+    Answer (with inline citations):
+    """,
+    KernelArguments.builder()
+        .withVariable("question", userQuestion)
+        .withVariable("retrieved_records", searchPlugin.search(userQuestion))
+        .build())
+    .block()
+    .getResult();
 ```
 
 **Confidence Scoring:**
@@ -354,98 +406,71 @@ Sources:
 ### Tool Calling with Semantic Kernel
 
 **Tool Definition (Register capabilities, not actions):**
-```csharp
-[KernelFunction("retrieve_records")]
-[Description("Retrieve clinical records for a specific pet")]
-public async Task<string> RetrieveRecords(
-    [Description("Pet name or ID")] string petIdentifier,
-    [Description("Filter by record type: visit | note | medication")] string? recordType = null
-)
-{
-    // Implementation: call RAG search, return grounded results
-    var results = await _searchClient.SearchAsync(
-        $"pet: {petIdentifier} {recordType}",
-        new SearchOptions { Size = 10 }
-    );
-    return JsonConvert.SerializeObject(results);
-}
+```java
+public class ClinicalTools {
 
-[KernelFunction("request_approval")]
-[Description("Request human approval before executing an action")]
-public async Task<ApprovalResult> RequestApproval(
-    [Description("What approval is being requested")] string action,
-    [Description("Why this action is needed")] string reasoning,
-    [Description("Confidence in this recommendation (0.0-1.0)")] double confidence
-)
-{
-    var approval = await _approvalService.CreateApprovalRequest(new ApprovalRequest
-    {
-        Action = action,
-        Reasoning = reasoning,
-        Confidence = confidence,
-        Timestamp = DateTime.UtcNow
-    });
-    
-    // Block agent until human responds
-    return await _approvalService.WaitForApprovalAsync(approval.Id);
-}
+    public String retrieveRecords(String petIdentifier, String recordType) throws JsonProcessingException {
+        SearchOptions options = new SearchOptions().setTop(10);
+        String query = "pet: " + petIdentifier + " " + (recordType == null ? "" : recordType);
 
-[KernelFunction("log_reasoning")]
-[Description("Log a reasoning step for audit and explainability")]
-public void LogReasoning(
-    [Description("The reasoning step")] string step,
-    [Description("Why this step was taken")] string justification
-)
-{
-    _logger.LogInformation("Agent reasoning: {Step} | Justification: {Justification}", step, justification);
+        var results = searchClient.search(query, options, Context.NONE);
+        return objectMapper.writeValueAsString(results.stream().map(SearchResult::getDocument).toList());
+    }
+
+    public ApprovalResult requestApproval(String action, String reasoning, double confidence) {
+        ApprovalRequest approval = approvalService.createApprovalRequest(
+            new ApprovalRequest(action, reasoning, confidence, Instant.now())
+        );
+
+        return approvalService.waitForApproval(approval.id());
+    }
+
+    public void logReasoning(String step, String justification) {
+        logger.info("Agent reasoning: {} | Justification: {}", step, justification);
+    }
 }
 ```
 
 **Kernel Invocation (Agent Loop):**
-```csharp
-var kernel = new KernelBuilder()
-    .WithAzureOpenAIChatCompletion(...)
-    .Build();
+```java
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletionService)
+    .withPlugin(KernelPluginFactory.createFromObject(new ClinicalTools(searchClient, approvalService), "clinical"))
+    .build();
 
-// Register tools
-kernel.ImportPluginFromObject(new ClinicalTools(_searchClient, _approvalService), "clinical");
+String systemPrompt = """
+    You are the Clinical Assistant. Your role is to:
+    1. Analyze clinical records
+    2. Draft summaries and recommendations
+    3. Request human approval before actions persist
 
-var systemPrompt = @"
-You are the Clinical Assistant. Your role is to:
-1. Analyze clinical records
-2. Draft summaries and recommendations
-3. Request human approval before actions persist
+    You CANNOT create records or take autonomous action.
+    Always explain your reasoning.
+    Always request approval before suggesting changes to the system.
+    """;
 
-You CANNOT create records or take autonomous action.
-Always explain your reasoning.
-Always request approval before suggesting changes to the system.
-";
+ChatHistory history = new ChatHistory();
+history.addSystemMessage(systemPrompt);
+history.addUserMessage("Summarize Bella's visit history and suggest next steps");
 
-var messages = new List<ChatMessage>
-{
-    new SystemChatMessage(systemPrompt),
-    new UserChatMessage("Summarize Bella's visit history and suggest next steps")
-};
+InvocationContext invocationContext = InvocationContext.builder()
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+    .build();
 
-// Agentic loop (multiple turns)
-var chatHistory = new ChatHistory(systemPrompt);
-while (true)
-{
-    var response = await kernel.GetRequiredService<IChatCompletion>()
-        .GetChatMessageContentsAsync(messages);
-    
-    if (response[0].Content.Contains("</tool_call>"))
-    {
-        // Agent called a tool; process it
-        var toolResult = await ExecuteToolCall(response[0].Content);
-        messages.Add(new AssistantChatMessage(response[0].Content));
-        messages.Add(new ToolResultMessage(toolResult));
+while (true) {
+    List<ChatMessageContent<?>> response = chatCompletionService
+        .getChatMessageContentsAsync(history, kernel, invocationContext)
+        .block();
+
+    ChatMessageContent<?> assistantMessage = response.getFirst();
+    history.addMessage(assistantMessage);
+
+    if (assistantMessage.getContent() != null && assistantMessage.getContent().contains("function")) {
+        history.addToolMessage(executeToolCall(assistantMessage.getContent()));
+        continue;
     }
-    else
-    {
-        // Agent produced final answer
-        return response[0].Content;
-    }
+
+    return assistantMessage.getContent();
 }
 ```
 
@@ -459,37 +484,25 @@ while (true)
 5. **Token/cost limits:** Set max tokens per reasoning loop (e.g., 5 tool calls max)
 
 **Implementation Pattern:**
-```csharp
-// Middleware: intercept tool calls and enforce boundaries
-public class ToolCallBoundaryEnforcer : KernelPlugin
-{
-    private static readonly HashSet<string> AllowedTools = new()
-    {
+```java
+public final class ToolCallBoundaryEnforcer {
+
+    private static final Set<String> ALLOWED_TOOLS = Set.of(
         "retrieve_records",
         "request_approval",
         "log_reasoning"
-    };
-    
-    private static readonly HashSet<string> ForbiddenToolPatterns = new()
-    {
-        "create_", "delete_", "update_", "send_", "notify_"
-    };
+    );
 
-    public override async Task<KernelContent> InvokeAsync(
-        KernelFunctionInvocation invocation, 
-        KernelContext context)
-    {
-        var toolName = invocation.Function.Name;
-        
-        // Check whitelist
-        if (!AllowedTools.Contains(toolName))
-            throw new UnauthorizedToolCallException($"Tool '{toolName}' not allowed");
-        
-        // Check forbidden patterns
-        if (ForbiddenToolPatterns.Any(p => toolName.StartsWith(p)))
-            throw new UnauthorizedToolCallException($"Tool pattern '{toolName}' violates boundaries");
-        
-        return await base.InvokeAsync(invocation, context);
+    private static final List<String> FORBIDDEN_PREFIXES = List.of("create_", "delete_", "update_", "send_", "notify_");
+
+    public void validate(String toolName) {
+        if (!ALLOWED_TOOLS.contains(toolName)) {
+            throw new UnauthorizedToolCallException("Tool '%s' is not allowed".formatted(toolName));
+        }
+
+        if (FORBIDDEN_PREFIXES.stream().anyMatch(toolName::startsWith)) {
+            throw new UnauthorizedToolCallException("Tool pattern '%s' violates execution boundaries".formatted(toolName));
+        }
     }
 }
 ```
@@ -631,45 +644,33 @@ User Request
 Final Output (Draft with audit trail)
 ```
 
-**Implementation Pattern (C# with Semantic Kernel):**
-```csharp
-public async Task<MASResult> OrchestrateMultiAgent(string petId, string userQuery)
-{
-    var result = new MASResult();
-    
-    // Stage 1: Clinical Reasoning
-    var clinicalAgent = new ClinicalReasoningAgent(_kernel);
-    var clinicalOutput = await clinicalAgent.AnalyzeAsync(petId, userQuery);
-    result.ClinicalAnalysis = clinicalOutput;
-    
-    if (!clinicalOutput.Success)
-        return result; // Short-circuit if analysis fails
-    
-    // Stage 2: Compliance & Safety Review
-    var complianceAgent = new ComplianceAgent(_kernel);
-    var safetyVerdictOutput = await complianceAgent.ReviewAsync(clinicalOutput);
-    result.SafetyVerdictOutput = safetyVerdictOutput;
-    
-    if (safetyVerdictOutput.Verdict == SafetyVerdictType.FAIL)
-    {
-        result.Status = "BLOCKED_BY_SAFETY_POLICY";
-        return result; // Do not proceed
+**Implementation Pattern (Java with Semantic Kernel):**
+```java
+public MASResult orchestrateMultiAgent(String petId, String userQuery) {
+    MASResult result = new MASResult();
+
+    ClinicalReasoningAgent clinicalAgent = new ClinicalReasoningAgent(kernel);
+    ClinicalOutput clinicalOutput = clinicalAgent.analyze(petId, userQuery);
+    result.setClinicalAnalysis(clinicalOutput);
+
+    if (!clinicalOutput.success()) {
+        return result;
     }
-    
-    // Stage 3: Communication Drafting
-    var commAgent = new CommunicationAgent(_kernel);
-    var draftOutput = await commAgent.DraftAsync(clinicalOutput, safetyVerdictOutput);
-    result.DraftCommunication = draftOutput;
-    
-    // Stage 4: Audit trail & human approval
-    result.AuditTrail = new AuditTrail
-    {
-        Stage1_Clinical = clinicalOutput,
-        Stage2_Safety = safetyVerdictOutput,
-        Stage3_Communication = draftOutput,
-        OverallStatus = "READY_FOR_APPROVAL"
-    };
-    
+
+    ComplianceAgent complianceAgent = new ComplianceAgent(kernel);
+    SafetyVerdictOutput safetyVerdict = complianceAgent.review(clinicalOutput);
+    result.setSafetyVerdictOutput(safetyVerdict);
+
+    if (safetyVerdict.verdict() == SafetyVerdictType.FAIL) {
+        result.setStatus("BLOCKED_BY_SAFETY_POLICY");
+        return result;
+    }
+
+    CommunicationAgent communicationAgent = new CommunicationAgent(kernel);
+    CommunicationDraft draft = communicationAgent.draft(clinicalOutput, safetyVerdict);
+    result.setDraftCommunication(draft);
+
+    result.setAuditTrail(new AuditTrail(clinicalOutput, safetyVerdict, draft, "READY_FOR_APPROVAL"));
     return result;
 }
 ```
@@ -752,21 +753,17 @@ All agents can read:
 - Owner profile (communication preferences, past interactions)
 - Policies & guidelines (shared reference)
 
-```csharp
-public class SharedContext
-{
-    public PetRecord PetData { get; set; }          // read-only
-    public List<Visit> ClinicalHistory { get; set; } // read-only
-    public OwnerProfile OwnerData { get; set; }      // read-only
-    public PolicySet CompliancePolicies { get; set; } // read-only
-}
+```java
+public record SharedContext(
+    PetRecord petData,
+    List<Visit> clinicalHistory,
+    OwnerProfile ownerData,
+    PolicySet compliancePolicies
+) {}
 
-// Agents receive this context but cannot modify it
-public async Task<Output> AnalyzeAsync(SharedContext context, string query)
-{
-    // Use context, but don't mutate it
-    var analysis = AnalyzeClinicalHistory(context.ClinicalHistory);
-    return new Output { Analysis = analysis };
+public Output analyze(SharedContext context, String query) {
+    String analysis = analyzeClinicalHistory(context.clinicalHistory());
+    return new Output(analysis);
 }
 ```
 
@@ -776,22 +773,26 @@ public async Task<Output> AnalyzeAsync(SharedContext context, string query)
 - Communication Agent owns message tone; Clinical cannot mandate phrasing
 
 **Shared State Machine (Track Progress Without Central Control):**
-```csharp
-public enum MASStage { Clinical = 1, Compliance = 2, Communication = 3, Approval = 4 }
+```java
+public enum MASStage { CLINICAL, COMPLIANCE, COMMUNICATION, APPROVAL }
 
-public class MASExecutionState
-{
-    public MASStage CurrentStage { get; set; } = MASStage.Clinical;
-    
-    // Each agent records its own output
-    public ClinicalOutput ClinicalResult { get; set; }
-    public SafetyVerdictOutput SafetyResult { get; set; }
-    public CommunicationOutput CommResult { get; set; }
-    
-    // Progression rules
-    public bool CanAdvanceToCompliance => ClinicalResult?.Success ?? false;
-    public bool CanAdvanceToCommunication => SafetyResult?.Verdict != SafetyVerdictType.FAIL;
-    public bool ReadyForApproval => CommResult != null;
+public class MASExecutionState {
+    private MASStage currentStage = MASStage.CLINICAL;
+    private ClinicalOutput clinicalResult;
+    private SafetyVerdictOutput safetyResult;
+    private CommunicationOutput communicationResult;
+
+    public boolean canAdvanceToCompliance() {
+        return clinicalResult != null && clinicalResult.success();
+    }
+
+    public boolean canAdvanceToCommunication() {
+        return safetyResult != null && safetyResult.verdict() != SafetyVerdictType.FAIL;
+    }
+
+    public boolean readyForApproval() {
+        return communicationResult != null;
+    }
 }
 ```
 
@@ -814,10 +815,10 @@ Every agent decision is logged with:
 {
   "models": [
     {
-      "id": "gpt-4-turbo",
-      "provider": "Azure OpenAI",
-      "endpoint": "https://petclinic-ai.openai.azure.com/",
-      "deployment_id": "gpt4-prod-v1",
+            "id": "gpt-5.2",
+            "provider": "Microsoft Foundry Models",
+            "endpoint": "https://petclinic-foundry.services.ai.azure.com/api/projects/petclinic-platform",
+            "deployment_id": "gpt-5.2-prod",
       "version": "2024-04-09",
       "cost_per_1k_tokens": { "input": 0.03, "output": 0.06 },
       "approved_for": ["general_qa", "clinical_summarization", "owner_communication"],
@@ -830,48 +831,56 @@ Every agent decision is logged with:
 ```
 
 **Centralized Kernel Configuration (All Teams Use Same):**
-```csharp
-public class CentralizedAIConfiguration
-{
-    public static IKernelBuilder ConfigureSharedKernel(this IKernelBuilder builder)
-    {
-        var config = new ConfigurationBuilder()
-            .AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential())
-            .Build();
-        
-        // All teams use same endpoint, credentials, model
-        builder.WithAzureOpenAIChatCompletion(
-            modelId: config["AzureOpenAI:ModelId"],
-            endpoint: config["AzureOpenAI:Endpoint"],
-            apiKey: config["AzureOpenAI:ApiKey"]
-        );
-        
-        return builder;
+```java
+@Configuration
+public class CentralizedAiConfiguration {
+
+    @Bean
+    DefaultAzureCredential azureCredential(@Value("${azure.identity.client-id:}") String managedIdentityClientId) {
+        DefaultAzureCredentialBuilder builder = new DefaultAzureCredentialBuilder();
+        if (StringUtils.hasText(managedIdentityClientId)) {
+            builder.managedIdentityClientId(managedIdentityClientId);
+        }
+        return builder.build();
+    }
+
+    @Bean
+    Kernel sharedKernel(DefaultAzureCredential credential,
+                        @Value("${azure.openai.endpoint}") String endpoint,
+                        @Value("${azure.openai.model-id}") String modelId) {
+        OpenAIAsyncClient client = new OpenAIClientBuilder()
+            .endpoint(endpoint)
+            .credential(credential)
+            .buildAsyncClient();
+
+        ChatCompletionService chatCompletion = OpenAIChatCompletion.builder()
+            .withModelId(modelId)
+            .withOpenAIAsyncClient(client)
+            .build();
+
+        return Kernel.builder()
+            .withAIService(ChatCompletionService.class, chatCompletion)
+            .build();
     }
 }
-
-// Teams use this instead of their own config
-var kernel = new KernelBuilder()
-    .ConfigureSharedKernel()
-    .Build();
 ```
 
 **Access Control (Role-Based):**
-```csharp
-public class ModelAccessPolicy
-{
-    public bool CanUseModel(string userId, string modelId, string useCase)
-    {
-        var userRole = _authService.GetUserRole(userId);
-        var policyRule = _policyStore.GetRule(modelId, useCase);
-        
-        if (!policyRule.AllowedRoles.Contains(userRole))
-            throw new UnauthorizedAccessException($"Role {userRole} cannot use {modelId} for {useCase}");
-        
-        // Additional checks: cost limits, audit flags
-        if (policyRule.RequiresAudit && !_auditService.IsEnabled(userId))
+```java
+public class ModelAccessPolicy {
+
+    public boolean canUseModel(String userId, String modelId, String useCase) {
+        String userRole = authService.getUserRole(userId);
+        PolicyRule policyRule = policyStore.getRule(modelId, useCase);
+
+        if (!policyRule.allowedRoles().contains(userRole)) {
+            throw new UnauthorizedAccessException("Role %s cannot use %s for %s".formatted(userRole, modelId, useCase));
+        }
+
+        if (policyRule.requiresAudit() && !auditService.isEnabled(userId)) {
             throw new PolicyViolationException("Audit must be enabled for this use case");
-        
+        }
+
         return true;
     }
 }
@@ -909,31 +918,26 @@ public class ModelAccessPolicy
 ```
 
 **Prompt Evolution Without Disruption:**
-```csharp
-public async Task<string> SummarizeClinicalHistory(string petId)
-{
-    // Always fetch ACTIVE prompt version
-    var prompt = await _promptRegistry.GetActiveAsync("clinical_summary");
-    
-    var kernel = _kernelFactory.Create();
-    var result = await kernel.InvokeAsync<string>(
-        prompt.Content,
-        new KernelArguments { { "petId", petId } }
-    );
-    
-    return result;
+```java
+public String summarizeClinicalHistory(String petId) {
+    PromptDefinition prompt = promptRegistry.getActive("clinical_summary");
+
+    return kernelFactory.create()
+        .invokePromptAsync(
+            prompt.content(),
+            KernelArguments.builder().withVariable("petId", petId).build())
+        .block()
+        .getResult();
 }
 ```
 
 **A/B Testing Prompts:**
-```csharp
-// Route based on experiment cohort
-var prompt = _experimentFramework.ShouldUse("prompt_variant_b", userId)
-    ? await _promptRegistry.GetAsync("clinical_summary", version: "2.1")
-    : await _promptRegistry.GetAsync("clinical_summary", version: "2.0");
+```java
+PromptDefinition prompt = experimentFramework.shouldUse("prompt_variant_b", userId)
+    ? promptRegistry.get("clinical_summary", "2.1")
+    : promptRegistry.get("clinical_summary", "2.0");
 
-// Track metrics separately per version
-_metrics.RecordUsage("clinical_summary", version: prompt.Version, userId: userId);
+metrics.recordUsage("clinical_summary", prompt.version(), userId);
 ```
 
 **Rollback Strategy:**
@@ -944,45 +948,45 @@ _metrics.RecordUsage("clinical_summary", version: prompt.Version, userId: userId
 ### Telemetry and Cost Tracking
 
 **Comprehensive Usage Tracking:**
-```csharp
-public class AIPlatformTelemetry
-{
-    public async Task LogUsageAsync(UsageRecord record)
-    {
-        // Record in Application Insights / Azure Monitor
-        _telemetryClient.TrackEvent("AIModelUsage", new Dictionary<string, string>
-        {
-            { "model_id", record.ModelId },
-            { "prompt_version", record.PromptVersion },
-            { "use_case", record.UseCase },
-            { "user_id", record.UserId },
-            { "team", record.Team }
-        }, new Dictionary<string, double>
-        {
-            { "input_tokens", record.InputTokens },
-            { "output_tokens", record.OutputTokens },
-            { "latency_ms", record.LatencyMs },
-            { "cost_usd", record.CostUsd }
-        });
-        
-        // Store in database for historical analysis
-        await _cosmosDb.InsertAsync(record);
+```java
+public class AiPlatformTelemetry {
+
+    public void logUsage(UsageRecord record) {
+        azureMonitorClient.trackEvent(
+            "AIModelUsage",
+            Map.of(
+                "model_id", record.modelId(),
+                "prompt_version", record.promptVersion(),
+                "use_case", record.useCase(),
+                "user_id", record.userId(),
+                "team", record.team()),
+            Map.of(
+                "input_tokens", (double) record.inputTokens(),
+                "output_tokens", (double) record.outputTokens(),
+                "latency_ms", (double) record.latencyMs(),
+                "cost_usd", record.costUsd().doubleValue())
+        );
+
+        cosmosRepository.save(record);
     }
 }
 ```
 
 **Cost Calculation:**
-```csharp
-public class CostCalculator
-{
-    public decimal CalculateCost(string modelId, int inputTokens, int outputTokens)
-    {
-        var pricing = _modelRegistry.GetPricing(modelId);
-        
-        var inputCost = (inputTokens / 1000.0m) * pricing.InputCostPer1k;
-        var outputCost = (outputTokens / 1000.0m) * pricing.OutputCostPer1k;
-        
-        return inputCost + outputCost;
+```java
+public class CostCalculator {
+
+    public BigDecimal calculateCost(String modelId, int inputTokens, int outputTokens) {
+        ModelPricing pricing = modelRegistry.getPricing(modelId);
+
+        BigDecimal inputCost = BigDecimal.valueOf(inputTokens)
+            .divide(BigDecimal.valueOf(1000), RoundingMode.HALF_UP)
+            .multiply(pricing.inputCostPer1k());
+        BigDecimal outputCost = BigDecimal.valueOf(outputTokens)
+            .divide(BigDecimal.valueOf(1000), RoundingMode.HALF_UP)
+            .multiply(pricing.outputCostPer1k());
+
+        return inputCost.add(outputCost);
     }
 }
 ```
@@ -995,8 +999,8 @@ AI Platform Usage Dashboard
 COSTS (Today)
 ├─ Total: $2,341.50
 ├─ By Model:
-│  ├─ gpt-4-turbo: $1,890 (80.7%)
-│  ├─ gpt-35-turbo: $451.50 (19.3%)
+│  ├─ gpt-5.2: $1,890 (80.7%)
+│  ├─ gpt-4o-mini: $451.50 (19.3%)
 ├─ By Team:
 │  ├─ Clinical: $1,500 (64%)
 │  ├─ Communication: $620 (26%)
@@ -1019,23 +1023,27 @@ QUALITY METRICS
 ```
 
 **Budget Alerts:**
-```csharp
-public class BudgetMonitor
-{
-    public async Task CheckBudgetsAsync()
-    {
-        var dailyUsage = await _telemetryClient.GetDailyCostAsync();
-        
-        foreach (var team in _organization.Teams)
-        {
-            var teamCost = dailyUsage.Where(u => u.Team == team.Id).Sum(u => u.Cost);
-            var budget = team.MonthlyAIBudget / 30; // Daily threshold
-            
-            if (teamCost > budget * 0.8) // 80% threshold
-                await _alertService.NotifyAsync($"{team.Name} at 80% of daily budget");
-            
-            if (teamCost > budget)
-                await _throttleService.LimitTeamAsync(team.Id); // Rate-limit this team
+```java
+public class BudgetMonitor {
+
+    public void checkBudgets() {
+        List<DailyUsage> dailyUsage = telemetryClient.getDailyCost();
+
+        for (Team team : organization.teams()) {
+            BigDecimal teamCost = dailyUsage.stream()
+                .filter(usage -> usage.team().equals(team.id()))
+                .map(DailyUsage::cost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal dailyThreshold = team.monthlyAiBudget().divide(BigDecimal.valueOf(30), RoundingMode.HALF_UP);
+
+            if (teamCost.compareTo(dailyThreshold.multiply(BigDecimal.valueOf(0.8d))) > 0) {
+                alertService.notify(team.name() + " is at 80% of daily budget");
+            }
+
+            if (teamCost.compareTo(dailyThreshold) > 0) {
+                throttleService.limitTeam(team.id());
+            }
         }
     }
 }
@@ -1044,32 +1052,29 @@ public class BudgetMonitor
 ### Policy Enforcement Points
 
 **Request-Time Validation:**
-```csharp
-public class AIRequestValidator : IKernelPlugin
-{
-    public async Task<bool> ValidateRequestAsync(KernelFunctionInvocation invocation)
-    {
-        var policies = await _policyStore.GetPoliciesAsync();
-        
-        // Check 1: Model approved for this use case?
-        var modelPolicy = policies.FirstOrDefault(p => p.ModelId == invocation.ModelId);
-        if (!modelPolicy.ApprovedUseCases.Contains(invocation.UseCase))
-            throw new PolicyViolationException($"Model {invocation.ModelId} not approved for {invocation.UseCase}");
-        
-        // Check 2: User has quota remaining?
-        var userQuota = await _quotaService.GetRemainingAsync(invocation.UserId);
-        if (userQuota.MonthlyTokens < 1000)
+```java
+public class AiRequestValidator {
+
+    public void validateRequest(InvocationRequest request) {
+        List<ModelPolicy> policies = policyStore.getPolicies();
+
+        ModelPolicy modelPolicy = policies.stream()
+            .filter(policy -> policy.modelId().equals(request.modelId()))
+            .findFirst()
+            .orElseThrow(() -> new PolicyViolationException("Model is not in the approved registry"));
+
+        if (!modelPolicy.approvedUseCases().contains(request.useCase())) {
+            throw new PolicyViolationException("Model %s is not approved for %s".formatted(request.modelId(), request.useCase()));
+        }
+
+        UserQuota userQuota = quotaService.getRemaining(request.userId());
+        if (userQuota.monthlyTokens() < 1000) {
             throw new QuotaExceededException("Monthly token quota exceeded");
-        
-        // Check 3: Sensitive data filter?
-        if (invocation.Input.Contains("SSN") || invocation.Input.Contains("password"))
+        }
+
+        if (request.input().contains("SSN") || request.input().contains("password")) {
             throw new DataLeakageException("Prompt contains sensitive data");
-        
-        // Check 4: Output filtering (for PII, medical privacy)?
-        var result = await invocation.InvokeAsync();
-        var filtered = await _outputFilter.FilterAsync(result, DataClassification.PII);
-        
-        return true;
+        }
     }
 }
 ```
@@ -1098,31 +1103,29 @@ Return to user
 ```
 
 **Audit & Compliance Logging:**
-```csharp
-public class ComplianceLogger
-{
-    public async Task LogAIActionAsync(AIAction action)
-    {
-        var log = new ComplianceLog
-        {
-            Timestamp = DateTime.UtcNow,
-            UserId = action.UserId,
-            ModelId = action.ModelId,
-            UseCase = action.UseCase,
-            InputTokens = action.InputTokens,
-            OutputTokens = action.OutputTokens,
-            InputHash = Hash(action.Input), // Don't store raw input
-            OutputHash = Hash(action.Output),
-            PolicyChecksPassed = action.PolicyChecksPassed,
-            Cost = action.Cost,
-            Latency = action.Latency
-        };
-        
-        await _complianceDb.InsertAsync(log);
-        
-        // For audit investigation (longer retention)
-        if (action.UseCase == "clinical_recommendation")
-            await _longTermArchive.InsertAsync(log);
+```java
+public class ComplianceLogger {
+
+    public void logAiAction(AiAction action) {
+        ComplianceLog log = new ComplianceLog(
+            Instant.now(),
+            action.userId(),
+            action.modelId(),
+            action.useCase(),
+            action.inputTokens(),
+            action.outputTokens(),
+            hash(action.input()),
+            hash(action.output()),
+            action.policyChecksPassed(),
+            action.cost(),
+            action.latency()
+        );
+
+        complianceRepository.save(log);
+
+        if ("clinical_recommendation".equals(action.useCase())) {
+            longTermArchive.save(log);
+        }
     }
 }
 ```
@@ -1195,7 +1198,7 @@ public class ComplianceLogger
 
 - **Azure AI Search:** https://learn.microsoft.com/en-us/azure/search/
 - **Semantic Kernel:** https://github.com/microsoft/semantic-kernel
-- **Azure OpenAI:** https://learn.microsoft.com/en-us/azure/ai-services/openai/
+- **Microsoft Foundry Models:** https://learn.microsoft.com/en-us/azure/foundry/foundry-models/
 - **Responsible AI Principles:** https://www.microsoft.com/en-us/ai/responsible-ai
 
 ---
