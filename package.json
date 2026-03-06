@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@bradygaster/squad-cli": "^0.8.20"
+  }
+}

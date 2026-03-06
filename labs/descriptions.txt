@@ -1,0 +1,180 @@
+Lab 0 — Legacy Baseline & AI Readiness
+Theme: Start where customers actually are
+Mindset: No AI, no cloud assumptions, no refactors yet
+What this lab proves
+
+This is a real legacy enterprise app
+AI is not “added” yet—only assessed
+
+Key activities
+
+Explore the PetClinic domain (Owners, Pets, Visits)
+Identify where human judgment exists today
+Identify data already present but under‑used (notes, visits, history)
+
+Outputs
+
+AI opportunity map (Q&A, summaries, recommendations)
+Constraints list (safety, accuracy, approvals)
+Baseline architecture diagram (pre‑AI)
+
+Teaching moment
+
+“Before asking how to add AI, you must ask where AI creates product value.”
+
+
+Lab 1 — In‑App AI with RAG (Assistive AI)
+Theme: AI answers questions inside the application
+Mindset: AI as a feature, not a chatbot
+What this lab proves
+
+AI can deliver value without changing workflows
+RAG fits naturally into legacy apps
+
+Key activities
+
+Index existing PetClinic data (owners, visits, notes)
+Add natural‑language Q&A to the app UI
+Ground answers strictly in application data
+
+Outputs
+
+“Ask about a patient” capability
+Citations back to source records
+Confidence‑bounded responses
+
+Teaching moment
+
+“This is not automation—this is augmented understanding.”
+
+
+Lab 2 — AI‑Assisted Actions with Human‑in‑the‑Loop
+Theme: AI proposes, humans decide
+Mindset: AI drafts, people approve
+What this lab proves
+
+Enterprises don’t fear AI—they fear uncontrolled AI
+Human‑in‑the‑loop is a design feature, not a constraint
+
+Key activities
+
+AI drafts visit summaries, follow‑up plans, owner messages
+Add approval checkpoints before persistence or communication
+Surface confidence, reasoning, and source context
+
+Outputs
+
+Draft artifacts (summaries, recommendations)
+Explicit approval / rejection flow
+Explainability metadata per suggestion
+
+Teaching moment
+
+“The safest AI is not the least capable—it’s the most accountable.”
+
+
+Lab 3 — Single‑Agent Workflows (Goal‑Oriented AI)
+Theme: AI reasons across steps
+Mindset: From suggestions → goal pursuit
+What this lab proves
+
+Agents are not automation scripts
+Reasoning loops ≠ uncontrolled behavior
+
+Key activities
+
+Introduce a Clinical Assistant Agent
+Agent performs multi‑step reasoning (analyze → draft → request approval)
+Agent can call tools, but cannot execute irreversible actions
+
+Outputs
+
+Defined agent role & scope
+Tool‑constrained execution
+Observable reasoning steps
+
+Teaching moment
+
+“An agent is a bounded decision‑maker, not a free‑roaming process.”
+
+
+Lab 4 — Multi‑Agent System (MAS)
+Theme: Separation of cognitive responsibilities
+Mindset: Teams scale intelligence by separating thinking
+What this lab proves
+
+Complex decisions should never live in one prompt
+Multi‑agent design improves safety and clarity
+
+Key activities
+
+Introduce multiple agents:
+
+Clinical Reasoning Agent
+Compliance / Safety Agent
+Communication Agent
+
+
+Orchestrate collaboration and critique
+Prevent shared authority, allow shared context
+
+Outputs
+
+Agent role contracts
+Orchestration flow (sequential or parallel)
+Conflict resolution strategy
+
+Teaching moment
+
+“Multi‑agent systems scale judgment, not just throughput.”
+
+
+Lab 5 — Platform & Governance (Enterprise AI)
+Theme: Many teams, one AI platform
+Mindset: Innovation locally, governance centrally
+What this lab proves
+
+AI must be governed like any other enterprise platform
+Teams should not reinvent prompts, models, or safety rules
+
+Key activities
+
+Centralize model access & policy
+Introduce prompt/version governance
+Add cost, usage, and performance telemetry
+Align with Foundry / Global Standard concepts
+
+Outputs
+
+Shared AI platform architecture
+Policy enforcement points
+Cost & usage dashboards
+
+Teaching moment
+
+“The question is no longer can we build AI?—it’s can we scale it safely?”
+
+
+Lab 6 — AI‑Native Product Re‑Thinking (Optional Capstone)
+Theme: Design the app around AI
+Mindset: If we built this today, what would change?
+What this lab proves
+
+AI is not an enhancement—it reshapes UX
+CRUD is no longer the primary interaction model
+
+Key activities
+
+Replace screens with intent‑driven flows
+Make AI the primary interface, UI the fallback
+Event‑first, insight‑first design
+
+Outputs
+
+AI‑native UX concepts
+Re‑imagined architecture diagram
+“If we started today” narrative
+
+Teaching moment
+
+“AI maturity ends when AI becomes invisible—but indispensable.”
