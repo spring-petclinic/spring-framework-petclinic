@@ -4,9 +4,9 @@
 
 Welcome to PetClinic AI Modernization. Before we talk about AI, we need to understand the **legacy system as it exists today**. This lab is about discovery, not transformation.
 
-You'll explore a real enterprise application—the Spring PetClinic—and identify where human judgment currently makes decisions. Then, you'll map where AI *could* add value, without building or deploying any AI yet.
+You'll first establish a supported Java 21 baseline with GitHub Copilot app modernization, then explore a real enterprise application—the Spring PetClinic—and identify where human judgment currently makes decisions. After that, you'll map where AI *could* add value, without building or deploying any AI yet.
 
-**The Core Teaching Moment:** "Before asking how to add AI, you must ask where AI creates product value."
+**The Core Teaching Moment:** "Before asking how to add AI, first create a stable baseline—then ask where AI creates product value."
 
 ---
 
@@ -14,32 +14,62 @@ You'll explore a real enterprise application—the Spring PetClinic—and identi
 
 By the end of this lab, you will:
 
-1. **Understand the PetClinic domain** — explore Owners, Pets, Visits, and Vets
-2. **Identify human judgment** — find decisions made manually today
-3. **Discover hidden data** — uncover visit notes, history, and patterns that could inform AI
-4. **Map AI opportunities** — create an opportunity list for Q&A, summaries, and recommendations
-5. **Document constraints** — identify safety, accuracy, and approval boundaries
-6. **Visualize the baseline** — draw the pre-AI architecture
+1. **Establish a modernized baseline** — use GitHub Copilot app modernization to review and apply a Java 17 → Java 21 upgrade plan
+2. **Understand the PetClinic domain** — explore Owners, Pets, Visits, and Vets
+3. **Identify human judgment** — find decisions made manually today
+4. **Discover hidden data** — uncover visit notes, history, and patterns that could inform AI
+5. **Map AI opportunities** — create an opportunity list for Q&A, summaries, and recommendations
+6. **Document constraints** — identify safety, accuracy, and approval boundaries
+7. **Visualize the baseline** — draw the pre-AI architecture
 
 ---
 
 ## Prerequisites
 
 - Git installed and available in your terminal
-- Java 17+ and Maven 3.8+ (for running the app)
-- A text editor or IDE (VS Code, IntelliJ, etc.)
-- ~45 minutes of time
-- **No AI knowledge required** — this is pure exploration
+- VS Code 1.106+ with GitHub Copilot enabled
+- GitHub Copilot app modernization installed in VS Code (restart VS Code after installation if prompted)
+- Java 21+ and Maven 3.8+ (the modernization step upgrades the project before you run it)
+- ~60 minutes of time
+- **No AI knowledge required** — this is modernization plus exploration
 
 ---
 
 ## Time Estimate
 
-**45 minutes** including setup, exploration, and documentation
+**60 minutes** including runtime modernization, exploration, and documentation
 
 ---
 
 ## Step-by-Step Instructions
+
+### Step 00: Modernize the Baseline Before Adding AI
+
+Before you analyze AI readiness, put the application on a current LTS runtime. This keeps the rest of the lab focused on product value instead of mixing AI work with avoidable Java runtime drift.
+
+1. Open the repository folder in VS Code.
+
+2. If VS Code shows this prompt, accept it:
+   > "This project is using an older Java runtime (17). Would you like to install GitHub Copilot app modernization extension and upgrade it to Java 21 (LTS)?"
+
+   If you do **not** see the prompt, install GitHub Copilot app modernization manually and restart VS Code if asked.
+
+3. Open the GitHub Copilot app modernization pane in the sidebar. App modernization can also be started from the Quickstart panel or Copilot Chat, but for this lab use the sidebar pane so you can watch the workflow step by step.
+
+4. Choose `Upgrade Runtime & Frameworks` and review the proposed plan. The extension can analyze the project, propose an upgrade plan, and prepare plan/progress artifacts before it changes code.
+
+5. Let the modernization workflow run. It may check out a new branch, execute transformations, automatically fix issues during progress, and run build or validation loops while recording commits, logs, output, and a final summary.
+
+6. Review the summary carefully when the run finishes. If the results look good, keep the upgraded branch or working tree and use that as your baseline for the rest of Lab 0.
+
+7. Capture a few comparison notes before moving on:
+   - What changed between the Java 17 baseline and the Java 21 baseline?
+   - Which fixes happened automatically?
+   - What build warnings, errors, or compatibility concerns were removed?
+
+> **Why this happens now:** Later labs are about AI patterns, retrieval, approval, and governance. Upgrading first reduces noise so you can evaluate AI opportunities on a cleaner baseline.
+
+> **Note:** App modernization can also support assessment, planning, transformations, security validation, deployment workflows, and separate unit-test generation. In this lab, stay focused on the runtime/framework upgrade and the summary of what changed.
 
 ### Step 1: Clone and Explore the Repository
 
@@ -67,6 +97,8 @@ By the end of this lab, you will:
 ---
 
 ### Step 2: Start PetClinic Locally
+
+Use the upgraded branch or working tree from Step 00 so the rest of the lab reflects your Java 21 baseline.
 
 1. Build and start the application:
    ```bash
@@ -289,6 +321,8 @@ Save this as `baseline-architecture.md`:
 Stop the PetClinic server (Ctrl+C in your terminal) and verify your work:
 
 **Checklist:**
+- [ ] You reviewed the GitHub Copilot app modernization plan and final summary
+- [ ] You compared the Java 17 baseline with the Java 21 upgraded baseline before moving on
 - [ ] PetClinic ran successfully at http://localhost:8080
 - [ ] You explored at least 2 Owner profiles and their Pets
 - [ ] You viewed at least 1 Visit record with description text
@@ -311,6 +345,7 @@ your-working-directory/
 ## Summary & What's Next
 
 ### What You Learned
+✅ You established a Java 21-ready baseline before discussing AI changes  
 ✅ PetClinic is a real 3-layer enterprise application with Owner → Pet → Visit relationships  
 ✅ The application captures rich **visit descriptions** that are currently only reviewed manually  
 ✅ Human staff make several routine decisions (vet matching, follow-ups, trend detection)  
@@ -318,7 +353,7 @@ your-working-directory/
 ✅ Safety, accuracy, and approval workflows will be critical constraints  
 
 ### Key Insight
-The data is already there. Visit descriptions, visit history, vet specialties—these form a rich foundation for AI. But the value isn't in automating decisions; it's in **augmenting human judgment with insights they don't have time to extract today**.
+The data is already there. Visit descriptions, visit history, vet specialties—these form a rich foundation for AI. But the value isn't in automating decisions; it's in **augmenting human judgment with insights they don't have time to extract today**. That becomes easier to evaluate once the application is running on a current, supportable baseline.
 
 ### What's Coming
 - **Lab 1:** Build an in-app AI assistant using RAG (Retrieval-Augmented Generation) to answer questions about a pet's history

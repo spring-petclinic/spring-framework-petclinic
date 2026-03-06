@@ -15,9 +15,9 @@ This lab series guides you from legacy baseline through enterprise-scale AI gove
 
 ### **Lab 0: Legacy Baseline & AI Readiness**
 - **Theme:** Start where customers actually are
-- **Mindset:** No AI, no cloud assumptions, no refactors yet
-- **What you'll prove:** This is a real legacy enterprise app; AI is not "added" yet—only assessed
-- **Key outcomes:** AI opportunity map, constraints list, baseline architecture diagram
+- **Mindset:** Modernize the runtime baseline first; no AI or cloud assumptions yet
+- **What you'll prove:** This is a real legacy enterprise app; first establish a Java 21-ready baseline, then assess where AI belongs
+- **Key outcomes:** Modernized Java 21 baseline, AI opportunity map, constraints list, baseline architecture diagram
 - **Duration:** ~6 hours
 
 ---
@@ -84,7 +84,7 @@ This lab series guides you from legacy baseline through enterprise-scale AI gove
 
 ## How to Use These Labs
 
-1. **Start with Lab 0.** Do not skip. It establishes the domain model and grounds all subsequent labs in real customer context.
+1. **Start with Lab 0.** Do not skip. It establishes the Java 21-ready baseline, the domain model, and the real customer context for all subsequent labs.
 2. **Follow the sequence 0→6.** Each lab assumes knowledge and code artifacts from the previous lab.
 3. **Read each lab fully before starting.** Labs are self-contained; they include setup, activities, checkpoints, and reflection.
 4. **Hands-on work.** Each lab involves writing code, running queries, or designing interactions. Avoid copying snippets; understand *why* each pattern exists.
