@@ -11,8 +11,14 @@ bin/
 # VS Code
 .vscode
 
+# Node
+node_modules/
+
 # Maven
 target/
 
 # OS
 .DS_Store
+# Squad: ignore generated logs
+.squad/orchestration-log/
+.squad/log/

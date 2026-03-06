@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "excalidraw": {
+      "command": "node",
+      "args": [
+        "${userHome}/mcp_excalidraw/dist/index.js"
+      ],
+      "env": {
+        "EXPRESS_SERVER_URL": "http://localhost:3000",
+        "ENABLE_CANVAS_SYNC": "true"
+      }
+    },
+    "EXAMPLE-trello": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@trello/mcp-server"
+      ],
+      "env": {
+        "TRELLO_API_KEY": "${TRELLO_API_KEY}",
+        "TRELLO_TOKEN": "${TRELLO_TOKEN}"
+      }
+    }
+  }
+}
