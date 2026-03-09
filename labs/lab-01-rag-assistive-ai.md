@@ -302,17 +302,27 @@ If you want extraction to live inside the Spring application boundary, implement
 
 #### 2.3 Export Data to JSON
 
-Set `PETCLINIC_DB_URL` to the same datasource your local app uses, then run the extraction:
+Set `PETCLINIC_DB_URL` to the PostgreSQL datasource configured in Lab 0. If you followed the default PostgreSQL profile, your SQLAlchemy connection string is:
+
+```
+postgresql+psycopg2://postgres:petclinic@localhost:5432/petclinic
+```
+
+Install the `psycopg2` driver alongside `sqlalchemy`, then run the extraction:
 
 ```text
 # Linux/Mac
-export PETCLINIC_DB_URL="<sqlalchemy-connection-string>"
+python -m pip install sqlalchemy psycopg2-binary
+export PETCLINIC_DB_URL="postgresql+psycopg2://postgres:petclinic@localhost:5432/petclinic"
 python labs/scripts/extract_petclinic_data.py
 
 # Windows
-set PETCLINIC_DB_URL=<sqlalchemy-connection-string>
+python -m pip install sqlalchemy psycopg2-binary
+set PETCLINIC_DB_URL=postgresql+psycopg2://postgres:petclinic@localhost:5432/petclinic
 python labs/scripts/extract_petclinic_data.py
 ```
+
+> **Note:** The connection string matches the PostgreSQL profile in `pom.xml` (host: `localhost`, port: `5432`, database: `petclinic`, user: `postgres`, password: `petclinic`). If you changed any of these values during Lab 0 setup, update the URL accordingly.
 
 Verify the output has a structure like:
 

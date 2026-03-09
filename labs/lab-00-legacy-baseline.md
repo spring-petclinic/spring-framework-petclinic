@@ -30,8 +30,11 @@ By the end of this lab, you will:
 - VS Code 1.106+ with GitHub Copilot enabled
 - GitHub Copilot app modernization installed in VS Code (restart VS Code after installation if prompted)
 - Java 21+ and Maven 3.8+ (the modernization step upgrades the project before you run it)
+- A way to run PostgreSQL later in the lab series (installer or container is fine), but you do not need it for the first startup in this lab
 - ~60 minutes of time
 - **No AI knowledge required** — this is modernization plus exploration
+
+> **Recommended path:** Use the default H2 setup for your **first successful startup** in this lab because it has the least friction. After that baseline run, set up PostgreSQL in Lab 0 so later labs that rely on persistent data and external scripts/processes run more smoothly.
 
 ---
 
@@ -100,6 +103,8 @@ Before you analyze AI readiness, put the application on a current LTS runtime. T
 
 Use the upgraded branch or working tree from Step 00 so the rest of the lab reflects your Java 21 baseline.
 
+For this **first run**, stay on the default H2 profile. It is the easiest way to confirm that the upgraded application still starts cleanly.
+
 1. Build and start the application:
    ```bash
    ./mvnw jetty:run-war
@@ -120,6 +125,49 @@ Use the upgraded branch or working tree from Step 00 so the rest of the lab refl
    You should see the PetClinic home page with a navigation menu.
 
 > **Teaching Moment:** This is a real enterprise web application running on Jetty. It uses a database (H2 in-memory by default) and serves dynamic content. This is what "legacy" looks like: simple, stable, proven. No complex infrastructure. Now let's see what's inside.
+
+### Step 2A: Prepare PostgreSQL for the Rest of the Lab Series
+
+Now that you have a clean baseline run, prepare the database path that will make later labs easier.
+
+1. Keep your H2-based success as the baseline for this lab. Do **not** treat PostgreSQL as the required first boot path.
+
+2. Set up a local PostgreSQL instance after the baseline run. You can use a normal installer or a local container.
+
+   Example container startup:
+   ```bash
+   docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:16
+   ```
+
+3. Confirm the project's PostgreSQL profile settings so your local instance matches what the app expects:
+   - Maven profile: `PostgreSQL`
+   - Host: `localhost`
+   - Port: `5432`
+   - Database: `petclinic`
+   - Username: `postgres`
+   - Password: `petclinic`
+
+4. When PostgreSQL is ready, start the app with the PostgreSQL profile:
+   ```bash
+   ./mvnw -DskipTests jetty:run-war -P PostgreSQL
+   ```
+
+   On Windows:
+   ```bash
+   mvnw.cmd -DskipTests jetty:run-war -P PostgreSQL
+   ```
+
+> **Windows recovery:** If Jetty says it cannot delete `target/tmp`, fully stop the previous Jetty session with `Ctrl+C`, confirm batch termination if Windows prompts you, delete `target/tmp`, and rerun the same command.
+
+> **Tip:** `Hit <enter> to redeploy:` is normal when Jetty is running successfully in interactive mode. Leave that terminal running and verify the app in the browser instead of pressing Enter.
+
+5. Open http://localhost:8080/ again and confirm the application still loads.
+
+> **Note:** The `-DskipTests` flag is a temporary workaround for a current PostgreSQL-specific JDBC test/mapping issue. In Lab 0, the goal is to verify that the app starts locally with PostgreSQL; it is **not** to certify the full PostgreSQL test matrix.
+
+> **Why do this now if H2 already worked?** H2 is still the best first-run experience because it removes setup friction. PostgreSQL is the smoother path for the rest of the lab series because it gives you a persistent local database that behaves better when later labs introduce external scripts and supporting processes.
+
+> **Tip:** If you need the repo's original database notes, check `readme.md` and `src/main/resources/db/postgresql/petclinic_db_setup_postgresql.txt`.
 
 ---
 
@@ -324,6 +372,8 @@ Stop the PetClinic server (Ctrl+C in your terminal) and verify your work:
 - [ ] You reviewed the GitHub Copilot app modernization plan and final summary
 - [ ] You compared the Java 17 baseline with the Java 21 upgraded baseline before moving on
 - [ ] PetClinic ran successfully at http://localhost:8080
+- [ ] You completed the easiest first run on default H2 before changing database profiles
+- [ ] You prepared a local PostgreSQL instance and verified the app starts with the temporary `-DskipTests` PostgreSQL command
 - [ ] You explored at least 2 Owner profiles and their Pets
 - [ ] You viewed at least 1 Visit record with description text
 - [ ] You saw the Veterinarians list and noted their specialties
@@ -346,6 +396,9 @@ your-working-directory/
 
 ### What You Learned
 ✅ You established a Java 21-ready baseline before discussing AI changes  
+✅ H2 remains the fastest way to get the upgraded application running the first time  
+✅ PostgreSQL is worth setting up in Lab 0 because later labs run more smoothly with a persistent local database  
+✅ The PostgreSQL startup command currently skips tests temporarily because Lab 0 is validating local runtime, not the full PostgreSQL test matrix  
 ✅ PetClinic is a real 3-layer enterprise application with Owner → Pet → Visit relationships  
 ✅ The application captures rich **visit descriptions** that are currently only reviewed manually  
 ✅ Human staff make several routine decisions (vet matching, follow-ups, trend detection)  
@@ -368,6 +421,8 @@ The data is already there. Visit descriptions, visit history, vet specialties—
 - **PetClinic Source Code:** `src/main/java/org/springframework/samples/petclinic/`
 - **Domain Models:** `src/main/java/org/springframework/samples/petclinic/model/` (Owner, Pet, Visit, Vet classes)
 - **Service Layer:** `src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java`
+- **Database Profiles:** `readme.md` and `pom.xml`
+- **PostgreSQL Setup Notes:** `src/main/resources/db/postgresql/petclinic_db_setup_postgresql.txt`
 - **Spring PetClinic Docs:** http://fr.slideshare.net/AntoineRey/spring-framework-petclinic-sample-application
 
 ---

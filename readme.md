@@ -72,8 +72,14 @@ docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PAS
 For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
 
 ```
-./mvnw jetty:run-war -P PostgreSQL
+./mvnw -DskipTests jetty:run-war -P PostgreSQL
 ```
+
+Use `-DskipTests` here as a temporary workaround for a current PostgreSQL-specific JDBC test/mapping issue. The command above is intended to verify local runtime startup with PostgreSQL, not to certify the full PostgreSQL test matrix.
+
+> **Windows recovery:** If Jetty reports that it cannot delete `target/tmp`, fully stop the previous Jetty session with `Ctrl+C`, confirm batch termination if prompted, delete `target/tmp`, and rerun the same command.
+
+> **Tip:** `Hit <enter> to redeploy:` is normal when Jetty is running successfully in interactive mode. Leave that terminal running and verify the app in your browser instead of pressing Enter.
 
 Before do this, would be good to check properties defined in PostgreSQL profile inside pom.xml file.
 
