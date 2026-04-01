@@ -38,7 +38,7 @@
         <!-- Jakarta EE / Java SE dependencies -->
         <tomcat.version>11.0.18</tomcat.version>
         <jaxb-api.version>4.0.4</jaxb-api.version>
-        <jaxb-runtime.version>4.0.6</jaxb-runtime.version>
+        <jaxb-runtime.version>4.0.7</jaxb-runtime.version>
         <jakarta-activation.version>2.1.4</jakarta-activation.version>
         <servlet-api.version>6.1.0</servlet-api.version>
         <jstl-api.version>3.0.2</jstl-api.version>
