@@ -75,7 +75,7 @@
         <!-- Maven plugins -->
         <jetty-maven-plugin.version>11.0.26</jetty-maven-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
