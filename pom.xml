@@ -69,7 +69,7 @@
         <postgresql-driver.version>42.7.9</postgresql-driver.version>
 
         <!-- Others -->
-        <jackson.version>3.0.4</jackson.version>
+        <jackson.version>3.1.1</jackson.version>
         <aspectj.version>1.9.25.1</aspectj.version>
 
         <!-- Maven plugins -->
@@ -95,7 +95,7 @@
             <dependency>
                 <groupId>tools.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>3.0.4</version>
+                <version>${jackson.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
