@@ -66,6 +66,25 @@
         ".aecf/runtime/documentation/lvillara/2026-04-17/owner_pagination/AECF_06_VERSION.md"
       ],
       "notes": "Full AECF flow: PLAN→AUDIT(GO)→TEST_STRATEGY→IMPLEMENT→AUDIT_CODE(GO)→VERSION. 87/87 tests. 8 files modified across 3 persistence profiles. PAGE_SIZE=5. Spring Data JPA fix: findPagedByLastName returns List<Owner>."
+    },
+    {
+      "topic_id": "eager_loading_fix",
+      "display_name": "Eager Loading Fix",
+      "status": "COMPLETE",
+      "created_at": "2026-04-17T00:00:00Z",
+      "last_activity": "2026-04-17T00:00:00Z",
+      "skills_executed": ["aecf_refactor"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_01_DOCUMENT_EXISTING.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_02_REFACTOR_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_03_AUDIT_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_04_TEST_STRATEGY.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_05_TEST_IMPLEMENTATION.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_06_REFACTORING.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_07_AUDIT_CODE.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_08_VERSION.md"
+      ],
+      "notes": "Full AECF flow: DOCUMENT→PLAN→AUDIT(GO)→TEST_STRATEGY→TEST_IMPL→IMPLEMENT→AUDIT_CODE(GO)→VERSION. 87/87 tests. 6 production files + 1 test file modified. Key deviation: @EntityGraph required pets.type to avoid LazyInitializationException on PetType. SemVer 7.1.0 → 7.1.1 (PATCH)."
     }
   ]
 }

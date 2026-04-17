@@ -55,7 +55,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Description</th>
             </tr>
-            <c:forEach var="visit" items="${visit.pet.visits}">
+            <c:forEach var="visit" items="${visits}">
                 <c:if test="${!visit['new']}">
                     <tr>
                         <td><petclinic:localDate date="${visit.date}" pattern="yyyy/MM/dd"/></td>

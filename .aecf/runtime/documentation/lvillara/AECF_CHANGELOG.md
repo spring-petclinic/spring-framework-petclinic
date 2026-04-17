@@ -53,6 +53,25 @@
 
 ---
 
+## 2026-04-17 (5)
+
+### aecf_refactor | TOPIC: eager_loading_fix
+
+- **Skill**: `aecf_refactor`
+- **Status**: COMPLETE
+- **Artifacts generated**:
+  - `AECF_01_DOCUMENT_EXISTING.md` — Access point analysis + EAGER overhead catalog
+  - `AECF_02_REFACTOR_PLAN.md` — 7-step ordered plan (A-G), metrics before/after
+  - `AECF_03_AUDIT_PLAN.md` — Gate: GO (2 WARNINGs resolved in impl)
+  - `AECF_04_TEST_STRATEGY.md` — Existing test coverage, stub updates required
+  - `AECF_05_TEST_IMPLEMENTATION.md` — Stub added to VisitControllerTests.setup()
+  - `AECF_06_REFACTORING.md` — 6 production files + 1 test file modified, deviation documented
+  - `AECF_07_AUDIT_CODE.md` — Gate: GO, 87/87 tests pass
+  - `AECF_08_VERSION.md` — SemVer 7.1.0 → 7.1.1 (PATCH)
+- **Summary**: `Pet.visits` changed from `FetchType.EAGER` to `FetchType.LAZY`. JPA profile: L1-cache warm pre-query in `JpaOwnerRepositoryImpl.findById`. Spring Data JPA profile: `@EntityGraph(pets, pets.visits, pets.type)` — `pets.type` was added after discovering `@EntityGraph` overrides `@ManyToOne` default EAGER, causing LazyInitializationException on PetType. Controller: `loadPetWithVisit` uses `visit.setPet(pet)` instead of `pet.addVisit(visit)`; `showVisits` and `initNewVisitForm` use `findVisitsByPetId`. JSP: `${visit.pet.visits}` → `${visits}`. N+1 visit queries eliminated on owner search and all Pet-loading paths except ownerDetails.
+
+---
+
 ## 2026-04-17 (3)
 
 ### aecf_explain_behavior | TOPIC: persistence_strategies

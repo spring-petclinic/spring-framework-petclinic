@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -38,8 +39,17 @@ public interface SpringDataOwnerRepository extends OwnerRepository, Repository<O
     @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName%")
     Collection<Owner> findByLastName(@Param("lastName") String lastName);
 
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Carga el Owner con sus pets y las visitas de cada pet en una sola operación mediante @EntityGraph.
+     * Reemplaza el @Query con join-fetch explícito, añadiendo pets.visits para evitar
+     * LazyInitializationException en ownerDetails.jsp con FetchType.LAZY en Pet.visits.
+     */
     @Override
-    @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
+    @EntityGraph(attributePaths = {"pets", "pets.visits", "pets.type"})
     Owner findById(@Param("id") int id);
 
     /**
