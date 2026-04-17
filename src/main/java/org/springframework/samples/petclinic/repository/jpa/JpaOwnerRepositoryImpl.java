@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
+import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -56,6 +57,42 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
         Query query = this.em.createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName");
         query.setParameter("lastName", lastName + "%");
         return query.getResultList();
+    }
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Returns a page of owners whose last name starts with the given prefix.
+     * Uses setFirstResult/setMaxResults on a join-fetch query — Hibernate may apply
+     * in-memory pagination (HHH90003004) for correctness with collection fetch.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<Owner> findByLastName(String lastName, int page, int pageSize) {
+        Query query = this.em.createQuery(
+            "SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets " +
+            "WHERE owner.lastName LIKE :lastName ORDER BY owner.lastName, owner.id");
+        query.setParameter("lastName", lastName + "%");
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return (List<Owner>) query.getResultList();
+    }
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Counts owners whose last name starts with the given prefix.
+     */
+    @Override
+    public int countByLastName(String lastName) {
+        Query query = this.em.createQuery(
+            "SELECT COUNT(DISTINCT owner) FROM Owner owner WHERE owner.lastName LIKE :lastName");
+        query.setParameter("lastName", lastName + "%");
+        return ((Long) query.getSingleResult()).intValue();
     }
 
     @Override

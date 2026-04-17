@@ -1,0 +1,131 @@
+{
+  "generated_at": "2026-04-17T00:00:00Z",
+  "project": "spring-framework-petclinic",
+
+  "PetclinicInitializer": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java", "line": 39, "extends": "AbstractDispatcherServletInitializer", "note": "Servlet 3.0+ bootstrap entry point"},
+
+  "BaseEntity": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java", "line": 30},
+  "BaseEntity.getId": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java", "line": 35},
+  "BaseEntity.setId": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java", "line": 39},
+  "BaseEntity.isNew": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java", "line": 43},
+
+  "NamedEntity": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java", "line": 30, "extends": "BaseEntity"},
+  "NamedEntity.getName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java", "line": 35},
+  "NamedEntity.setName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java", "line": 39},
+
+  "Person": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Person.java", "line": 28, "extends": "BaseEntity"},
+  "Person.getFirstName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Person.java", "line": 38},
+  "Person.setFirstName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Person.java", "line": 42},
+  "Person.getLastName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Person.java", "line": 46},
+  "Person.setLastName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Person.java", "line": 50},
+
+  "Owner": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java", "line": 45, "extends": "Person", "annotations": ["@Entity", "@Table(name='owners')"]},
+  "Owner.getPets": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java", "line": 98},
+  "Owner.addPet": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java", "line": 104},
+  "Owner.getPet(String)": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java", "line": 115},
+  "Owner.getPet(String,boolean)": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java", "line": 125},
+
+  "Pet": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 46, "extends": "NamedEntity", "annotations": ["@Entity", "@Table(name='pets')"]},
+  "Pet.getBirthDate": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 68},
+  "Pet.setBirthDate": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 64},
+  "Pet.getType": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 72},
+  "Pet.getOwner": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 80},
+  "Pet.getVisits": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 99},
+  "Pet.addVisit": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Pet.java", "line": 105},
+
+  "PetType": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/PetType.java", "line": 27, "extends": "NamedEntity", "annotations": ["@Entity", "@Table(name='types')"]},
+  "Visit": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java", "line": 35, "extends": "BaseEntity", "annotations": ["@Entity", "@Table(name='visits')"]},
+  "Visit.getDate": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java", "line": 75},
+  "Visit.setDate": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java", "line": 81},
+  "Visit.getDescription": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java", "line": 90},
+  "Visit.getPet": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java", "line": 108},
+
+  "Vet": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Vet.java", "line": 44, "extends": "Person", "annotations": ["@Entity", "@Table(name='vets')"]},
+  "Vet.getSpecialties": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Vet.java", "line": 63},
+  "Vet.getNrOfSpecialties": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Vet.java", "line": 69},
+  "Vet.addSpecialty": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/model/Vet.java", "line": 73},
+
+  "Specialty": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Specialty.java", "line": 28, "extends": "NamedEntity", "annotations": ["@Entity", "@Table(name='specialties')"]},
+  "Vets": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/model/Vets.java", "line": 31, "annotations": ["@XmlRootElement"]},
+
+  "ClinicService": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 32},
+  "ClinicService.findPetTypes": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 34},
+  "ClinicService.findOwnerById": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 36},
+  "ClinicService.findPetById": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 38},
+  "ClinicService.savePet": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 40},
+  "ClinicService.saveVisit": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 42},
+  "ClinicService.findVets": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 44},
+  "ClinicService.saveOwner": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 46},
+  "ClinicService.findOwnerByLastName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 48},
+  "ClinicService.findVisitsByPetId": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java", "line": 50},
+
+  "ClinicServiceImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", "line": 40, "implements": "ClinicService", "annotations": ["@Service", "@Transactional"]},
+  "ClinicServiceImpl.findPetTypes": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", "line": 56, "annotations": ["@Cacheable(\"default\")"]},
+  "ClinicServiceImpl.findVets": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", "line": 101, "annotations": ["@Cacheable(\"vets\")"]},
+
+  "OwnerRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/OwnerRepository.java", "line": 32},
+  "PetRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/PetRepository.java", "line": 33},
+  "VetRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/VetRepository.java", "line": 31},
+  "VisitRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/VisitRepository.java", "line": 32},
+
+  "JdbcOwnerRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", "line": 48, "implements": "OwnerRepository", "annotations": ["@Repository", "@Profile(\"jdbc\")"]},
+  "JdbcOwnerRepositoryImpl.findByLastName": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", "line": 71},
+  "JdbcOwnerRepositoryImpl.findById": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", "line": 89},
+  "JdbcOwnerRepositoryImpl.save": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", "line": 122},
+
+  "JdbcPetRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java", "line": 45, "implements": "PetRepository"},
+  "JdbcVetRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVetRepositoryImpl.java", "line": 45, "implements": "VetRepository"},
+  "JdbcVisitRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRepositoryImpl.java", "line": 40, "implements": "VisitRepository"},
+  "JdbcPet": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPet.java", "line": 26, "extends": "Pet"},
+  "JdbcPetRowMapper": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRowMapper.java", "line": 28, "implements": "RowMapper<JdbcPet>"},
+  "JdbcPetVisitExtractor": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetVisitExtractor.java", "line": 28, "extends": "OneToManyResultSetExtractor"},
+  "JdbcVisitRowMapper": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRowMapper.java", "line": 30, "implements": "RowMapper<Visit>"},
+  "OneToManyResultSetExtractor": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java", "line": 48, "implements": "ResultSetExtractor<List<R>>", "note": "generic abstract — R, C, K type params"},
+
+  "JpaOwnerRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java", "line": 37, "implements": "OwnerRepository", "annotations": ["@Repository", "@Profile(\"jpa\")"]},
+  "JpaPetRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetRepositoryImpl.java", "line": 37, "implements": "PetRepository"},
+  "JpaVetRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVetRepositoryImpl.java", "line": 35, "implements": "VetRepository"},
+  "JpaVisitRepositoryImpl": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVisitRepositoryImpl.java", "line": 39, "implements": "VisitRepository"},
+
+  "SpringDataOwnerRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataOwnerRepository.java", "line": 32, "extends": ["OwnerRepository", "Repository<Owner,Integer>"], "annotations": ["@Profile(\"spring-data-jpa\")"]},
+  "SpringDataPetRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataPetRepository.java", "line": 32, "extends": ["PetRepository", "Repository<Pet,Integer>"]},
+  "SpringDataVetRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataVetRepository.java", "line": 28, "extends": ["VetRepository", "Repository<Vet,Integer>"]},
+  "SpringDataVisitRepository": {"type": "interface", "file": "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataVisitRepository.java", "line": 28, "extends": ["VisitRepository", "Repository<Visit,Integer>"]},
+
+  "OwnerController": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 39, "annotations": ["@Controller"]},
+  "OwnerController.initCreationForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 54, "route": "GET /owners/new"},
+  "OwnerController.processCreationForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 61, "route": "POST /owners/new"},
+  "OwnerController.initFindForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 71, "route": "GET /owners/find"},
+  "OwnerController.processFindForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 77, "route": "GET /owners"},
+  "OwnerController.initUpdateOwnerForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 102, "route": "GET /owners/{ownerId}/edit"},
+  "OwnerController.processUpdateOwnerForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 109, "route": "POST /owners/{ownerId}/edit"},
+  "OwnerController.showOwner": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java", "line": 126, "route": "GET /owners/{ownerId}"},
+
+  "PetController": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java", "line": 40, "annotations": ["@Controller", "@RequestMapping('/owners/{ownerId}')"]},
+  "PetController.initCreationForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java", "line": 70, "route": "GET /owners/{ownerId}/pets/new"},
+  "PetController.processCreationForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java", "line": 78, "route": "POST /owners/{ownerId}/pets/new"},
+  "PetController.initUpdateForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java", "line": 93, "route": "GET /owners/{ownerId}/pets/{petId}/edit"},
+  "PetController.processUpdateForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java", "line": 100, "route": "POST /owners/{ownerId}/pets/{petId}/edit"},
+
+  "VisitController": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/VisitController.java", "line": 37, "annotations": ["@Controller"]},
+  "VisitController.initNewVisitForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VisitController.java", "line": 70, "route": "GET /owners/*/pets/{petId}/visits/new"},
+  "VisitController.processNewVisitForm": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VisitController.java", "line": 76, "route": "POST /owners/{ownerId}/pets/{petId}/visits/new"},
+  "VisitController.showVisits": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VisitController.java", "line": 86, "route": "GET /owners/*/pets/{petId}/visits"},
+
+  "VetController": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/VetController.java", "line": 34, "annotations": ["@Controller"]},
+  "VetController.showVetList": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VetController.java", "line": 43, "route": "GET /vets"},
+  "VetController.showResourcesVetList": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VetController.java", "line": 51, "route": "GET /vets.json"},
+  "VetController.showVetListXml": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/VetController.java", "line": 58, "route": "GET /vets.xml"},
+
+  "CrashController": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/CrashController.java", "line": 30, "annotations": ["@Controller"]},
+  "CrashController.triggerException": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/web/CrashController.java", "line": 33, "route": "GET /oups"},
+
+  "PetTypeFormatter": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/PetTypeFormatter.java", "line": 1, "implements": "Formatter<PetType>", "annotations": ["@Component"]},
+  "PetValidator": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/web/PetValidator.java", "line": 1, "implements": "Validator", "annotations": ["@Component"]},
+
+  "CallMonitoringAspect": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/util/CallMonitoringAspect.java", "line": 39, "annotations": ["@Aspect", "@ManagedResource"]},
+  "CallMonitoringAspect.invoke": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/util/CallMonitoringAspect.java", "line": 78, "annotations": ["@Around"]},
+
+  "EntityUtils": {"type": "class", "file": "src/main/java/org/springframework/samples/petclinic/util/EntityUtils.java", "line": 33},
+  "EntityUtils.getById": {"type": "method", "file": "src/main/java/org/springframework/samples/petclinic/util/EntityUtils.java", "line": 48, "signature": "static <T extends BaseEntity> T getById(Collection<T>, Class<T>, int)"}
+}

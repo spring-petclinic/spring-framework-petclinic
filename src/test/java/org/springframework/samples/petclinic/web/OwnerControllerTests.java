@@ -97,7 +97,10 @@ class OwnerControllerTests {
 
     @Test
     void testProcessFindFormSuccess() throws Exception {
-        given(this.clinicService.findOwnerByLastName("")).willReturn(Lists.newArrayList(george, new Owner()));
+        Owner other = new Owner();
+        other.setId(2);
+        given(this.clinicService.countOwnersByLastName("")).willReturn(2);
+        given(this.clinicService.findOwnerByLastName("", 1, 5)).willReturn(Lists.newArrayList(george, other));
 
         mockMvc.perform(get("/owners"))
             .andExpect(status().isOk())
@@ -106,7 +109,9 @@ class OwnerControllerTests {
 
     @Test
     void testProcessFindFormByLastName() throws Exception {
-        given(this.clinicService.findOwnerByLastName(george.getLastName())).willReturn(Lists.newArrayList(george));
+        given(this.clinicService.countOwnersByLastName(george.getLastName())).willReturn(1);
+        given(this.clinicService.findOwnerByLastName(george.getLastName(), 1, 1))
+            .willReturn(Lists.newArrayList(george));
 
         mockMvc.perform(get("/owners")
             .param("lastName", "Franklin")
@@ -117,6 +122,8 @@ class OwnerControllerTests {
 
     @Test
     void testProcessFindFormNoOwnersFound() throws Exception {
+        given(this.clinicService.countOwnersByLastName("Unknown Surname")).willReturn(0);
+
         mockMvc.perform(get("/owners")
             .param("lastName", "Unknown Surname")
         )

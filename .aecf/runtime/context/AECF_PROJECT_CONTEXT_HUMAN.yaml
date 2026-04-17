@@ -1,0 +1,62 @@
+# AECF_PROJECT_CONTEXT_HUMAN.yaml
+# Admin-curated override layer — edit this file, then run: aecf context resolve
+# Fields with confidence < 0.75 are flagged with [REVIEW NEEDED]
+# Human values override AUTO.json at resolve time.
+# -----------------------------------------------------------------------
+
+# ====================== MANDATORY HUMAN-ONLY FIELDS ======================
+# These 8 fields cannot be inferred by the machine — they REQUIRE admin input.
+
+business_criticality: ""        # LOW | MEDIUM | HIGH | CRITICAL
+                                # Risk if not provided: skills may underestimate impact of findings
+
+risk_tolerance: ""              # CONSERVATIVE | MODERATE | AGGRESSIVE
+                                # Risk if not provided: security/debt thresholds may be miscalibrated
+
+data_sensitivity: ""            # PUBLIC | INTERNAL | CONFIDENTIAL | RESTRICTED
+                                # Risk if not provided: data classification audits will lack a baseline
+
+compliance_requirements: []     # e.g. [GDPR, PCI-DSS, HIPAA, SOC2, ISO27001]
+                                # Risk if not provided: regulatory audit skills will have no target framework
+
+team_size: ""                   # approximate number of active developers
+                                # Risk if not provided: productivity KPIs will lack denominator context
+
+release_cadence: ""             # DAILY | WEEKLY | BIWEEKLY | MONTHLY | AD_HOC
+                                # Risk if not provided: release readiness checks cannot set temporal gates
+
+production_environment: ""      # CLOUD | ON_PREMISE | HYBRID | NONE (not yet in prod)
+                                # Risk if not provided: deployment and security posture cannot be finalized
+
+primary_use_case: ""            # Free text — describe the business purpose of this application
+                                # Risk if not provided: maturity and executive summary skills lack context
+
+# ====================== REVIEW NEEDED (confidence < 0.75) =================
+
+# concurrency_model (confidence: 0.75 — borderline; verify below)
+concurrency_model_override:
+  threading_model: ""           # sync | async | mixed — AUTO detected 'sync'; confirm or correct
+
+# external_integrations (confidence: 0.80 — confirm no external API calls were missed)
+external_integrations_override:
+  apis_consumed: []             # list any external REST/SOAP APIs consumed by the application
+  auth_providers: []            # e.g. [Keycloak, Okta, LDAP, Spring Security] — none detected by AUTO
+
+# ====================== OPTIONAL OVERRIDES ================================
+# Uncomment and fill to override any AUTO-detected value
+
+# technical_stack_override:
+#   primary_languages: []
+#   frameworks: []
+
+# architecture_pattern_override:
+#   style: ""                   # monolith | microservices | modular_monolith | serverless
+#   deployment_model: ""        # container | serverless | bare_metal | paas
+
+# persistence_model_override:
+#   primary_db: ""
+#   migration_system: ""
+
+# governance_signals_override:
+#   security_mechanisms: []
+#   compliance_notes: ""

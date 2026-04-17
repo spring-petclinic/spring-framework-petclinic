@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-04-17T00:00:00Z",
+  "project": "spring-framework-petclinic",
+  "detection_criteria": {
+    "large_file_threshold_loc": 500,
+    "many_imports_threshold": 10,
+    "high_call_frequency": "referenced by 3+ other classes"
+  },
+  "hotspots": [
+    {
+      "id": "ClinicService",
+      "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java",
+      "reason": "highest_call_frequency",
+      "details": "Referenced by 5 classes (OwnerController, PetController, VetController, VisitController, PetTypeFormatter). Central service facade — all web tier routes through it. Any change here cascades across all controllers.",
+      "risk": "HIGH",
+      "loc": 53,
+      "references": 5
+    },
+    {
+      "id": "OneToManyResultSetExtractor",
+      "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+      "reason": "highest_loc_in_module",
+      "details": "Largest file in main/java at 159 LOC. Generic abstract base for JDBC result set joining. Complex generic type logic (R, C, K). Used by JdbcPetVisitExtractor.",
+      "risk": "MEDIUM",
+      "loc": 159,
+      "references": 1
+    },
+    {
+      "id": "JdbcOwnerRepositoryImpl",
+      "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java",
+      "reason": "many_imports + high_complexity",
+      "details": "156 LOC, contains SQL join logic + lazy loading of pets and visits. Most complex repository implementation. Tight coupling between Owner, Pet, Visit via raw SQL and object mapping.",
+      "risk": "MEDIUM",
+      "loc": 156,
+      "references": 1
+    },
+    {
+      "id": "Owner",
+      "file": "src/main/java/org/springframework/samples/petclinic/model/Owner.java",
+      "reason": "highest_loc_in_model + aggregate_root",
+      "details": "152 LOC. Aggregate root with cascade behavior. Any change to the pet ownership model impacts both JDBC and JPA layers. Contains bidirectional association management logic.",
+      "risk": "MEDIUM",
+      "loc": 152,
+      "references": 8
+    },
+    {
+      "id": "OwnerController",
+      "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java",
+      "reason": "most_endpoints",
+      "details": "132 LOC, 7 HTTP endpoints. Busiest controller in the web layer. Handles both create/update flows. Relies on ClinicService.findOwnerByLastName which triggers a DB call per search.",
+      "risk": "MEDIUM",
+      "loc": 132,
+      "references": 1
+    },
+    {
+      "id": "ClinicServiceImpl",
+      "file": "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java",
+      "reason": "high_call_frequency + caching",
+      "details": "111 LOC. Only concrete service implementation — single point of failure for all domain operations. Two @Cacheable methods (findPetTypes, findVets) — cache invalidation not explicitly managed.",
+      "risk": "MEDIUM",
+      "loc": 111,
+      "references": 5
+    },
+    {
+      "id": "Visit",
+      "file": "src/main/java/org/springframework/samples/petclinic/model/Visit.java",
+      "reason": "loc_relative_to_model_peers",
+      "details": "121 LOC — surprisingly large for a simple entity. Contains JAXB/JPA annotations and pet-visit bidirectional association. Worth reviewing for simplification.",
+      "risk": "LOW",
+      "loc": 121,
+      "references": 4
+    },
+    {
+      "id": "JdbcPetRepositoryImpl",
+      "file": "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+      "reason": "cross_module_dependency",
+      "details": "117 LOC. Unusual: this repository depends on OwnerRepository (constructor injection), creating a cross-repository dependency that can cause circular bean issues or coupling between aggregates.",
+      "risk": "MEDIUM",
+      "loc": 117,
+      "references": 2
+    }
+  ],
+  "no_monolithic_files": true,
+  "note": "No file exceeds 500 LOC — project has no monolithic files by threshold. Hotspots are coupling/reference-based, not size-based."
+}

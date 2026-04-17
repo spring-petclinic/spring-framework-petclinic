@@ -45,4 +45,28 @@
         </c:forEach>
         </tbody>
     </table>
+
+    <c:if test="${totalPages > 1}">
+        <nav aria-label="Owner search results navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <c:if test='${currentPage == 1}'>disabled</c:if>">
+                    <spring:url value="/owners" var="prevUrl">
+                        <spring:param name="lastName" value="${lastName}"/>
+                        <spring:param name="page" value="${currentPage - 1}"/>
+                    </spring:url>
+                    <a class="page-link" href="${fn:escapeXml(prevUrl)}">&laquo; Previous</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Page ${currentPage} of ${totalPages} (${totalItems} results)</span>
+                </li>
+                <li class="page-item <c:if test='${currentPage == totalPages}'>disabled</c:if>">
+                    <spring:url value="/owners" var="nextUrl">
+                        <spring:param name="lastName" value="${lastName}"/>
+                        <spring:param name="page" value="${currentPage + 1}"/>
+                    </spring:url>
+                    <a class="page-link" href="${fn:escapeXml(nextUrl)}">Next &raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </c:if>
 </petclinic:layout>

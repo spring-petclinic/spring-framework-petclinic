@@ -1,0 +1,179 @@
+{
+  "context_metadata": {
+    "project_name": "spring-framework-petclinic",
+    "generated_at": "2026-04-17T00:00:00Z",
+    "context_version": "1.0.0",
+    "structural_hash": "a3f2b1c4d5e6f708",
+    "confidence_overall": 0.90,
+    "generator_skill": "aecf_project_context_generator",
+    "output_language": "ENGLISH"
+  },
+  "technical_stack": {
+    "confidence": 0.98,
+    "source": "auto",
+    "primary_languages": ["Java 21"],
+    "frameworks": [
+      "Spring Framework 7.0.6",
+      "Spring MVC 7.0.6",
+      "Spring Data JPA 2025.1.2",
+      "Spring Context Support 7.0.6",
+      "Spring OXM 7.0.6",
+      "Spring JDBC 7.0.6",
+      "Spring ORM 7.0.6",
+      "Hibernate ORM 7.3.0.Final",
+      "Hibernate Validator 9.1.0.Final",
+      "AspectJ 1.9.25.1",
+      "Jakarta EE (Servlet 6.1, JPA 3.2, JSTL 3.0)"
+    ],
+    "orms": ["Hibernate ORM 7.3.0.Final", "Spring Data JPA 2025.1.2"],
+    "databases": ["H2 2.4.240 (default/embedded)", "HSQLDB 2.7.4", "MySQL 8.1.0", "PostgreSQL 42.7.9"],
+    "cache_backends": ["Caffeine 3.2.3"],
+    "message_brokers": [],
+    "cloud_services": [],
+    "tooling": {
+      "linting": ["SonarCloud (sonar-maven-plugin)"],
+      "formatting": [".editorconfig"],
+      "testing": ["JUnit Jupiter 6.0.2", "AssertJ 3.27.7", "Mockito 5.23.0", "Hamcrest 3.0", "JMeter (load tests)"],
+      "build": ["Maven (mvnw 3.8.4+)", "JaCoCo 0.8.14", "Jib 3.5.1", "libsass-maven-plugin 0.3.4"]
+    },
+    "runtime_versions": {
+      "java": "21",
+      "maven_minimum": "3.8.4",
+      "tomcat_embedded": "11.0.18",
+      "jetty_plugin": "11.0.26"
+    }
+  },
+  "architecture_pattern": {
+    "confidence": 0.97,
+    "source": "auto",
+    "style": "modular_monolith",
+    "layers": [
+      "web (Spring MVC @Controller — src/main/java/.../web)",
+      "service (facade interface ClinicService — src/main/java/.../service)",
+      "repository (3 interchangeable implementations — jdbc / jpa / spring-data-jpa)",
+      "model (JPA entities — src/main/java/.../model)",
+      "util (AOP call monitoring, EntityUtils — src/main/java/.../util)"
+    ],
+    "api_style": "REST",
+    "auth_patterns": [],
+    "multi_tenant": false,
+    "entry_points": [
+      "src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java (Servlet 3.0+ programmatic bootstrap)"
+    ],
+    "deployment_model": "container",
+    "process_model": "single"
+  },
+  "persistence_model": {
+    "confidence": 0.97,
+    "source": "auto",
+    "primary_db": "H2 (in-memory, default Maven profile)",
+    "orm_or_driver": "Hibernate ORM 7.3.0.Final / Spring Data JPA / Spring JdbcClient",
+    "migration_system": "Spring jdbc:initialize-database (schema.sql + data.sql per DB profile)",
+    "secondary_stores": ["HSQLDB (Maven profile HSQLDB)", "MySQL (Maven profile MySQL)", "PostgreSQL (Maven profile PostgreSQL)"],
+    "persistence_profiles": {
+      "jpa": "default — raw Hibernate/JPA via LocalContainerEntityManagerFactoryBean",
+      "spring-data-jpa": "Spring Data JPA repositories (SpringDataOwnerRepository, etc.)",
+      "jdbc": "Spring JdbcTemplate / JdbcClient (JdbcOwnerRepositoryImpl, etc.)"
+    }
+  },
+  "concurrency_model": {
+    "confidence": 0.75,
+    "source": "auto",
+    "threading_model": "sync",
+    "task_queues": [],
+    "lock_patterns": [],
+    "worker_processes": false
+  },
+  "caching_strategy": {
+    "confidence": 0.95,
+    "source": "auto",
+    "backends": ["Caffeine (CaffeineCacheManager via Spring Cache abstraction)"],
+    "patterns": ["@Cacheable annotation-driven cache via <cache:annotation-driven/>"],
+    "ttl_defaults": {},
+    "named_caches": ["vets", "default"]
+  },
+  "external_integrations": {
+    "confidence": 0.80,
+    "source": "auto",
+    "apis_consumed": [],
+    "auth_providers": [],
+    "webhooks": [],
+    "event_buses": [],
+    "third_party_services": ["SonarCloud (CI quality gate)", "GitHub Actions (CI/CD)"],
+    "jmx_monitoring": "CallMonitoringAspect exported via MBean (mbean-export)"
+  },
+  "domain_model_snapshot": {
+    "confidence": 0.97,
+    "source": "auto",
+    "core_entities": [
+      "BaseEntity (id, isNew) — src/main/java/.../model/BaseEntity.java",
+      "NamedEntity extends BaseEntity (name) — src/main/java/.../model/NamedEntity.java",
+      "Person extends BaseEntity (firstName, lastName) — src/main/java/.../model/Person.java",
+      "Owner extends Person (address, city, telephone, pets:Set<Pet>) — src/main/java/.../model/Owner.java",
+      "Pet extends NamedEntity (birthDate, type:PetType, owner:Owner, visits:Set<Visit>) — src/main/java/.../model/Pet.java",
+      "PetType extends NamedEntity — src/main/java/.../model/PetType.java",
+      "Visit extends BaseEntity (date, description, petId) — src/main/java/.../model/Visit.java",
+      "Vet extends Person (specialties:Set<Specialty>) — src/main/java/.../model/Vet.java",
+      "Specialty extends NamedEntity — src/main/java/.../model/Specialty.java",
+      "Vets (JAXB wrapper for Collection<Vet>) — src/main/java/.../model/Vets.java"
+    ],
+    "bounded_contexts": ["PetClinic (single bounded context — veterinary practice management)"],
+    "aggregate_roots": ["Owner (owns Pets → Visits)", "Vet (owns Specialties)"],
+    "relationships": [
+      "Owner 1→N Pet (CASCADE ALL, mapped-by=owner)",
+      "Pet N→1 PetType",
+      "Pet 1→N Visit",
+      "Vet N→M Specialty"
+    ]
+  },
+  "governance_signals": {
+    "confidence": 0.92,
+    "source": "auto",
+    "test_framework": "JUnit Jupiter 6.0.2 with Spring Test integration",
+    "test_organization": "src/test/java — model/ (unit), service/ (AbstractClinicServiceTests + 3 profile-specific subclasses), web/ (MockMvc)",
+    "coverage_tool": "JaCoCo 0.8.14 (XML report at prepare-package phase)",
+    "linting_rules": ["SonarCloud (sonar.organization=spring-petclinic, sonar.host.url=https://sonarcloud.io)"],
+    "security_mechanisms": [],
+    "ci_cd_pipeline": "GitHub Actions (.github/workflows/maven-build-main.yml, maven-build-pull-request.yml) — matrix Java 17/21, SonarCloud analysis",
+    "monitoring_observability": ["SLF4J + Logback (logback.xml)", "JMX via CallMonitoringAspect (count, avg invocation time)"],
+    "i18n": ["messages_de", "messages_en", "messages_es", "messages (default)"],
+    "devcontainer": ".devcontainer/devcontainer.json present"
+  },
+  "structural_metrics": {
+    "confidence": 0.97,
+    "source": "auto",
+    "total_files": 120,
+    "total_lines_estimated": 6500,
+    "module_count": 7,
+    "modules": [
+      "model (11 Java files)",
+      "service (2 Java files)",
+      "repository/jdbc (11 Java files)",
+      "repository/jpa (5 Java files)",
+      "repository/springdatajpa (4 Java files)",
+      "repository (interfaces — 4 Java files)",
+      "web (8 Java files)",
+      "util (2 Java files)"
+    ],
+    "monolithic_files": [],
+    "complexity_hotspots": [
+      "src/main/java/.../repository/jdbc/JdbcOwnerRepositoryImpl.java (JDBC complexity)",
+      "src/main/java/.../web/OwnerController.java (most web endpoints)"
+    ],
+    "files_by_language": {
+      "Java": 61,
+      "XML (Spring config / pom.xml)": 9,
+      "SQL": 8,
+      "JSP": 10,
+      "SCSS": 4,
+      "Properties": 7,
+      "YAML (GitHub Actions)": 2,
+      "Other": 19
+    }
+  },
+  "context_integrity": {
+    "structural_hash": "a3f2b1c4d5e6f708",
+    "structural_hash_match": true,
+    "requires_refresh": false
+  }
+}

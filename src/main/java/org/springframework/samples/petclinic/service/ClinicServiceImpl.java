@@ -69,6 +69,28 @@ public class ClinicServiceImpl implements ClinicService {
         return ownerRepository.findByLastName(lastName);
     }
 
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Owner> findOwnerByLastName(String lastName, int page, int pageSize) {
+        return ownerRepository.findByLastName(lastName, page, pageSize);
+    }
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public int countOwnersByLastName(String lastName) {
+        return ownerRepository.countByLastName(lastName);
+    }
+
     @Override
     @Transactional
     public void saveOwner(Owner owner) {

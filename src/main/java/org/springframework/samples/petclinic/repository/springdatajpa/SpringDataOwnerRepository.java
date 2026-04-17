@@ -16,7 +16,10 @@
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +41,32 @@ public interface SpringDataOwnerRepository extends OwnerRepository, Repository<O
     @Override
     @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
     Owner findById(@Param("id") int id);
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Spring Data internal method — applies Pageable to the join-fetch query.
+     */
+    @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets " +
+           "WHERE owner.lastName LIKE :lastName% ORDER BY owner.lastName, owner.id")
+    List<Owner> findPagedByLastName(@Param("lastName") String lastName, Pageable pageable);
+
+    @Override
+    @Query("SELECT COUNT(DISTINCT owner) FROM Owner owner WHERE owner.lastName LIKE :lastName%")
+    int countByLastName(@Param("lastName") String lastName);
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Implements OwnerRepository contract by converting (page, pageSize) to a Pageable and
+     * delegating to the Spring Data proxy method findPagedByLastName.
+     */
+    @Override
+    default Collection<Owner> findByLastName(String lastName, int page, int pageSize) {
+        return findPagedByLastName(lastName, PageRequest.of(page - 1, pageSize));
+    }
 }

@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-04-17T00:00:00Z",
+  "project": "spring-framework-petclinic",
+  "entry_points": [
+    {
+      "id": "servlet_initializer",
+      "type": "web_application_bootstrap",
+      "class": "PetclinicInitializer",
+      "file": "src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java",
+      "line": 39,
+      "description": "Servlet 3.0+ programmatic web application initializer — replaces web.xml. Registers DispatcherServlet and CharacterEncodingFilter, loads Spring root context (business-config.xml + tools-config.xml) and MVC context (mvc-core-config.xml). Default persistence profile: jpa.",
+      "activation": "Runtime — loaded by Servlet container via ServiceLoader (SPI)"
+    },
+    {
+      "id": "mvc_dispatcher",
+      "type": "request_dispatcher",
+      "mapping": "/*",
+      "description": "Spring DispatcherServlet — all HTTP requests routed through mvc-core-config.xml",
+      "activation": "HTTP request"
+    },
+    {
+      "id": "welcome_page",
+      "type": "static_route",
+      "route": "GET /",
+      "view": "welcome.jsp",
+      "description": "Root URL mapped via <mvc:view-controller path='/' view-name='welcome'/>",
+      "file": "src/main/resources/spring/mvc-core-config.xml"
+    },
+    {
+      "id": "owner_routes",
+      "type": "controller_entry",
+      "class": "OwnerController",
+      "routes": [
+        "GET /owners/new",
+        "POST /owners/new",
+        "GET /owners/find",
+        "GET /owners",
+        "GET /owners/{ownerId}",
+        "GET /owners/{ownerId}/edit",
+        "POST /owners/{ownerId}/edit"
+      ],
+      "file": "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java"
+    },
+    {
+      "id": "pet_routes",
+      "type": "controller_entry",
+      "class": "PetController",
+      "base_mapping": "/owners/{ownerId}",
+      "routes": [
+        "GET /owners/{ownerId}/pets/new",
+        "POST /owners/{ownerId}/pets/new",
+        "GET /owners/{ownerId}/pets/{petId}/edit",
+        "POST /owners/{ownerId}/pets/{petId}/edit"
+      ],
+      "file": "src/main/java/org/springframework/samples/petclinic/web/PetController.java"
+    },
+    {
+      "id": "visit_routes",
+      "type": "controller_entry",
+      "class": "VisitController",
+      "routes": [
+        "GET /owners/*/pets/{petId}/visits/new",
+        "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "GET /owners/*/pets/{petId}/visits"
+      ],
+      "file": "src/main/java/org/springframework/samples/petclinic/web/VisitController.java"
+    },
+    {
+      "id": "vet_routes",
+      "type": "controller_entry",
+      "class": "VetController",
+      "routes": [
+        "GET /vets",
+        "GET /vets.json (produces: application/json)",
+        "GET /vets.xml (produces: application/xml)"
+      ],
+      "file": "src/main/java/org/springframework/samples/petclinic/web/VetController.java"
+    },
+    {
+      "id": "crash_route",
+      "type": "controller_entry",
+      "class": "CrashController",
+      "routes": ["GET /oups"],
+      "description": "Intentional exception trigger for error-handling demo",
+      "file": "src/main/java/org/springframework/samples/petclinic/web/CrashController.java"
+    },
+    {
+      "id": "db_initializer",
+      "type": "startup_hook",
+      "description": "Spring jdbc:initialize-database — executes schema.sql + data.sql at startup for the active DB profile",
+      "file": "src/main/resources/spring/datasource-config.xml"
+    }
+  ],
+  "main_methods": [],
+  "cli_scripts": []
+}
