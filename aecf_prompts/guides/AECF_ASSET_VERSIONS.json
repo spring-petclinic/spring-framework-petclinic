@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-04-16T22:03:14.015Z",
+  "skills": {
+    "sourceRoot": "aecf_prompts/skills",
+    "count": 38,
+    "collectionVersionStamp": "sha256-140788201ee2",
+    "items": [
+      {
+        "id": "aecf_ai_risk_assessment",
+        "sourcePath": "aecf_prompts/skills/skill_ai_risk_assessment.md",
+        "bytes": 5069,
+        "sha256": "b960e796cfc4a6a8a4820362ce7b2814eb5a922b51b3042e5002f373fbd57988",
+        "versionStamp": "sha256-b960e796cfc4"
+      },
+      {
+        "id": "aecf_application_lifecycle",
+        "sourcePath": "aecf_prompts/skills/skill_application_lifecycle.md",
+        "bytes": 10095,
+        "sha256": "c79a6bf02b45e7d3f650980eba2c000e022582dc41c3edaf2c962029f1a57467",
+        "versionStamp": "sha256-c79a6bf02b45"
+      },
+      {
+        "id": "aecf_code_standards_audit",
+        "sourcePath": "aecf_prompts/skills/skill_code_standards_audit.md",
+        "bytes": 51302,
+        "sha256": "fbc281e3acdeb5ac39700e2c0fc0874e7e6186bb7c7da12e5561e0ab2e54f7ec",
+        "versionStamp": "sha256-fbc281e3acde"
+      },
+      {
+        "id": "aecf_codebase_intelligence",
+        "sourcePath": "aecf_prompts/skills/skill_codebase_intelligence.md",
+        "bytes": 13923,
+        "sha256": "1f38d082030f4bd19a606157528c2f8e8cba617ef1835e7145329e68d32921d4",
+        "versionStamp": "sha256-1f38d082030f"
+      },
+      {
+        "id": "aecf_content_project_generation_map",
+        "sourcePath": "aecf_prompts/skills/skill_content_project_generation_map.md",
+        "bytes": 3797,
+        "sha256": "7db15cc6031ac3e6c262ae2ffee2d04b4296359e50b59a9670c449b2896101d1",
+        "versionStamp": "sha256-7db15cc6031a"
+      },
+      {
+        "id": "aecf_coupling_assessment",
+        "sourcePath": "aecf_prompts/skills/skill_coupling_assessment.md",
+        "bytes": 10412,
+        "sha256": "9f828532b90bed3f2fbe430849f2785fbccf6637c1f7a25a0fa53866ff44206f",
+        "versionStamp": "sha256-9f828532b90b"
+      },
+      {
+        "id": "aecf_data_classification",
+        "sourcePath": "aecf_prompts/skills/skill_data_classification.md",
+        "bytes": 15220,
+        "sha256": "fc1ad1d4a9e5065cd240f017cd6fb0638a2ef1f214ede412c4c89b5f7ccf2b49",
+        "versionStamp": "sha256-fc1ad1d4a9e5"
+      },
+      {
+        "id": "aecf_data_governance_audit",
+        "sourcePath": "aecf_prompts/skills/skill_data_governance_audit.md",
+        "bytes": 6123,
+        "sha256": "d16745559c453696d1b9ca038ef9fb70296b111113104beac0fdba55223ac046",
+        "versionStamp": "sha256-d16745559c45"
+      },
+      {
+        "id": "aecf_data_strategy",
+        "sourcePath": "aecf_prompts/skills/skill_data_strategy.md",
+        "bytes": 20131,
+        "sha256": "4464fa733c3b0b5f321b555e41fc467c15f5905581335bbaae6f29caa661a1b3",
+        "versionStamp": "sha256-4464fa733c3b"
+      },
+      {
+        "id": "aecf_define_impact_metrics",
+        "sourcePath": "aecf_prompts/skills/skill_define_impact_metrics.md",
+        "bytes": 4948,
+        "sha256": "e4a2efd21b61d8fe3b983238cb3c6727a6087160cc4ae15cab711db912725a9d",
+        "versionStamp": "sha256-e4a2efd21b61"
+      },
+      {
+        "id": "aecf_dependency_audit",
+        "sourcePath": "aecf_prompts/skills/skill_dependency_audit.md",
+        "bytes": 22528,
+        "sha256": "10856254ea7412926f8a905cd34f2a0a3f503c7035b6ebe1c573cda69014c656",
+        "versionStamp": "sha256-10856254ea74"
+      },
+      {
+        "id": "aecf_document_context_ingestion",
+        "sourcePath": "aecf_prompts/skills/skill_document_context_ingestion.md",
+        "bytes": 8944,
+        "sha256": "1b904f947a1beb65b5b7c5ba453ba7af12ee255fd784a688b4ead6fa6c76252b",
+        "versionStamp": "sha256-1b904f947a1b"
+      },
+      {
+        "id": "aecf_document_legacy",
+        "sourcePath": "aecf_prompts/skills/skill_document_legacy.md",
+        "bytes": 21851,
+        "sha256": "b7ad22e22c9b24bb3e85cfe14d0db72d255bfe9de6c20dbdc65d4da458c9eca8",
+        "versionStamp": "sha256-b7ad22e22c9b"
+      },
+      {
+        "id": "aecf_executive_summary",
+        "sourcePath": "aecf_prompts/skills/skill_executive_summary.md",
+        "bytes": 5696,
+        "sha256": "72697aecaab28da0423a5afe446aacd194815846a2b654c7cd6660eabab3aa8c",
+        "versionStamp": "sha256-72697aecaab2"
+      },
+      {
+        "id": "aecf_explain_behavior",
+        "sourcePath": "aecf_prompts/skills/skill_explain_behaviour.md",
+        "bytes": 14729,
+        "sha256": "cfa9173adcfcd239db9bc589ceb8e7a2ddc00d2e492ba4d926b281187754935e",
+        "versionStamp": "sha256-cfa9173adcfc"
+      },
+      {
+        "id": "aecf_generate_runtime_context",
+        "sourcePath": "aecf_prompts/skills/skill_generate_runtime_context.md",
+        "bytes": 4410,
+        "sha256": "ac2f4149b23f0d3030a13172c40a147f8a596c64e6262b09a140e20d2e8715bc",
+        "versionStamp": "sha256-ac2f4149b23f"
+      },
+      {
+        "id": "aecf_generate_static_project_context",
+        "sourcePath": "aecf_prompts/skills/skill_generate_static_project_context.md",
+        "bytes": 7486,
+        "sha256": "c0d701063fe87f65f1144cd98cdd6066099302f8e851be698ca03a600c075b25",
+        "versionStamp": "sha256-c0d701063fe8"
+      },
+      {
+        "id": "aecf_hotfix",
+        "sourcePath": "aecf_prompts/skills/skill_hotfix.md",
+        "bytes": 16119,
+        "sha256": "18e9443212581de14470fd182c17218b752074e8b81ee312c4ee874aabcae1ae",
+        "versionStamp": "sha256-18e944321258"
+      },
+      {
+        "id": "aecf_maturity_assessment",
+        "sourcePath": "aecf_prompts/skills/skill_maturity_assessment.md",
+        "bytes": 14902,
+        "sha256": "b91c5bcec0e8a6f2840f77b6d035695c2a350a457048268cc768b0b9126d1fe6",
+        "versionStamp": "sha256-b91c5bcec0e8"
+      },
+      {
+        "id": "aecf_model_governance_audit",
+        "sourcePath": "aecf_prompts/skills/skill_model_governance_audit.md",
+        "bytes": 5259,
+        "sha256": "ef95d2263c53b53dadc29a09e00e163fc2e1bb51f2a499687354f19b6f87e721",
+        "versionStamp": "sha256-ef95d2263c53"
+      },
+      {
+        "id": "aecf_new_feature",
+        "sourcePath": "aecf_prompts/skills/skill_new_feature.md",
+        "bytes": 17397,
+        "sha256": "e19b53435161a81b8cb0d300277acf35dda6260aed10a1c507fb02b035797df3",
+        "versionStamp": "sha256-e19b53435161"
+      },
+      {
+        "id": "aecf_new_feature_ma",
+        "sourcePath": "aecf_prompts/skills/skill_new_feature_ma.md",
+        "bytes": 3545,
+        "sha256": "27444babc4e8ff5050d6dbabc21807eda216a7ea1677a9e8e1ac874692a9d4c6",
+        "versionStamp": "sha256-27444babc4e8"
+      },
+      {
+        "id": "aecf_new_project",
+        "sourcePath": "aecf_prompts/skills/skill_new_project.md",
+        "bytes": 43217,
+        "sha256": "efbee645ca421bf19b64c338c9b41b0912c498b2b560296034b65498abf408bb",
+        "versionStamp": "sha256-efbee645ca42"
+      },
+      {
+        "id": "aecf_new_test_set",
+        "sourcePath": "aecf_prompts/skills/skill_new_test_set.md",
+        "bytes": 11526,
+        "sha256": "5c623a381bb6cbc51b7095e72a5ee91b2c019b5cc2ebc363de69a76ff229f271",
+        "versionStamp": "sha256-5c623a381bb6"
+      },
+      {
+        "id": "aecf_productivity",
+        "sourcePath": "aecf_prompts/skills/skill_productivity.md",
+        "bytes": 10201,
+        "sha256": "e87e44f158cd842d9e67bf8ed1eea95a3fc85f5fc16be8d4fa0f1a54cc331045",
+        "versionStamp": "sha256-e87e44f158cd"
+      },
+      {
+        "id": "aecf_project_context_generator",
+        "sourcePath": "aecf_prompts/skills/skill_project_context_generator.md",
+        "bytes": 26506,
+        "sha256": "0dff5466be5aa5e81bec928e6a0c108eb5726a6b5ea44d04c7d59035be440270",
+        "versionStamp": "sha256-0dff5466be5a"
+      },
+      {
+        "id": "aecf_project_context_generator_map",
+        "sourcePath": "aecf_prompts/skills/skill_project_context_generator_map.md",
+        "bytes": 7486,
+        "sha256": "c0d701063fe87f65f1144cd98cdd6066099302f8e851be698ca03a600c075b25",
+        "versionStamp": "sha256-c0d701063fe8"
+      },
+      {
+        "id": "aecf_refactor",
+        "sourcePath": "aecf_prompts/skills/skill_refactor.md",
+        "bytes": 16492,
+        "sha256": "fbf10b6a52c9fc5deedebf0c093b591931325011bc319cf2e561ec84a45cec88",
+        "versionStamp": "sha256-fbf10b6a52c9"
+      },
+      {
+        "id": "aecf_release_readiness",
+        "sourcePath": "aecf_prompts/skills/skill_release_readiness.md",
+        "bytes": 14253,
+        "sha256": "c04bdc75f89da330f9b4346182aeec47c83e6ab6cbf7e924dd7b3cd3bd9631b6",
+        "versionStamp": "sha256-c04bdc75f89d"
+      },
+      {
+        "id": "aecf_surface_discovery",
+        "sourcePath": "aecf_prompts/skills/skill_surface_discovery.md",
+        "bytes": 0,
+        "sha256": "pending",
+        "versionStamp": "sha256-pending"
+      },
+      {
+        "id": "aecf_resolve_linting",
+        "sourcePath": "aecf_prompts/skills/skill_resolve_linting.md",
+        "bytes": 5741,
+        "sha256": "4f7d4d141857937932486678afad0f51f5dc485a2fe909aefeceac0c4aa29861",
+        "versionStamp": "sha256-4f7d4d141857"
+      },
+      {
+        "id": "aecf_security_review",
+        "sourcePath": "aecf_prompts/skills/skill_security_review.md",
+        "bytes": 32925,
+        "sha256": "54ccf4ab1d1b66e6c523a1471cfe1e7e63bb4084cee8ef34f2c6694eb357fb38",
+        "versionStamp": "sha256-54ccf4ab1d1b"
+      },
+      {
+        "id": "aecf_security_review_dora",
+        "sourcePath": "aecf_prompts/skills/skill_security_review_dora.md",
+        "bytes": 14250,
+        "sha256": "5c449c81ab95c0bcb2090c79a8516475ebac89d685a43e6c7bbf43be2bad99b8",
+        "versionStamp": "sha256-5c449c81ab95"
+      },
+      {
+        "id": "aecf_security_review_eu_ai_act",
+        "sourcePath": "aecf_prompts/skills/skill_security_review_eu_ai_act.md",
+        "bytes": 13824,
+        "sha256": "c8e4cad227bbb3b83d2c19ef890722c56451f7f261ab3226e14a4cff301fa727",
+        "versionStamp": "sha256-c8e4cad227bb"
+      },
+      {
+        "id": "aecf_security_review_gdpr",
+        "sourcePath": "aecf_prompts/skills/skill_security_review_gdpr.md",
+        "bytes": 16567,
+        "sha256": "da2d252b238bf9324097f4e95a8073047143758f062842ca587b13a9553056cd",
+        "versionStamp": "sha256-da2d252b238b"
+      },
+      {
+        "id": "aecf_set_stack",
+        "sourcePath": "aecf_prompts/skills/skill_set_stack.md",
+        "bytes": 10955,
+        "sha256": "0b4f54a62e067d3b83cc94a17ba469952beee775288e3823600e3906db39bf29",
+        "versionStamp": "sha256-0b4f54a62e06"
+      },
+      {
+        "id": "aecf_system_replayability_adaptive",
+        "sourcePath": "aecf_prompts/skills/skill_system_replayability_adaptive.md",
+        "bytes": 26655,
+        "sha256": "46dc0ec132801fdca9053f1ea69480e59428f5852c61a12ee950a6a55934608d",
+        "versionStamp": "sha256-46dc0ec13280"
+      },
+      {
+        "id": "aecf_tech_debt_assessment",
+        "sourcePath": "aecf_prompts/skills/skill_tech_debt_assessment.md",
+        "bytes": 22016,
+        "sha256": "b18133c33a5e032c45372ef562e09d7004c6baf985a02888f2151ed1354516af",
+        "versionStamp": "sha256-b18133c33a5e"
+      }
+    ]
+  },
+  "promptAssets": {
+    "sourceRoot": "aecf_prompts/prompts",
+    "count": 25,
+    "collectionVersionStamp": "sha256-427ad8d73d31",
+    "items": [
+      {
+        "id": "00_DEBUG",
+        "phase": "DEBUG",
+        "sourcePath": "aecf_prompts/prompts/00_DEBUG.md",
+        "bytes": 5664,
+        "sha256": "bc622e88bee87bf0e2ea3a5141b86276dbf668dcacc468ec8539df37c2535809",
+        "versionStamp": "sha256-bc622e88bee8"
+      },
+      {
+        "id": "00_DISCOVERY_LEGACY",
+        "phase": "DISCOVERY_LEGACY",
+        "sourcePath": "aecf_prompts/prompts/00_DISCOVERY_LEGACY.md",
+        "bytes": 4738,
+        "sha256": "c802d62f23f6d0ccc841302186edd6259e06d3a076911b9a73f9d5bf68be4f3d",
+        "versionStamp": "sha256-c802d62f23f6"
+      },
+      {
+        "id": "00_DOCUMENT_EXISTING_FUNCTIONALITY",
+        "phase": "DOCUMENT_EXISTING_FUNCTIONALITY",
+        "sourcePath": "aecf_prompts/prompts/00_DOCUMENT_EXISTING_FUNCTIONALITY.md",
+        "bytes": 7245,
+        "sha256": "4ff2a2303c8b81bb7c0398565a5326772222b7c13216a5243c9fa84912ff5872",
+        "versionStamp": "sha256-4ff2a2303c8b"
+      },
+      {
+        "id": "00_EXPLAIN_BEHAVIOR",
+        "phase": "EXPLAIN_BEHAVIOR",
+        "sourcePath": "aecf_prompts/prompts/00_EXPLAIN_BEHAVIOR.md",
+        "bytes": 9639,
+        "sha256": "ed55002ca503b5151d553edfa3a08a3b31c2011a1a42cab0a5ea173a6fe04c81",
+        "versionStamp": "sha256-ed55002ca503"
+      },
+      {
+        "id": "00_HOTFIX",
+        "phase": "HOTFIX",
+        "sourcePath": "aecf_prompts/prompts/00_HOTFIX.md",
+        "bytes": 14335,
+        "sha256": "2af770d87733c1df43384deeda86c37416e409b917fed15e307ff1b95305926f",
+        "versionStamp": "sha256-2af770d87733"
+      },
+      {
+        "id": "00_PLAN",
+        "phase": "PLAN",
+        "sourcePath": "aecf_prompts/prompts/00_PLAN.md",
+        "bytes": 5721,
+        "sha256": "84d3a363a0f00b19fc72df2fa5959100b1d029fae00c64cf944e696e91ef7000",
+        "versionStamp": "sha256-84d3a363a0f0"
+      },
+      {
+        "id": "01_PLAN_LEGACY",
+        "phase": "PLAN_LEGACY",
+        "sourcePath": "aecf_prompts/prompts/01_PLAN_LEGACY.md",
+        "bytes": 3590,
+        "sha256": "2d8c8e9f328c1f17bdbc07b9a0adb3868a250e2c9664a9c2aa75c7f807d9654b",
+        "versionStamp": "sha256-2d8c8e9f328c"
+      },
+      {
+        "id": "02_AUDIT_PLAN",
+        "phase": "AUDIT_PLAN",
+        "sourcePath": "aecf_prompts/prompts/02_AUDIT_PLAN.md",
+        "bytes": 4424,
+        "sha256": "2ac7d1187cf6397c8ff12bc9ca653d76e274161e05102bc08a4f419bdc28acad",
+        "versionStamp": "sha256-2ac7d1187cf6"
+      },
+      {
+        "id": "03_FIX_PLAN",
+        "phase": "FIX_PLAN",
+        "sourcePath": "aecf_prompts/prompts/03_FIX_PLAN.md",
+        "bytes": 2171,
+        "sha256": "a9f5e239ae319f51f8ba2e48e409cf9b4dcd0835783433fcba05503be8868ffe",
+        "versionStamp": "sha256-a9f5e239ae31"
+      },
+      {
+        "id": "04_IMPLEMENT",
+        "phase": "IMPLEMENT",
+        "sourcePath": "aecf_prompts/prompts/04_IMPLEMENT.md",
+        "bytes": 14858,
+        "sha256": "eec5c0a739b8bb5b5648a1e851a3c5540d8f850ddba9875af558dc8bec7fbc16",
+        "versionStamp": "sha256-eec5c0a739b8"
+      },
+      {
+        "id": "04_TEST_STRATEGY",
+        "phase": "TEST_STRATEGY",
+        "sourcePath": "aecf_prompts/prompts/04_TEST_STRATEGY.md",
+        "bytes": 4244,
+        "sha256": "bbfe17a6ee8fd9ba7faf6c66e9082747ccba83dbadc683b44e277d0e867c5d85",
+        "versionStamp": "sha256-bbfe17a6ee8f"
+      },
+      {
+        "id": "05_AUDIT_CODE",
+        "phase": "AUDIT_CODE",
+        "sourcePath": "aecf_prompts/prompts/05_AUDIT_CODE.md",
+        "bytes": 9448,
+        "sha256": "3a0c6c11f80fd5c834fe62ef03699babdcb0b83aee9ff7c62afadf5174e74c37",
+        "versionStamp": "sha256-3a0c6c11f80f"
+      },
+      {
+        "id": "05_IMPLEMENT",
+        "phase": "IMPLEMENT",
+        "sourcePath": "aecf_prompts/prompts/05_IMPLEMENT.md",
+        "bytes": 8166,
+        "sha256": "39fcc939b40bb372ca8fe9a1a7a7b1bbcec3450d53c8c7e19a66ee4b5ff5023e",
+        "versionStamp": "sha256-39fcc939b40b"
+      },
+      {
+        "id": "05A_AUDIT_STATIC_ANALYSIS",
+        "phase": "AUDIT_STATIC_ANALYSIS",
+        "sourcePath": "aecf_prompts/prompts/05A_AUDIT_STATIC_ANALYSIS.md",
+        "bytes": 2796,
+        "sha256": "c7bc7492692d5a0e4d101fd18b12521d9a1f88999483133f846883a38aae9b2e",
+        "versionStamp": "sha256-c7bc7492692d"
+      },
+      {
+        "id": "06_AUDIT_CODE",
+        "phase": "AUDIT_CODE",
+        "sourcePath": "aecf_prompts/prompts/06_AUDIT_CODE.md",
+        "bytes": 7561,
+        "sha256": "8b693ad15705751ef5d3471c90d53f358835f6062edf0a3849bbf22d0f877220",
+        "versionStamp": "sha256-8b693ad15705"
+      },
+      {
+        "id": "06_FIX_CODE",
+        "phase": "FIX_CODE",
+        "sourcePath": "aecf_prompts/prompts/06_FIX_CODE.md",
+        "bytes": 11088,
+        "sha256": "aaf51a4ca5a2af51fa86dd9af25c8ab78e6d87ae55e49b3906bed9b676f4be4b",
+        "versionStamp": "sha256-aaf51a4ca5a2"
+      },
+      {
+        "id": "07_FIX_CODE",
+        "phase": "FIX_CODE",
+        "sourcePath": "aecf_prompts/prompts/07_FIX_CODE.md",
+        "bytes": 3752,
+        "sha256": "9f0e5bee4d4adc6383466e23d07161cdf634f1c662e0938e8736ccd80e27f3d7",
+        "versionStamp": "sha256-9f0e5bee4d4a"
+      },
+      {
+        "id": "07_VERSION_MANAGEMENT",
+        "phase": "VERSION_MANAGEMENT",
+        "sourcePath": "aecf_prompts/prompts/07_VERSION_MANAGEMENT.md",
+        "bytes": 10906,
+        "sha256": "241fd8cdcd90b4ef654783871913d3bc0fe281d150938c687a1579d556e80bf2",
+        "versionStamp": "sha256-241fd8cdcd90"
+      },
+      {
+        "id": "08_TEST_STRATEGY",
+        "phase": "TEST_STRATEGY",
+        "sourcePath": "aecf_prompts/prompts/08_TEST_STRATEGY.md",
+        "bytes": 8591,
+        "sha256": "87ec159e68848585d9538aac5cdb926c2f57811a6e8140a06246da86188d23d9",
+        "versionStamp": "sha256-87ec159e6884"
+      },
+      {
+        "id": "08_VERSION",
+        "phase": "VERSION",
+        "sourcePath": "aecf_prompts/prompts/08_VERSION.md",
+        "bytes": 3806,
+        "sha256": "cbf2836bc0c90fc513dfdf460c0ad00fae902cea63fe7a7ee593bd3fef01c25a",
+        "versionStamp": "sha256-cbf2836bc0c9"
+      },
+      {
+        "id": "09_TEST_IMPLEMENTATION",
+        "phase": "TEST_IMPLEMENTATION",
+        "sourcePath": "aecf_prompts/prompts/09_TEST_IMPLEMENTATION.md",
+        "bytes": 12672,
+        "sha256": "3cb9a88e5c92c48aa715e4f417ee95a0b9cc6e39881cbedd73e62261feed5c44",
+        "versionStamp": "sha256-3cb9a88e5c92"
+      },
+      {
+        "id": "10_AUDIT_TESTS",
+        "phase": "AUDIT_TESTS",
+        "sourcePath": "aecf_prompts/prompts/10_AUDIT_TESTS.md",
+        "bytes": 9240,
+        "sha256": "48aca39f21a019b423a61f91fa9772d9abe5277d962d6b873b08f3fb99321ad9",
+        "versionStamp": "sha256-48aca39f21a0"
+      },
+      {
+        "id": "11_TEST_EXECUTION_REPORT",
+        "phase": "TEST_EXECUTION_REPORT",
+        "sourcePath": "aecf_prompts/prompts/11_TEST_EXECUTION_REPORT.md",
+        "bytes": 4680,
+        "sha256": "bf16a5a403f4cf7a4ac2b69bde25b2df86e8ba3bc4239783b85d145b3d4c741a",
+        "versionStamp": "sha256-bf16a5a403f4"
+      },
+      {
+        "id": "17_SECURITY_AUDIT",
+        "phase": "SECURITY_AUDIT",
+        "sourcePath": "aecf_prompts/prompts/17_SECURITY_AUDIT.md",
+        "bytes": 11263,
+        "sha256": "bb977d6bfef24d397a58b4e3ccaaa2f77f90b0cb9a11606b8ebd455819d145cc",
+        "versionStamp": "sha256-bb977d6bfef2"
+      },
+      {
+        "id": "README",
+        "phase": "README",
+        "sourcePath": "aecf_prompts/prompts/README.md",
+        "bytes": 524,
+        "sha256": "0426d9ef19297cef2993b699bd7754bf3273a1b4a97bbf55f6e89668770c4529",
+        "versionStamp": "sha256-0426d9ef1929"
+      }
+    ]
+  }
+}

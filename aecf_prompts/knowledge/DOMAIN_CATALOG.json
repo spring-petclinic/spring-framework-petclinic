@@ -1,0 +1,237 @@
+{
+  "version": "1.0.0",
+  "strategy": "local-first",
+  "domains": [
+    {
+      "id": "python",
+      "title": "Python / PyPI",
+      "priority": 100,
+      "file": "domains/python/pack.md",
+      "source_ids": ["python-docs", "pytest-docs", "packaging-guide"],
+      "match": {
+        "languages": ["python"],
+        "frameworks": ["fastapi", "flask", "django", "pytest"],
+        "extensions": [".py"],
+        "manifests": ["pyproject.toml", "requirements.txt", "setup.py"],
+        "keywords": ["python", "fastapi", "flask", "django", "pytest", "pydantic"],
+        "path_fragments": ["src/", "tests/"]
+      }
+    },
+    {
+      "id": "java",
+      "title": "Java / JVM",
+      "priority": 90,
+      "file": "domains/java/pack.md",
+      "source_ids": ["java-docs", "maven-docs", "gradle-docs"],
+      "match": {
+        "languages": ["java"],
+        "frameworks": ["spring", "springboot", "maven", "gradle", "junit", "zkoss"],
+        "extensions": [".java", ".zul"],
+        "manifests": ["pom.xml", "build.gradle", "build.gradle.kts"],
+        "keywords": ["java", "spring", "spring boot", "maven", "gradle", "junit", "zkoss", "zul"],
+        "path_fragments": ["src/main/java", "src/test/java", "web-inf/zk.xml", ".zul"]
+      }
+    },
+    {
+      "id": "angular",
+      "title": "Angular",
+      "priority": 89,
+      "file": "domains/angular/pack.md",
+      "source_ids": ["angular-docs", "rxjs-docs", "ngrx-docs"],
+      "match": {
+        "languages": ["typescript", "angular"],
+        "frameworks": ["angular", "rxjs", "ngrx", "angular material"],
+        "extensions": [".ts", ".html", ".scss"],
+        "manifests": ["angular.json", "package.json", "tsconfig.app.json"],
+        "keywords": ["angular", "@angular/core", "bootstrapapplication", "standalone: true", "@ngrx/store", "rxjs"],
+        "path_fragments": ["angular.json", "src/main.ts", "src/app/"]
+      }
+    },
+    {
+      "id": "csharp",
+      "title": "C#",
+      "priority": 89,
+      "file": "domains/csharp/pack.md",
+      "source_ids": ["csharp-docs", "dotnet-docs"],
+      "match": {
+        "languages": ["c#", "csharp"],
+        "extensions": [".cs"],
+        "manifests": [".csproj", ".sln"],
+        "keywords": ["c#", "csharp", "async await", "linq", "nullable reference types", "record", "class library"],
+        "path_fragments": [".cs", ".csproj"]
+      }
+    },
+    {
+      "id": "dotnet",
+      "title": ".NET",
+      "priority": 88,
+      "file": "domains/dotnet/pack.md",
+      "source_ids": ["dotnet-docs", "aspnet-docs"],
+      "match": {
+        "languages": [".net", "dotnet", "c#", "f#", "vb.net"],
+        "frameworks": ["asp.net core", "entity framework"],
+        "extensions": [".cs", ".fs", ".vb"],
+        "manifests": [".csproj", ".sln"],
+        "keywords": ["dotnet", ".net", "asp.net core", "entity framework", "csharp"],
+        "path_fragments": ["program.cs", "startup.cs", ".csproj"]
+      }
+    },
+    {
+      "id": "cobol",
+      "title": "COBOL (legacy)",
+      "priority": 84,
+      "file": "domains/cobol/pack.md",
+      "source_ids": ["cobol-docs", "ibm-zos-docs"],
+      "match": {
+        "languages": ["cobol"],
+        "extensions": [".cbl", ".cob", ".cpy"],
+        "keywords": ["cobol", "copybook", "cics", "jcl", "db2"],
+        "path_fragments": ["copybook", ".cbl", ".cpy"]
+      }
+    },
+    {
+      "id": "businesscentral",
+      "title": "Business Central / AL",
+      "priority": 95,
+      "file": "domains/businesscentral/pack.md",
+      "source_ids": ["bc-al-docs", "bc-app-json", "bc-testing"],
+      "match": {
+        "languages": ["al"],
+        "frameworks": ["businesscentral", "business central"],
+        "extensions": [".al"],
+        "manifests": ["app.json"],
+        "keywords": ["business central", "businesscentral", "dynamics 365 business central", "al language", "al extension"],
+        "path_fragments": [".al", "app.json"]
+      }
+    },
+    {
+      "id": "react",
+      "title": "React",
+      "priority": 93,
+      "file": "domains/react/pack.md",
+      "source_ids": ["react-docs", "vite-docs"],
+      "match": {
+        "languages": ["react"],
+        "frameworks": ["react", "vite", "next", "nextjs", "remix"],
+        "extensions": [".jsx", ".tsx"],
+        "keywords": ["react", "jsx", "tsx", "vite", "next.js", "nextjs"],
+        "path_fragments": ["src/components", "src/app", "app/"]
+      }
+    },
+    {
+      "id": "go",
+      "title": "Go",
+      "priority": 89,
+      "file": "domains/go/pack.md",
+      "source_ids": ["go-docs"],
+      "match": {
+        "languages": ["go", "golang"],
+        "frameworks": ["gin", "echo", "fiber", "chi"],
+        "extensions": [".go"],
+        "manifests": ["go.mod"],
+        "keywords": ["golang", "go mod", "gin", "echo", "fiber", "chi", "gorilla/mux"],
+        "path_fragments": ["cmd/", "internal/", "go.mod"]
+      }
+    },
+    {
+      "id": "rust",
+      "title": "Rust",
+      "priority": 87,
+      "file": "domains/rust/pack.md",
+      "source_ids": ["rust-docs", "cargo-docs"],
+      "match": {
+        "languages": ["rust"],
+        "frameworks": ["cargo", "tokio", "axum", "actix", "rocket"],
+        "extensions": [".rs"],
+        "manifests": ["cargo.toml"],
+        "keywords": ["rust", "cargo", "tokio", "axum", "actix", "rocket"],
+        "path_fragments": ["src/main.rs", "src/lib.rs", "cargo.toml"]
+      }
+    },
+    {
+      "id": "node",
+      "title": "Node.js",
+      "priority": 86,
+      "file": "domains/node/pack.md",
+      "source_ids": ["node-docs", "npm-docs"],
+      "match": {
+        "languages": ["node", "nodejs"],
+        "frameworks": ["express", "fastify", "nestjs", "koa"],
+        "extensions": [".js", ".cjs", ".mjs"],
+        "keywords": ["node.js", "nodejs", "express", "fastify", "nestjs", "koa"],
+        "path_fragments": ["server.js", "src/server", "src/routes", "api/"]
+      }
+    },
+    {
+      "id": "d365fo",
+      "title": "Dynamics 365 Finance and Operations / X++",
+      "priority": 94,
+      "file": "domains/d365fo/pack.md",
+      "source_ids": ["d365fo-docs", "d365fo-xpp-docs"],
+      "match": {
+        "languages": ["xpp", "x++"],
+        "frameworks": ["d365fo", "finance and operations"],
+        "extensions": [".xpp"],
+        "manifests": ["AxModelInfo.xml"],
+        "keywords": ["dynamics 365 finance", "dynamics 365 operations", "finance and operations", "d365fo", "x++", "xpp"],
+        "path_fragments": ["AxClass", "AxTable", "AxForm", "AxModelInfo.xml"]
+      }
+    },
+    {
+      "id": "d365ce",
+      "title": "Dynamics 365 Customer Engagement / CRM",
+      "priority": 93,
+      "file": "domains/d365ce/pack.md",
+      "source_ids": ["d365ce-docs", "d365ce-plugin-docs", "d365ce-webapi-docs"],
+      "match": {
+        "languages": ["c#", "javascript"],
+        "frameworks": ["d365ce", "customer engagement", "dataverse"],
+        "extensions": [".cs"],
+        "keywords": ["dynamics crm", "customer engagement", "d365ce", "dataverse", "dynamics 365 sales", "dynamics 365 service", "xrm sdk", "plugin"],
+        "path_fragments": ["Plugins/", "WebResources/"]
+      }
+    },
+    {
+      "id": "d365marketing",
+      "title": "Dynamics 365 Marketing / Power Platform",
+      "priority": 92,
+      "file": "domains/d365marketing/pack.md",
+      "source_ids": ["d365marketing-docs", "powerplatform-docs", "pcf-docs"],
+      "match": {
+        "languages": ["javascript", "typescript"],
+        "frameworks": ["d365marketing", "power platform", "pcf"],
+        "extensions": [".ts", ".js"],
+        "keywords": ["dynamics 365 marketing", "d365marketing", "real-time marketing", "power platform", "pcf", "power automate", "custom connector"],
+        "path_fragments": ["pcf/", "controls/", "ControlManifest."]
+      }
+    },
+    {
+      "id": "c",
+      "title": "C",
+      "priority": 88,
+      "file": "domains/c/pack.md",
+      "source_ids": ["c-docs", "cmake-docs"],
+      "match": {
+        "languages": ["c"],
+        "extensions": [".c", ".h"],
+        "manifests": ["CMakeLists.txt", "Makefile"],
+        "keywords": ["c language", "posix", "embedded c", "systems programming"],
+        "path_fragments": ["src/", "include/", ".c", ".h"]
+      }
+    },
+    {
+      "id": "cpp",
+      "title": "C++",
+      "priority": 88,
+      "file": "domains/cpp/pack.md",
+      "source_ids": ["cpp-docs", "cmake-docs", "cpp-core-guidelines"],
+      "match": {
+        "languages": ["c++", "cpp"],
+        "extensions": [".cpp", ".hpp", ".cc", ".hh", ".cxx"],
+        "manifests": ["CMakeLists.txt", "Makefile", "meson.build"],
+        "keywords": ["c++", "cpp", "modern c++", "c++17", "c++20", "c++23", "raii"],
+        "path_fragments": ["src/", "include/", ".cpp", ".hpp"]
+      }
+    }
+  ]
+}

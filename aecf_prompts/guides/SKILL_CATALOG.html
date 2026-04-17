@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AECF Skill Catalog Explorer</title>
+  <meta name="description" content="AECF Skills catalog explorer with category chips, full skill detail, and copy-ready prompt composer.">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06060e;
+      --bg-soft: #0a0c1a;
+      --surface: rgba(10, 12, 28, 0.90);
+      --surface-strong: rgba(14, 16, 36, 0.96);
+      --surface-ink: #e0e8f0;
+      --text: #e0e8f0;
+      --muted: #7a8ba0;
+      --line: rgba(0, 224, 255, 0.12);
+      --shadow: 0 24px 60px rgba(0, 180, 255, 0.08);
+      --brand: #00e0ff;
+      --brand-2: #ff2d7b;
+      --brand-3: #7b2fff;
+      --accent-dd: #00ffa3;
+      --accent-aq: #ff6b4a;
+      --accent-dc: #b580ff;
+      --accent-gr: #ffcc00;
+      --accent-pr: #7aff2d;
+      --accent-bs: #00d4ff;
+      --accent-ex: #ff44cc;
+      --accent-tr: #00ffc8;
+      --released: #00ff66;
+      --beta: #ffaa00;
+      --hidden: #9988ff;
+      --deprecated: #ff4444;
+      --danger: #ff2222;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 999px;
+      --font-sans: "Segoe UI", "Aptos", "Trebuchet MS", sans-serif;
+      --font-display: "Georgia", "Palatino Linotype", serif;
+      --max-width: 1500px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0, 224, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(123, 47, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #06060e 0%, var(--bg) 38%, #0e1020 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 28px 20px 56px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(10, 12, 28, 0.95), rgba(8, 10, 24, 0.92));
+      border: 1px solid rgba(0, 224, 255, 0.10);
+      border-radius: 32px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -110px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(123, 47, 255, 0.10), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 224, 255, 0.12);
+      color: var(--brand);
+      width: fit-content;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 3.5vw, 4.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      max-width: 11ch;
+      text-shadow: 0 0 20px rgba(0, 224, 255, 0.40), 0 0 40px rgba(123, 47, 255, 0.20);
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 80ch;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.6;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stat {
+      background: rgba(0, 224, 255, 0.06);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 20px;
+      padding: 16px 18px;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.8rem;
+      font-family: var(--font-display);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .toolbar {
+      margin-top: 24px;
+      display: grid;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search,
+    .toggle,
+    .composer-input,
+    .composer-output {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .search,
+    .toggle {
+      min-height: 52px;
+      padding: 0 16px;
+    }
+
+    .search:focus,
+    .toggle:focus,
+    .composer-input:focus,
+    .composer-output:focus {
+      outline: none;
+      border-color: rgba(0, 224, 255, 0.4);
+      box-shadow: 0 0 0 4px rgba(0, 224, 255, 0.12);
+    }
+
+    .filter-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .filter-group header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .filter-group h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .filter-group p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      appearance: none;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      line-height: 1;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .chip:hover,
+    .chip:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(0, 224, 255, 0.35);
+      outline: none;
+    }
+
+    .chip.is-active {
+      background: rgba(0, 224, 255, 0.14);
+      border-color: rgba(0, 224, 255, 0.38);
+      box-shadow: inset 0 0 0 1px rgba(0, 224, 255, 0.15);
+    }
+
+    .chip-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.8em;
+      height: 1.8em;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 224, 255, 0.06);
+      font-size: 0.8rem;
+      padding: 0 6px;
+    }
+
+    .results-layout {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 430px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-header h2,
+    .panel-header h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .panel-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .skill-list {
+      max-height: calc(100vh - 260px);
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .skill-card {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      border-radius: 18px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .skill-card:hover,
+    .skill-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(0, 224, 255, 0.10);
+      border-color: rgba(0, 224, 255, 0.32);
+      outline: none;
+    }
+
+    .skill-card.is-selected {
+      border-color: rgba(0, 224, 255, 0.42);
+      box-shadow: inset 0 0 0 1px rgba(0, 224, 255, 0.18), 0 14px 28px rgba(0, 224, 255, 0.10);
+      background: linear-gradient(180deg, rgba(14, 20, 40, 0.94), rgba(12, 16, 36, 0.94));
+    }
+
+    .skill-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .skill-id {
+      display: inline-flex;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.82rem;
+      color: var(--brand);
+      background: rgba(0, 224, 255, 0.06);
+      border-radius: 10px;
+      padding: 4px 8px;
+      margin-bottom: 10px;
+    }
+
+    .skill-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .mini-chips,
+    .meta-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-chip,
+    .meta-chip,
+    .release-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      line-height: 1;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+    }
+
+    .mini-chip[data-tone="daily development"] { background: rgba(0, 255, 163, 0.12); }
+    .mini-chip[data-tone="audit and quality"] { background: rgba(255, 107, 74, 0.12); }
+    .mini-chip[data-tone="documentation and understanding"] { background: rgba(181, 128, 255, 0.12); }
+    .mini-chip[data-tone="governance and release"] { background: rgba(255, 204, 0, 0.14); }
+    .mini-chip[data-tone="productivity"] { background: rgba(122, 255, 45, 0.14); }
+    .mini-chip[data-tone="bootstrap y setup"] { background: rgba(0, 212, 255, 0.12); }
+    .mini-chip[data-tone="explorators"] { background: rgba(255, 68, 204, 0.12); }
+    .mini-chip[data-tone="traceability and replay"] { background: rgba(0, 255, 200, 0.12); }
+
+    .release-badge[data-status="released"] {
+      background: rgba(0, 255, 102, 0.12);
+      color: var(--released);
+    }
+
+    .release-badge[data-status="beta"] {
+      background: rgba(255, 170, 0, 0.12);
+      color: var(--beta);
+    }
+
+    .release-badge[data-status="hidden"] {
+      background: rgba(153, 136, 255, 0.12);
+      color: var(--hidden);
+    }
+
+    .release-badge[data-status="deprecated"] {
+      background: rgba(255, 68, 68, 0.12);
+      color: var(--deprecated);
+    }
+
+    .detail {
+      padding: 24px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .detail-top {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-top h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 2.8vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .detail-top p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .meta-box {
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: rgba(14, 16, 36, 0.72);
+    }
+
+    .meta-box strong {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .meta-box span,
+    .meta-box code {
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .meta-box code {
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--brand);
+      word-break: break-word;
+    }
+
+    .detail-section {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-section h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .detail-section p,
+    .detail-section li {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .detail-section ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .composer {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(14, 16, 36, 0.95), rgba(10, 12, 28, 0.95));
+      border: 1px solid rgba(0, 224, 255, 0.12);
+    }
+
+    .composer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .composer label {
+      display: grid;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .composer-input,
+    .composer-output {
+      min-height: 150px;
+      padding: 14px 16px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .composer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button {
+      appearance: none;
+      border: none;
+      background: linear-gradient(135deg, var(--brand), #ff2d7b);
+      color: #fff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      box-shadow: 0 10px 24px rgba(0, 224, 255, 0.15), 0 0 20px rgba(0, 224, 255, 0.20);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .button.is-secondary {
+      background: rgba(14, 16, 36, 0.90);
+      color: var(--text);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .button.is-ghost {
+      background: rgba(0, 224, 255, 0.12);
+      color: var(--brand);
+      box-shadow: none;
+    }
+
+    .button.is-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(14, 16, 36, 0.88);
+      color: var(--text);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .help-panel {
+      margin-top: 18px;
+      display: none;
+      gap: 10px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .help-panel.is-open {
+      display: grid;
+    }
+
+    .help-panel h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .help-panel ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .top-link {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 12;
+      background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+      color: #fff;
+      border: none;
+      box-shadow: 0 16px 28px rgba(255, 45, 123, 0.20), 0 0 20px rgba(123, 47, 255, 0.15);
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .source-box,
+    .catalog-render {
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 18px;
+      background: rgba(14, 16, 36, 0.76);
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .catalog-section {
+      margin-top: 28px;
+    }
+
+    .catalog-launcher {
+      padding: 22px 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .catalog-launcher p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    .mermaid-shell {
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(14, 20, 40, 0.98), rgba(12, 16, 36, 0.98));
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .mermaid {
+      min-width: 720px;
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mermaid .label,
+    .mermaid .nodeLabel,
+    .mermaid .edgeLabel,
+    .mermaid .cluster-label text,
+    .mermaid text {
+      fill: #e0e8f0 !important;
+      color: #e0e8f0 !important;
+      font-weight: 700;
+    }
+
+    .mermaid .edgeLabel rect {
+      fill: rgba(14, 16, 36, 0.96) !important;
+      opacity: 1 !important;
+    }
+
+    .mermaid .node rect,
+    .mermaid .node polygon,
+    .mermaid .node path,
+    .mermaid .node circle {
+      filter: drop-shadow(0 10px 18px rgba(0, 224, 255, 0.10));
+    }
+
+    .markdown {
+      color: var(--surface-ink);
+    }
+
+    .markdown > :first-child {
+      margin-top: 0;
+    }
+
+    .markdown h1,
+    .markdown h2,
+    .markdown h3,
+    .markdown h4 {
+      line-height: 1.15;
+      margin: 1.4em 0 0.7em;
+    }
+
+    .markdown h1,
+    .markdown h2 {
+      font-family: var(--font-display);
+      letter-spacing: -0.02em;
+    }
+
+    .markdown h1 { font-size: 2rem; }
+    .markdown h2 { font-size: 1.5rem; }
+    .markdown h3 { font-size: 1.12rem; }
+    .markdown h4 { font-size: 1rem; }
+
+    .markdown p,
+    .markdown li,
+    .markdown blockquote {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .markdown p code,
+    .markdown li code,
+    .markdown td code,
+    .markdown th code {
+      font-family: Consolas, "Courier New", monospace;
+      background: rgba(0, 224, 255, 0.06);
+      color: var(--brand);
+      border-radius: 8px;
+      padding: 0.12em 0.38em;
+      font-size: 0.92em;
+    }
+
+    .markdown pre {
+      background: #0c0e18;
+      color: #e0e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .markdown pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+    }
+
+    .markdown blockquote {
+      border-left: 4px solid rgba(0, 224, 255, 0.24);
+      margin: 1rem 0;
+      padding: 0.2rem 0 0.2rem 1rem;
+    }
+
+    .markdown table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.4rem;
+      font-size: 0.94rem;
+    }
+
+    .markdown th,
+    .markdown td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0, 224, 255, 0.12);
+      vertical-align: top;
+    }
+
+    .markdown th {
+      background: rgba(0, 224, 255, 0.06);
+      color: var(--text);
+    }
+
+    .markdown hr {
+      border: none;
+      height: 1px;
+      background: rgba(0, 224, 255, 0.12);
+      margin: 1.4rem 0;
+    }
+
+    .empty-state {
+      padding: 22px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .copy-feedback {
+      min-height: 1.4em;
+      color: var(--brand);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1180px) {
+      .results-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .skill-list {
+        max-height: 420px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .toolbar-top,
+      .composer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .detail {
+        padding: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <span class="eyebrow">AECF Catalog Explorer</span>
+      <h1 id="page-title">SKILL_CATALOG</h1>
+      <p>
+        Explora las skills por categoría, tier, release e ingress mode. Al seleccionar una skill verás su descripción,
+        uso recomendado, routing, composiciones frecuentes y un prompt listo para copiar y pegar en el LLM que toque.
+      </p>
+      <div class="hero-actions">
+        <a class="button is-link" href="../../index.html">AECF Knowledge Center</a>
+        <a class="button is-link" href="./AECF_COMMANDS.html">Ir a comandos</a>
+        <a class="button is-link" href="./GUIDE_VIEWER.html?doc=AECF_GUIDES_MASTER.md">Ir a guias</a>
+        <button class="button is-secondary" type="button" id="help-toggle-button" aria-expanded="false">Help</button>
+      </div>
+      <div class="hero-stats" id="hero-stats"></div>
+    </section>
+
+    <section class="help-panel" id="help-panel" aria-live="polite">
+      <h2>Ayuda hiperresumida</h2>
+      <ul>
+        <li>Usa filtros y chips para aislar la skill exacta.</li>
+        <li>La pagina sigue renderizando el catalogo canónico internamente, pero ya no ofrece un enlace directo descargable al markdown.</li>
+        <li>`Ir a guias` abre el visor HTML para el resto de la documentacion publicada.</li>
+        <li>El boton flotante devuelve arriba en cualquier punto del catalogo largo.</li>
+      </ul>
+    </section>
+
+    <section class="toolbar" aria-label="Filtros del catálogo">
+      <div class="toolbar-top">
+        <input id="search-input" class="search" type="search" placeholder="Buscar por skill, categoría, tier, ingress, release o composición..." aria-label="Buscar skills">
+        <select id="tier-select" class="toggle" aria-label="Filtrar por tier"></select>
+        <select id="release-select" class="toggle" aria-label="Filtrar por release"></select>
+      </div>
+
+      <div class="filter-group">
+        <header>
+          <div>
+            <h2>Tipos de skill</h2>
+            <p>Los chips filtran por la categoría principal definida en el catálogo.</p>
+          </div>
+          <p id="results-count"></p>
+        </header>
+        <div id="category-chips" class="chips"></div>
+      </div>
+
+      <div class="filter-group">
+        <header>
+          <div>
+            <h2>Ingress modes</h2>
+            <p>Ayuda a entender cómo entra cada skill en el flujo gobernado de AECF.</p>
+          </div>
+        </header>
+        <div id="ingress-chips" class="chips"></div>
+      </div>
+    </section>
+
+    <section class="results-layout">
+      <aside class="panel" aria-labelledby="skills-panel-title">
+        <div class="panel-header">
+          <div>
+            <h2 id="skills-panel-title">Skills</h2>
+            <p>Selecciona una tarjeta para abrir el detalle completo.</p>
+          </div>
+        </div>
+        <div id="skill-list" class="skill-list"></div>
+      </aside>
+
+      <section class="panel" aria-labelledby="detail-title">
+        <div class="detail" id="skill-detail"></div>
+      </section>
+    </section>
+
+    <section class="panel catalog-section" aria-labelledby="catalog-title">
+      <div class="panel-header">
+        <div>
+          <h3 id="catalog-title">Catálogo completo renderizado</h3>
+          <p id="catalog-source-status">La guía renderiza internamente `SKILL_CATALOG.md` como fuente canónica y usa el contenido embebido solo como fallback.</p>
+        </div>
+        <button type="button" class="button is-secondary" id="open-catalog-window-button">Abrir en ventana aparte</button>
+      </div>
+      <div class="catalog-launcher">
+        <p>El catálogo completo se abre bajo demanda en una ventana separada para mantener esta vista centrada en filtros, detalle de skill y composición del comando.</p>
+      </div>
+    </section>
+  </div>
+
+  <a class="button top-link" href="#top" aria-label="Volver arriba">Volver arriba</a>
+
+  <script id="catalog-fallback-markdown" type="text/plain">![Version](https://img.shields.io/badge/version-1.0.44-blue)
+# AECF Skills — Catalog by Use Category
+
+
+> Quick guide to know **which skill to use** depending on the situation.
+> Each skill is classified by its main purpose.
+
+---
+LAST_REVIEW: 2026-03-26
+
+---
+
+## Visual Summary
+
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+    ROOT((AECF Skills))
+    ROOT --> BS[Bootstrap y Setup]
+    ROOT --> DD[Daily Development]
+    ROOT --> TR[Traceability and Replay]
+    ROOT --> AQ[Audit and Quality]
+    ROOT --> DC[Documentation and Understanding]
+    ROOT --> GR[Governance and Release]
+    ROOT --> PR[Productivity]
+    ROOT --> EX[Explorators]
+
+    DD --> F1(aecf_new_feature)
+    DD --> F26(aecf_new_test_set)
+    DD --> F2(aecf_hotfix)
+    DD --> F3(aecf_refactor)
+
+    TR --> F5(aecf_system_replayability_adaptive)
+
+    AQ --> F6(aecf_code_standards_audit)
+    AQ --> F7(aecf_security_review)
+    AQ --> F29(aecf_security_review_gdpr)
+    AQ --> F30(aecf_security_review_eu_ai_act)
+    AQ --> F31(aecf_security_review_dora)
+    AQ --> F8(aecf_dependency_audit)
+    AQ --> F9(aecf_tech_debt_assessment)
+    AQ --> F32(aecf_coupling_assessment)
+    AQ --> F34(aecf_resolve_linting)
+
+    DC --> F10(aecf_document_legacy)
+    DC --> F11(aecf_explain_behavior)
+
+    GR --> F12(aecf_maturity_assessment)
+    GR --> F13(aecf_release_readiness)
+    GR --> F14(aecf_executive_summary)
+    GR --> F16(aecf_data_governance_audit)
+    GR --> F17(aecf_model_governance_audit)
+    GR --> F18(aecf_ai_risk_assessment)
+    GR --> F19(aecf_define_impact_metrics)
+    PR --> F33(aecf_productivity)
+
+    EX --> F4(aecf_data_strategy)
+    EX --> F20(aecf_data_classification)
+
+    BS --> F15(aecf_project_context_generator)
+    BS --> F21(aecf_document_context_ingestion)
+    BS --> F25(aecf_new_project)
+    BS --> F27(aecf_codebase_intelligence)
+    BS --> F28(aecf_set_stack)
+
+    style ROOT fill:#5B9BD5,stroke:#3A7CC0,stroke-width:3px,color:#fff
+    style DD fill:#70AD47,stroke:#548235,stroke-width:2px,color:#fff
+    style TR fill:#4ECDC4,stroke:#36B0A8,stroke-width:2px,color:#fff
+    style AQ fill:#ED7D5B,stroke:#D35F3C,stroke-width:2px,color:#fff
+    style DC fill:#A78BDB,stroke:#8B6FC0,stroke-width:2px,color:#fff
+    style GR fill:#F4C748,stroke:#D4A828,stroke-width:2px,color:#1a1a1a
+    style PR fill:#7CB342,stroke:#558B2F,stroke-width:2px,color:#fff
+    style BS fill:#00BCD4,stroke:#00838F,stroke-width:2px,color:#fff
+    style EX fill:#C45AB3,stroke:#9B3A8A,stroke-width:2px,color:#fff
+
+    style F1 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
+    style F26 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
+    style F2 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
+    style F3 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
+    style F4 fill:#4A1E47,stroke:#C45AB3,color:#F0C8EC
+    style F5 fill:#1E4D49,stroke:#4ECDC4,color:#B2F0EC
+    style F6 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F7 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F29 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F30 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F31 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F8 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F9 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F32 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F34 fill:#5C3225,stroke:#ED7D5B,color:#FACEBE
+    style F10 fill:#3D2D5C,stroke:#A78BDB,color:#D8C8F0
+    style F11 fill:#3D2D5C,stroke:#A78BDB,color:#D8C8F0
+    style F12 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F13 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F14 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F15 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+    style F16 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F17 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F18 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F19 fill:#5C4A15,stroke:#F4C748,color:#FBE9A8
+    style F33 fill:#36531F,stroke:#7CB342,color:#E6F4C7
+    style F20 fill:#4A1E47,stroke:#C45AB3,color:#F0C8EC
+    style F21 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+    style F25 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+    style F27 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+    style F28 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+```
+
+| Category | Skills |
+|:---------:|:-------|
+| 🔧 **Desarrollo Diario** | `aecf_new_feature` · `aecf_new_test_set` · `aecf_hotfix` · `aecf_refactor` |
+| 🔄 **Trazabilidad y Replay** | `aecf_system_replayability_adaptive` |
+| 🔍 **Audit and Quality** | `aecf_code_standards_audit` · `aecf_security_review` · `aecf_security_review_gdpr` · `aecf_security_review_eu_ai_act` · `aecf_security_review_dora` · `aecf_dependency_audit` · `aecf_tech_debt_assessment` · `aecf_coupling_assessment` · `aecf_resolve_linting` |
+| 📚 **Documentation and Understanding** | `aecf_document_legacy` · `aecf_explain_behavior` |
+| 🏛️ **Governance and Release** | `aecf_maturity_assessment` · `aecf_release_readiness` · `aecf_executive_summary` · `aecf_data_governance_audit` · `aecf_model_governance_audit` · `aecf_ai_risk_assessment` · `aecf_define_impact_metrics` |
+| ⚡ **Productivity** | `aecf_productivity` |
+| 🚀 **Bootstrap y Setup** | `aecf_project_context_generator` · `aecf_document_context_ingestion` · `aecf_new_project` · `aecf_codebase_intelligence` · `aecf_set_stack` |
+| 🔬 **Explorators** | `aecf_data_classification` · `aecf_data_strategy` |
+
+---
+
+## AECF Skill Taxonomy
+
+- **TIER1 — ENTERPRISE_DETERMINISTIC**: formal audits with scoring/severity/decision outputs for compliance and contractual evidence; deterministic pipeline required.
+- **TIER2 — STRUCTURED_ANALYSIS**: structured analysis and comparable reporting without contractual scoring requirements; deterministic scoring engine not required.
+- **TIER3 — GENERATIVE**: implementation-oriented skills that generate or modify code/artifacts; formal scoring is not required.
+
+### Mandatory Prompt Ingress Taxonomy
+
+AECF MUST not allow a governed skill to underperform a normal chat prompt simply because the skill enters an overly rigid phase too early.
+
+Every skill that accepts or depends on a user prompt MUST declare one canonical ingress mode and MUST be documented in the routing matrix below.
+
+Canonical ingress modes:
+
+- **INTAKE_FIRST**: the first governed step validates required business or project parameters before design or execution.
+- **DISCOVERY_FIRST**: the first governed step performs repository exploration and freezes a `WORKING_CONTEXT`-style evidence artifact before the final analysis or synthesis phase.
+- **RESOLVE_TO_PLAN**: the first step is a permissive, read-only prompt-resolution pass that interprets the user request with enriched context and emits a short canonical brief that hands off into `PLAN`.
+- **RESOLVE_TO_FINAL**: the first step is a permissive, read-only prompt-resolution pass that interprets the user request with enriched context and emits a short canonical brief that hands off into the skill terminal phase.
+- **DIRECT_FINAL**: the skill itself is already a governed context/bootstrap/intelligence phase and can enter its skill terminal phase directly.
+
+Mandatory ingress rules:
+
+1. If a skill can generate or modify code, it MUST end its ingress in `PLAN`; it MUST NOT go directly from user prompt to a governed skill terminal phase.
+2. If a skill is read-only and depends on understanding the repository, it MUST use `DISCOVERY_FIRST` or `RESOLVE_TO_FINAL`; it MUST NOT synthesize the final artifact from the raw user prompt alone.
+3. If a skill requires mandatory business or project parameters before work can be designed, it MUST use `INTAKE_FIRST`.
+4. Any permissive ingress step remains inside AECF governance: it is read-only, prompt-sanitized, scope-bounded, and MUST emit a compact canonical handoff artifact.
+5. The ingress step MUST NOT complete the skill's final business output. Its only job is to classify intent, resolve scope, freeze evidence when needed, and route deterministically into `PLAN` or the governed skill terminal phase.
+
+### Skill Routing Matrix
+
+| Skill | Tier | Ingress Mode | Canonical Handoff Artifact | Governed Destination | Notes |
+|-------|------|--------------|----------------------------|----------------------|-------|
+| `aecf_new_feature` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | New code generation must be routed into the full planning flow. |
+| `aecf_new_feature_ma` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | Same as `aecf_new_feature`, with multi-agent downstream flow. |
+| `aecf_hotfix` | TIER3 | `RESOLVE_TO_PLAN` | `INCIDENT_BRIEF` | `PLAN` | Urgency changes depth, not the need for governed planning. |
+| `aecf_refactor` | TIER3 | `DISCOVERY_FIRST` | `REFACTOR_SCOPE` | `PLAN` | Must delimit upstream files/problems before refactor planning. |
+| `aecf_new_test_set` | TIER3 | `DISCOVERY_FIRST` | `TEST_SCOPE` | `PLAN` | Test creation needs evidence of modules, tests, and runnable commands before planning; `execute=True` pre-approves the post-strategy implementation/report path. |
+| `aecf_system_replayability_adaptive` | TIER3 | `DISCOVERY_FIRST` | `ARCHITECTURE_SCOPE` | `PLAN` | Replayability design depends on architecture discovery first. |
+| `aecf_new_project` | TIER3 | `INTAKE_FIRST` | `INTAKE_CONTRACT` | `PLAN` | Mandatory project parameters must be resolved before planning. |
+| `aecf_document_legacy` | TIER2 | `RESOLVE_TO_FINAL` (default) / `RESOLVE_TO_PLAN` (`document_code=True`) | `DOCUMENT_SCOPE` | `SKILL_FINAL` (default) / `PLAN` (`document_code=True`) | Default mode stays read-only and lands in `AECF_DOCUMENT_LEGACY`; `document_code=True` routes through governed planning to allow documentation-only edits in code and docs. |
+| `aecf_explain_behavior` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `EXECUTE` | Behavioral explanation must start from IDE-discovered evidence, not only the prompt. |
+| `aecf_code_standards_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first audit that lands in `AECF_CODE_STANDARDS_AUDIT`. |
+| `aecf_security_review` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first security audit that lands in `AECF_SECURITY_REVIEW`. |
+| `aecf_security_review_gdpr` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_GDPR`. |
+| `aecf_security_review_eu_ai_act` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_EU_AI_ACT`. |
+| `aecf_security_review_dora` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_DORA`. |
+| `aecf_dependency_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Needs package/config evidence before the `AECF_DEPENDENCY_AUDIT` terminal phase. |
+| `aecf_tech_debt_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first debt assessment that lands in `AECF_TECH_DEBT_ASSESSMENT`. |
+| `aecf_coupling_assessment` | TIER1 | `DISCOVERY_FIRST` | `COUPLING_SCOPE` | `SKILL_FINAL` | Search-first coupling audit that lands in `AECF_COUPLING_ASSESSMENT` and routes remediation into `aecf_new_test_set` and `aecf_refactor`. |
+| `aecf_resolve_linting` | TIER2 | `RESOLVE_TO_FINAL` | `LINTING_SCOPE` | `SKILL_FINAL` | Resolves the deterministic `static_analysis_profile` and `static_analysis_matrix` into a reusable read-only quality contract before planning or implementation. |
+| `aecf_maturity_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Needs repository/process evidence before `AECF_MATURITY_ASSESSMENT`. |
+| `aecf_release_readiness` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Must inspect release evidence, docs, and artifacts before `AECF_RELEASE_READINESS`. |
+| `aecf_executive_summary` | TIER2 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Must scan topic artifacts before consolidating into `AECF_EXECUTIVE_SUMMARY`. |
+| `aecf_data_governance_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first governance audit that lands in `AECF_DATA_GOVERNANCE_AUDIT`. |
+| `aecf_document_context_ingestion` | TIER2 | `DISCOVERY_FIRST` | `SOURCE_CONTEXT` | `SKILL_FINAL` | First inventory and normalize external/documentary evidence before `AECF_DOCUMENT_CONTEXT_INGESTION`. |
+| `aecf_data_classification` | TIER1 | `DISCOVERY_FIRST` | `DATA_INVENTORY_SCOPE` | `SKILL_FINAL` | Must locate models, schemas, DTOs and stores before `AECF_DATA_CLASSIFICATION`. |
+| `aecf_ai_risk_assessment` | TIER1 | `RESOLVE_TO_FINAL` | `RISK_SCOPE` | `SKILL_FINAL` | Prompt resolution can stay permissive, but final assessment lands in `AECF_AI_RISK_ASSESSMENT`. |
+| `aecf_model_governance_audit` | TIER1 | `RESOLVE_TO_FINAL` | `MODEL_SCOPE` | `SKILL_FINAL` | Resolve AI-related scope first, then audit in `AECF_MODEL_GOVERNANCE_AUDIT`. |
+| `aecf_define_impact_metrics` | TIER2 | `RESOLVE_TO_FINAL` | `METRICS_SCOPE` | `SKILL_FINAL` | Resolve scope and success intent first, then generate the metrics spec in `AECF_DEFINE_IMPACT_METRICS`. |
+| `aecf_productivity` | TIER2 | `DISCOVERY_FIRST` | `PRODUCTIVITY_SCOPE` | `SKILL_FINAL` | Must discover `TOPICS_INVENTORY` and `CHANGELOG` evidence first, then calculate per-person and group productivity KPIs in `AECF_PRODUCTIVITY`. |
+| `aecf_data_strategy` | TIER2 | `RESOLVE_TO_FINAL` | `STRATEGY_SCOPE` | `SKILL_FINAL` | Design-only skill; enriched prompt resolution is acceptable before `AECF_DATA_STRATEGY`. |
+| `aecf_project_context_generator` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | The skill is itself a governed discovery/bootstrap phase and lands in `AECF_PROJECT_CONTEXT_GENERATOR`. |
+| `aecf_codebase_intelligence` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Phase-0 intelligence generator that lands in `AECF_CODEBASE_INTELLIGENCE`. |
+| `aecf_set_stack` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Same as codebase intelligence, but with explicit stack input and terminal phase `AECF_SET_STACK`. |
+
+Rule for new skills:
+
+- No new skill is complete until this matrix is updated with its canonical ingress mode, handoff artifact, and governed destination.
+
+| Skill | Tier | Deterministic |
+|-------|------|---------------|
+| aecf_ai_risk_assessment | TIER1 | true |
+| aecf_code_standards_audit | TIER1 | true |
+| aecf_data_classification | TIER1 | true |
+| aecf_data_governance_audit | TIER1 | true |
+| aecf_data_strategy | TIER2 | false |
+| aecf_define_impact_metrics | TIER2 | false |
+| aecf_dependency_audit | TIER1 | true |
+| aecf_coupling_assessment | TIER1 | true |
+| aecf_document_context_ingestion | TIER2 | false |
+| aecf_document_legacy | TIER2 | false |
+| aecf_executive_summary | TIER2 | true |
+| aecf_explain_behaviour | TIER1 | true |
+| aecf_hotfix | TIER3 | false |
+| aecf_maturity_assessment | TIER1 | true |
+| aecf_model_governance_audit | TIER1 | true |
+| aecf_new_feature | TIER3 | false |
+| aecf_new_test_set | TIER3 | false |
+| aecf_productivity | TIER2 | true |
+| aecf_resolve_linting | TIER2 | true |
+| aecf_project_context_generator | TIER2 | false |
+| aecf_refactor | TIER3 | false |
+| aecf_release_readiness | TIER1 | true |
+| aecf_security_review | TIER1 | true |
+| aecf_security_review_gdpr | TIER1 | true |
+| aecf_security_review_eu_ai_act | TIER1 | true |
+| aecf_security_review_dora | TIER1 | true |
+| aecf_new_project | TIER3 | false |
+| aecf_codebase_intelligence | TIER2 | true |
+| aecf_set_stack | TIER2 | true |
+| aecf_system_replayability_adaptive | TIER3 | false |
+| aecf_tech_debt_assessment | TIER1 | true |
+
+---
+
+## Deterministic Report Hardening Allowlist
+
+Skills listed here MUST apply deterministic report hardening (repository evidence gates + canonical scoring normalization when enabled):
+
+- `aecf_code_standards_audit`
+- `aecf_security_review`
+- `aecf_security_review_gdpr`
+- `aecf_security_review_eu_ai_act`
+- `aecf_security_review_dora`
+- `aecf_dependency_audit`
+- `aecf_tech_debt_assessment`
+- `aecf_coupling_assessment`
+- `aecf_data_governance_audit`
+- `aecf_model_governance_audit`
+- `aecf_ai_risk_assessment`
+- `aecf_maturity_assessment`
+- `aecf_release_readiness`
+
+---
+
+## 1. 🔧 Daily Development
+
+Skills that are used in the day-to-day work of generating, modifying and implementing code.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **New Feature** | `aecf_new_feature` | Complete flow to implement new functionality with testing | New feature, endpoint, module or component from scratch |
+| **New Test Set** | `aecf_new_test_set` | Discover test gaps, propose missing tests, and optionally pre-approve implementation/execution with `execute=True` for extensive evidence | Existing modules or routines need stronger coverage, security, SQL injection, forced-error, or performance tests |
+| **Hotfix** | `aecf_hotfix` | Accelerated response to critical production incidents | Production down (P1), vulnerability exploited, data loss active, core functionality degraded (P2) |
+| **Refactor** | `aecf_refactor` | Governed refactoring with prior documentation and regression checking | Post-standards audit, reduce cyclomatic complexity, eliminate duplication, prepare legacy code for new feature |
+| **System Replayability** | `aecf_system_replayability_adaptive` | Replay/traceability adaptive to any architecture | Add reproducibility/replay to a project, traceability for compliance, post-document_legacy, post-security_review, pre-release_readiness |
+
+### Typical development flow
+
+```
+aecf_new_feature (implementar)
+  → aecf_release_readiness (validate before release)
+```
+
+### Typical test hardening flow
+
+```
+aecf_new_test_set (discover and harden tests)
+  → aecf_security_review
+  → aecf_release_readiness
+```
+
+### Typical flow of improving existing code
+
+```
+aecf_document_legacy → aecf_code_standards_audit → aecf_refactor
+```
+
+---
+
+## 2. 🔍 Audit and Quality
+
+**read-only** analysis skills that generate reports without modifying code. Ideal for periodic evaluations, pre-release or due diligence.
+
+**Unified group characteristics**:
+- 🗂️ **Index of Sections Analyzed**: Before the findings, each report includes an index with direct links to each section analyzed and its remediation
+- 🔧 **Remediation by Skills**: Each CRITICAL/WARNING finding recommends the **appropriate AECF skill** (never prompts/internal phases directly, to maintain the cycle of predictability)
+- 🔄 **Matrix Auto-Apply Protocol**: `ADD_RULE` decisions are automatically applied to the project severity matrix — without manual intervention, with full traceability to the source report
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Code Standards Audit** | `aecf_code_standards_audit` | Audits compliance with standards defined in GLOBAL_CONTEXT and PROJECT_CONTEXT | Audit legacy code, verify organizational conventions, pre-refactoring, onboarding new code to the project |
+| **Security Review** | `aecf_security_review` | Specialized security audit with CVSS classification | Pre-deployment, code that handles sensitive data, post-security compromise, compliance (PCI-DSS, HIPAA, GDPR) |
+| **Security Review GDPR** | `aecf_security_review_gdpr` | GDPR-specific code audit with article-level mapping, staleness warning, and organizational gap detection | Systems processing EU personal data, post-data_classification, legacy GDPR readiness, quarterly compliance check |
+| **Security Review EU AI Act** | `aecf_security_review_eu_ai_act` | EU AI Act code audit with risk classification, article-level mapping, staleness warning, and organizational gap detection | AI systems for EU market, post-ai_risk_assessment, high-risk AI conformity, pre-release AI compliance |
+| **Security Review DORA** | `aecf_security_review_dora` | DORA ICT resilience code audit with article-level mapping, staleness warning, and organizational gap detection | Financial sector ICT systems, post-security_review ICT depth, third-party ICT risk, periodic resilience audit |
+| **Dependency Audit** | `aecf_dependency_audit` | Dependency audit: CVEs, licenses, maintenance health, supply chain | Pre-release, periodic evaluation (monthly/quarterly), Dependabot/Snyk post-alert, project due diligence |
+| **Tech Debt Assessment** | `aecf_tech_debt_assessment` | Comprehensive technical debt assessment with quantification and prioritization | Before major refactoring, sprint planning, technical due diligence, pre-migration, justify investment to stakeholders |
+| **Coupling Assessment** | `aecf_coupling_assessment` | Focused coupling audit that finds tight seams, cycles, hidden dependency chains, and refactor/test freeze needs | Before `aecf_refactor`, after hotspot discovery, when modularization or safe seam extraction is blocked by coupling |
+| **Resolve Linting** | `aecf_resolve_linting` | Read-only resolution of the deterministic static-analysis profile and check matrix to reuse before `PLAN` or `IMPLEMENT` | Before planning a change, before implementation, or when you need to explain why AECF selected a given quality profile |
+
+### Unified output format
+
+All skills in this group generate reports with:
+
+```
+📊 Executive Summary
+🗂️ Sections Analyzed — Navigation Index ← NEW
+(direct links to each section with findings)
+📋 Findings by Section
+   - Cada CRITICAL/WARNING → 🔧 Skill recomendado: `skill: aecf_xxx`
+- NEVER refers to internal prompts/phases
+📈 Metrics / Scoring
+🎯 Recommendations
+```
+
+### Recommended audit chains
+
+```
+aecf_code_standards_audit → aecf_tech_debt_assessment → aecf_refactor
+aecf_codebase_intelligence → aecf_coupling_assessment → aecf_new_test_set → aecf_refactor
+aecf_resolve_linting → aecf_refactor (only if remediation is needed to satisfy the resolved profile)
+aecf_security_review → aecf_dependency_audit (drill down into third parties)
+aecf_tech_debt_assessment → aecf_maturity_assessment (evaluar estado global)
+```
+
+### Suggested frequency
+
+| Audit | Recommended Frequency |
+|-----------|----------------------|
+| Code Standards Audit | Cada sprint o pre-refactoring |
+| Security Review | Pre-release and quarterly |
+| Security Review GDPR | Pre-release and quarterly (EU personal data) |
+| Security Review EU AI Act | Pre-release (AI systems for EU market) |
+| Security Review DORA | Pre-release and quarterly (financial sector) |
+| Dependency Audit | Monthly or upon security alerts |
+| Tech Debt Assessment | Quarterly or pre-planning |
+| Coupling Assessment | Pre-refactor or before modularization work |
+| Resolve Linting | Before PLAN/IMPLEMENT handoffs or whenever the static-analysis profile must be explained explicitly |
+
+---
+
+## 3. 📚 Documentation and Understanding
+
+Skills to understand and document existing systems. Essential for onboarding, change preparation and incident analysis.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Legacy Document** | `aecf_document_legacy` | Document existing legacy code with flowcharts | Before modifying code without documentation, onboarding new equipment, understanding legacy system, preparing refactoring |
+| **Explain Behavior** | `aecf_explain_behavior` | Analyze and explain why the system behaves in a certain way | Understand unexpected outputs, investigate 403 errors/timeouts/incorrect calculations, pre-debugging preparation, analyze critical flows |
+
+### Key differences
+
+| Aspecto | `document_legacy` | `explain_behavior` |
+|---------|-------------------|-------------------|
+| **Focus** | What the code does (general functionality) | Why it produces a certain output (specific behavior) |
+| **Output** | Complete documentation + `.mmd` diagrams | Behavior traceability analysis |
+| **Next step** | Refactor, new feature, audit | Debug, fix plan, or nothing if correct |
+
+---
+
+## 4. 🏛️ Governance and Release
+
+Skills to evaluate process maturity and validate preparation for releases. Oriented towards technical leadership and compliance.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Maturity Assessment** | `aecf_maturity_assessment` | Evaluates 10 dimensions of AECF governance, calculates level L1–L5, generates roadmap | Initial adoption of AECF (baseline), quarterly review, post-incident, pre-certification/audit, team onboarding |
+| **Release Readiness** | `aecf_release_readiness` | Comprehensive pre-release validation with GO/NO-GO verdict | Before each release to production, pre-merge to main, sprint end, compliance checkpoint, before tagging version |
+| **Executive Summary** | `aecf_executive_summary` | Generates consolidated executive summary of all documents of a TOPIC | When an overall executive summary is required from `documentation/{{TOPIC}}/`; Mandatory explicit TOPIC |
+| **Data Governance Audit** | `aecf_data_governance_audit` | Data classification, lineage, retention and controls audit | Validate data traceability, retention compliance, pre-release and audit preparation |
+| **Model Governance Audit** | `aecf_model_governance_audit` | Model impact audit, inference paths and auditability | Changes that alter behavior AI, validation of determinism and change control |
+| **AI Risk Assessment** | `aecf_ai_risk_assessment` | AI risk assessment (operational, security, compliance, reliability) | Pre-go-live, post-incident, executive exposure assessment and mitigations |
+| **Define Impact Metrics** | `aecf_define_impact_metrics` | Define metrics with baseline, targets and measurement governance | When you need to measure real impact of change with auditable criteria |
+
+### When to use each
+
+| Situation | Skill |
+|-----------|-------|
+| "Are we ready to deploy?" | `aecf_release_readiness` |
+| "How mature is our process?" | `aecf_maturity_assessment` |
+| "What are we missing as a team?" | `aecf_maturity_assessment` |
+| "Did all the audits for this feature pass?" | `aecf_release_readiness` |
+| "Generate an executive summary of the TOPIC" | `aecf_executive_summary` |
+| “Do we have data lineage and retention well controlled?” | `aecf_data_governance_audit` |
+| "Does this change affect inference or model behavior?" | `aecf_model_governance_audit` |
+| "What is our current AI risk and how to mitigate it?" | `aecf_ai_risk_assessment` |
+| "How do we measure impact with baseline and goals?" | `aecf_define_impact_metrics` |
+| "Which linting and static-analysis profile applies before we plan or implement this change?" | `aecf_resolve_linting` |
+| "How productive are Ana and Luis between two dates and on which topics/files?" | `aecf_productivity` |
+| "What PII/SENSITIVE fields exist in the project?" | `aecf_data_classification` |
+| "Does our code comply with GDPR?" | `aecf_security_review_gdpr` |
+| "Does our AI system comply with the EU AI Act?" | `aecf_security_review_eu_ai_act` |
+| "Does our financial system comply with DORA?" | `aecf_security_review_dora` |
+| "I need a classified data inventory before auditing" | `aecf_data_classification` |
+
+---
+
+## 5. ⚡ Productivity
+
+Skills to analyze delivery throughput and evidence-backed productivity using AECF traceability artifacts instead of raw commit counts or time tracking.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Productivity** | `aecf_productivity` | Calculates productivity KPIs per person and per group using `TOPICS_INVENTORY`, `CHANGELOG`, date windows, topics, and touched file evidence | Review one developer, compare several users, or evaluate team throughput by period, topic, or repository area |
+
+### Minimum output expectations
+
+```
+Executive Summary
+Analysis Scope
+Evidence Sources
+Individual Productivity KPIs
+Group Productivity KPIs
+Topic and File Analysis
+Coverage Gaps
+Recommendations
+```
+
+### Recommended usage flow
+
+```
+aecf_productivity (measure per person / team)
+  → aecf_define_impact_metrics (formalize improvement targets)
+  → aecf_release_readiness (validate operational readiness if needed)
+```
+
+---
+
+## 6. � Explorators
+
+**Knowledge Extraction** skills that generate structured documentation to feed audit, enforcement and fix skills. Explorators are always READ-ONLY on the source code.
+
+**Features**:
+- 🔍 **Structured discovery**: Inspect project artifacts without modifying them
+- 📄 **Deterministic output**: Generate YAML structured and validated by schema
+- 🔒 **Read-only**: NEVER modify code or data models
+- 🔗 **Enablers**: Their output is consumed directly by audit, enforcement and fix skills
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Explorer Data Classification** | `aecf_data_classification` | Discover all the data models, schemas, migrations and DTOs of the project. Apply deterministic classification heuristics (PII/SENSITIVE/CONFIDENTIAL/INTERNAL/PUBLIC) and generate structured governance proposal in YAML | Pre-data audit, before `aecf_data_governance_audit`, project onboarding with data, GDPR/CCPA compliance, pre-release with PII |
+| **Data Strategy** | `aecf_data_strategy` | Design of data ingestion, storage and management strategy | Integrate high volume data source, decide ETL/ELT strategy, design deduplication, pre-input for features with massive data |
+
+### Recommended usage flow (Explorators)
+
+```
+aecf_data_classification (discover and classify)
+  → aecf_data_strategy (define ingestion and storage strategy)
+  → aecf_data_governance_audit (auditar gaps usando el inventario)
+→ aecf_ai_risk_assessment (assess risk on classified data)
+→ aecf_release_readiness (validate before release)
+```
+
+---
+
+## 6. �🚀 Bootstrap y Setup
+
+Skills to initialize and configure the AECF environment in a project. They must be executed **before** any other skill.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Project Context Generator** | `aecf_project_context_generator` | Scans the entire workspace and generates `AECF_PROJECT_CONTEXT.md` automatically | When starting to use AECF in a project, when PROJECT_CONTEXT does not exist, legacy project onboarding, update outdated context |
+| **Document Context Ingestion** | `aecf_document_context_ingestion` | Ingests PDF/MD/URLs and external documents to build normalized project context evidence | When relevant context exists in documentation outside code folders, before bootstrap/context generation, compliance-heavy onboarding |
+| **New Project** | `aecf_new_project` | Bootstraps a full project skeleton from scratch: folder structure, README, config files, source stubs, CI/CD, and AECF_PROJECT_CONTEXT — with mandatory intake gate for project type, language/framework, and database | When starting a brand-new project from scratch with a known type and stack (10 project types supported, concrete language/framework catalog per type) |
+| **Codebase Intelligence** | `aecf_codebase_intelligence` | Analyzes the entire workspace and generates 8 structured intelligence artifacts (stack json, architecture graph, symbol index, entry points, module map, code hotspots, context keys, dynamic project context) | Phase 0 — before any PLAN or IMPLEMENT step; when downstream skills need structured architectural context instead of raw code scanning |
+| **Set Stack** | `aecf_set_stack` | Same as `aecf_codebase_intelligence` but skips auto-detection and uses the explicit `stack=` argument. Validates that the domain and semantic profiles exist before execution | When the project stack is perfectly known and auto-detection is unnecessary; polyglot repos where you want to force a specific stack focus |
+
+### Recommended AECF adoption flow
+
+```
+aecf_document_context_ingestion (opcional — contexto documental externo)
+  → aecf_project_context_generator (PRIMERO — contexto base de código)
+  → aecf_maturity_assessment (evaluar estado)
+  → aecf_code_standards_audit (auditar)
+→ Development skills as needed
+```
+
+---
+
+## 6. 🧭 Quick Decision Guide
+
+### "What skill do I need?"
+
+```
+What do you need to do?
+│
+├─ Get started with AECF in a project
+│ ├─ Generate project context → aecf_project_context_generator
+│ ├─ **Create new project from scratch** → **aecf_new_project**
+│ └─ Build structured intelligence layer → aecf_codebase_intelligence
+│
+├─ Consolidate context from documents (PDF/MD/URLs)
+│ └─ Ingest external documentation context → aecf_document_context_ingestion
+│
+├─ Write new code
+│  ├─ Feature nueva → aecf_new_feature
+│  ├─ Crear o ampliar tests para codigo existente → aecf_new_test_set
+│ ├─ Urgent production fix → aecf_hotfix
+│ ├─ Improve existing code → aecf_refactor
+│  └─ Add replay/traceability → aecf_system_replayability_adaptive
+│
+├─ Evaluate/audit without touching code
+│ ├─ Quality and standards → aecf_code_standards_audit
+│ ├─ Security → aecf_security_review
+│ ├─ GDPR compliance (code) → aecf_security_review_gdpr
+│ ├─ EU AI Act compliance (AI systems) → aecf_security_review_eu_ai_act
+│ ├─ DORA resilience (financial ICT) → aecf_security_review_dora
+│ ├─ Dependencies/third parties → aecf_dependency_audit
+│ └─ Technical Debt → aecf_tech_debt_assessment
+│ └─ Coupling / unstable seams → aecf_coupling_assessment
+│ └─ Resolve quality profile before planning/implementation → aecf_resolve_linting
+│
+├─ Understand/document
+│ ├─ Document old code → aecf_document_legacy
+│ └─ Explain behavior → aecf_explain_behavior
+│
+├─ Govern/validate
+│  ├─ Ready for release? → aecf_release_readiness
+│ ├─ How mature are we? → aecf_maturity_assessment
+│  ├─ Do we comply with data governance? → aecf_data_governance_audit
+│ ├─ Is there model impact? → aecf_model_governance_audit
+│ ├─ What is the AI ​​risk? → aecf_ai_risk_assessment
+│ └─ How do we measure impact? → aecf_define_impact_metrics
+│ └─ Who is delivering which topics/files and at what cadence? → aecf_productivity
+│
+└─ Explore/discover data
+└─ What PII/SENSITIVE data does the project have? → aecf_data_classification
+└─ Need ingestion/storage strategy for high-volume data? → aecf_data_strategy
+```
+
+---
+
+## 7. 📋 Complete Skills Matrix
+
+| Skill | Modify Code | Generate Docs | Estimated Time | Mode |
+|-------|:-:|:-:|:-:|:-:|
+| `aecf_project_context_generator` | ❌ | ✅ | 5 – 15min | Bootstrap |
+| `aecf_document_context_ingestion` | ❌ | ✅ | 15min – 2h | Bootstrap |
+| `aecf_new_feature` | ✅ | ✅ | 1.5 – 4h | Execution |
+| `aecf_new_test_set` | ✅ | ✅ | 1 – 3.5h | Execution |
+| `aecf_hotfix` | ✅ | ✅ | 1 – 3h | Execution |
+| `aecf_refactor` | ✅ | ✅ | 2 – 6h | Execution |
+| `aecf_data_strategy` | ❌ | ✅ | 20min – 3h | Explorator |
+| `aecf_system_replayability_adaptive` | ✅ | ✅ | 1.5 – 6h | Execution |
+| `aecf_code_standards_audit` | ❌ | ✅ | 30min – 4h | Read-only |
+| `aecf_security_review` | ❌ | ✅ | 45min – 6h | Read-only |
+| `aecf_security_review_gdpr` | ❌ | ✅ | 45min – 6h | Read-only |
+| `aecf_security_review_eu_ai_act` | ❌ | ✅ | 45min – 6h | Read-only |
+| `aecf_security_review_dora` | ❌ | ✅ | 45min – 6h | Read-only |
+| `aecf_dependency_audit` | ❌ | ✅ | 30min – 2h | Read-only |
+| `aecf_tech_debt_assessment` | ❌ | ✅ | 1 – 4h | Read-only |
+| `aecf_coupling_assessment` | ❌ | ✅ | 20min – 3h | Read-only |
+| `aecf_document_legacy` | ❌ | ✅ | 30min – 2h | Read-only |
+| `aecf_explain_behavior` | ❌ | ✅ | 15 – 60min | Read-only |
+| `aecf_maturity_assessment` | ❌ | ✅ | 1 – 3h | Read-only |
+| `aecf_release_readiness` | ❌ | ✅ | 30min – 2h | Read-only |
+| `aecf_data_governance_audit` | ❌ | ✅ | 30min – 3h | Read-only |
+| `aecf_model_governance_audit` | ❌ | ✅ | 30min – 3h | Read-only |
+| `aecf_ai_risk_assessment` | ❌ | ✅ | 30min – 3h | Read-only |
+| `aecf_define_impact_metrics` | ❌ | ✅ | 20min – 2h | Read-only |
+| `aecf_productivity` | ❌ | ✅ | 15min – 2h | Read-only |
+| `aecf_data_classification` | ❌ | ✅ | 15min – 2h | Explorator |
+| `aecf_new_project` | ✅ | ✅ | 15 – 30min | Bootstrap |
+| `aecf_codebase_intelligence` | ❌ | ✅ | 1 – 5min | Bootstrap |
+| `aecf_set_stack` | ❌ | ✅ | 1 – 5min | Bootstrap |
+
+---
+
+## Release Gate Status (Beta Enforcement)
+
+> **Single source of truth**: [`SKILL_RELEASE.json`](SKILL_RELEASE.json)
+>
+> Edit **only** `SKILL_RELEASE.json` to change skill availability.
+> The section below is kept for human reference but the JSON file takes precedence at runtime.
+
+Released skills when `AECF_BETA_ENFORCE_RELEASE_GATES=1`:
+
+- ✅ `aecf_codebase_intelligence`
+- ✅ `aecf_code_standards_audit`
+- ✅ `aecf_document_legacy`
+- ✅ `aecf_executive_summary`
+- ✅ `aecf_explain_behavior`
+- ✅ `aecf_hotfix`
+- ✅ `aecf_new_feature`
+- ✅ `aecf_new_project`
+- ✅ `aecf_new_test_set`
+- ✅ `aecf_project_context_generator`
+- ✅ `aecf_refactor`
+- ✅ `aecf_release_readiness`
+- ✅ `aecf_security_review`
+- ✅ `aecf_set_stack`
+
+Beta skills (visible in `list skills`, blocked for non-owner):
+
+- 🚧 `aecf_ai_risk_assessment`
+- 🚧 `aecf_data_classification`
+- 🚧 `aecf_data_governance_audit`
+- 🚧 `aecf_data_strategy`
+- 🚧 `aecf_define_impact_metrics`
+- 🚧 `aecf_dependency_audit`
+- 🚧 `aecf_coupling_assessment`
+- 🚧 `aecf_maturity_assessment`
+- 🚧 `aecf_model_governance_audit`
+- 🚧 `aecf_productivity`
+- 🚧 `aecf_resolve_linting`
+- 🚧 `aecf_security_review_gdpr`
+- 🚧 `aecf_security_review_eu_ai_act`
+- 🚧 `aecf_security_review_dora`
+- 🚧 `aecf_system_replayability_adaptive`
+- 🚧 `aecf_tech_debt_assessment`
+
+Hidden skills (not visible in `list skills`, blocked for non-owner):
+
+- 🙈 `aecf_document_context_ingestion`
+
+Deprecated skills (superseded, not available):
+
+- ⛔ `aecf_context_project_generation_map`
+- ⛔ `aecf_generate_runtime_context`
+- ⛔ `aecf_generate_static_project_context`
+- ⛔ `aecf_new_feature_ma`
+- ⛔ `aecf_project_context_generator_map`
+
+---
+
+## 8. 🔗 Frequent Compositions
+
+### New project from scratch (greenfield)
+```
+aecf_new_project → aecf_new_feature → aecf_security_review → aecf_release_readiness
+```
+
+### Bootstrap + full AECF adoption
+```
+aecf_codebase_intelligence → aecf_project_context_generator → aecf_maturity_assessment → aecf_code_standards_audit
+```
+
+### Documentation-first bootstrap
+```
+aecf_document_context_ingestion → aecf_project_context_generator → aecf_maturity_assessment
+```
+
+### Complete new feature cycle
+```
+aecf_new_feature → aecf_security_review → aecf_release_readiness
+```
+
+### Test hardening cycle
+```
+aecf_new_test_set → aecf_security_review → aecf_release_readiness
+```
+
+### Complete new feature cycle (MA / low-drift)
+```
+Use `aecf_new_feature` → aecf_security_review → aecf_release_readiness
+```
+
+### Legacy code rescue
+```
+aecf_document_legacy → aecf_code_standards_audit → aecf_tech_debt_assessment → aecf_refactor
+```
+
+### Comprehensive pre-release audit
+```
+aecf_code_standards_audit → aecf_security_review → aecf_dependency_audit → aecf_release_readiness
+```
+
+### Incident response
+```
+aecf_hotfix → aecf_security_review → aecf_explain_behavior (post-mortem)
+```
+
+### Security escalation policy (prompt-only)
+```text
+aecf_new_feature, aecf_new_test_set, and aecf_hotfix MUST run aecf_security_review before VERSION/release.
+Other skills escalate to aecf_security_review when AUDIT_CODE detects auth, secrets, crypto, external-input, outbound-call, privileged-action, or sensitive-data surfaces.
+```
+
+### Legacy project evaluation
+```
+aecf_document_legacy → aecf_tech_debt_assessment → aecf_dependency_audit → aecf_maturity_assessment
+```
+
+### Big Data Pipeline
+```
+aecf_data_strategy → aecf_new_feature → aecf_security_review → aecf_release_readiness
+```
+
+### Add traceability/replay to existing project
+```
+aecf_document_legacy → aecf_system_replayability_adaptive → aecf_security_review → aecf_release_readiness
+```
+
+### Comprehensive governance block
+```
+aecf_data_governance_audit → aecf_model_governance_audit → aecf_ai_risk_assessment → aecf_define_impact_metrics
+```
+
+### Complete data exploration and auditing
+```
+aecf_data_classification → aecf_data_governance_audit → aecf_ai_risk_assessment → aecf_release_readiness
+```
+
+### GDPR compliance audit
+```
+aecf_data_classification → aecf_security_review_gdpr → aecf_release_readiness
+```
+
+### Full security + GDPR audit
+```
+aecf_security_review → aecf_security_review_gdpr → aecf_dependency_audit → aecf_release_readiness
+```
+
+### EU AI Act compliance audit
+```
+aecf_ai_risk_assessment → aecf_security_review_eu_ai_act → aecf_release_readiness
+```
+
+### Full AI governance + EU AI Act
+```
+aecf_ai_risk_assessment → aecf_model_governance_audit → aecf_security_review_eu_ai_act → aecf_release_readiness
+```
+
+### DORA compliance audit (financial sector)
+```
+aecf_security_review → aecf_security_review_dora → aecf_release_readiness
+```
+
+### Full financial sector compliance (DORA + GDPR)
+```
+aecf_security_review → aecf_security_review_gdpr → aecf_security_review_dora → aecf_dependency_audit → aecf_release_readiness
+```
+
+---
+
+> **Tip**: All skills are invoked with `skill: <name>` or natural language.
+> The SKILL_DISPATCHER auto-resolves parameters, TOPIC and numbering.
+
+## GOVERNANCE VALIDATION BLOCK
+
+- Data lineage impact
+- Model impact (YES/NO)
+- Risk impact
+- Compliance check
+</script>
+
+  <script>
+    const fallbackMarkdownSource = document.getElementById("catalog-fallback-markdown").textContent.replace(/^\n+/, "");
+    let markdownSource = fallbackMarkdownSource;
+    let parsed = null;
+    let skillData = [];
+    let categoryNames = [];
+    let ingressModes = [];
+    let tiers = [];
+    let releases = [];
+    let assetVersionManifest = null;
+    let skillVersionById = new Map();
+    let markdownSourceMode = "fallback";
+    let versionSourceMode = "missing";
+
+    const sectionToneByName = {
+      "daily development": "daily development",
+      "audit and quality": "audit and quality",
+      "documentation and understanding": "documentation and understanding",
+      "governance and release": "governance and release",
+      "productivity": "productivity",
+      "bootstrap y setup": "bootstrap y setup",
+      "explorators": "explorators",
+      "traceability and replay": "traceability and replay"
+    };
+
+    function normalizeSkillId(value) {
+      return String(value || "")
+        .replace(/`/g, "")
+        .trim()
+        .toLowerCase()
+        .replace(/behaviour/g, "behavior");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function slugify(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "section";
+    }
+
+    function getSkillVersionEntry(skillId) {
+      return skillVersionById.get(normalizeSkillId(skillId)) || null;
+    }
+
+    function hydrateAssetVersionManifest(payload) {
+      assetVersionManifest = payload && typeof payload === "object" ? payload : null;
+      skillVersionById = new Map();
+      const items = Array.isArray(assetVersionManifest?.skills?.items) ? assetVersionManifest.skills.items : [];
+      items.forEach((entry) => {
+        if (!entry || !entry.id) {
+          return;
+        }
+        skillVersionById.set(normalizeSkillId(entry.id), entry);
+      });
+    }
+
+    function renderCatalogSourceStatus() {
+      const markdownMessage = markdownSourceMode === "canonical"
+        ? "La guía está renderizando el `SKILL_CATALOG.md` canónico del mismo directorio."
+        : "No se pudo leer `SKILL_CATALOG.md` en tiempo de carga; se está usando el fallback embebido del HTML.";
+      const versionMessage = versionSourceMode === "loaded" && assetVersionManifest
+        ? ` Version stamps activos desde \`AECF_ASSET_VERSIONS.json\` (${assetVersionManifest.skills.collectionVersionStamp} / ${assetVersionManifest.promptAssets.collectionVersionStamp}).`
+        : " Version stamps no disponibles; la guía queda en modo markdown-only.";
+      elements.catalogSourceStatus.textContent = `${markdownMessage}${versionMessage}`;
+    }
+
+    function splitTableRow(line) {
+      return line
+        .trim()
+        .replace(/^\|/, "")
+        .replace(/\|$/, "")
+        .split("|")
+        .map((cell) => cell.trim());
+    }
+
+    function renderInline(text) {
+      let html = escapeHtml(text);
+      html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">');
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      return html;
+    }
+
+    function sanitizeMermaidDefinition(source) {
+      return String(source || "")
+        .split("\n")
+        .filter((line) => !/^%%\{init:/.test(line.trim()))
+        .filter((line) => !/^\s*style\s+/i.test(line))
+        .join("\n")
+        .trim();
+    }
+
+    function renderMarkdown(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      let html = "";
+      let index = 0;
+      let inCode = false;
+      let codeLang = "";
+      let codeLines = [];
+      let listMode = null;
+      let tableLines = [];
+      let paragraphLines = [];
+      let blockquoteLines = [];
+
+      function flushParagraph() {
+        if (!paragraphLines.length) {
+          return;
+        }
+        html += `<p>${renderInline(paragraphLines.join(" "))}</p>`;
+        paragraphLines = [];
+      }
+
+      function flushList() {
+        if (!listMode) {
+          return;
+        }
+        html += `</${listMode}>`;
+        listMode = null;
+      }
+
+      function flushBlockquote() {
+        if (!blockquoteLines.length) {
+          return;
+        }
+        html += `<blockquote>${blockquoteLines.map((line) => `<p>${renderInline(line)}</p>`).join("")}</blockquote>`;
+        blockquoteLines = [];
+      }
+
+      function flushTable() {
+        if (!tableLines.length) {
+          return;
+        }
+        const rows = tableLines.map(splitTableRow);
+        if (rows.length >= 2) {
+          const header = rows[0];
+          const body = rows.slice(2);
+          html += "<table><thead><tr>" + header.map((cell) => `<th>${renderInline(cell)}</th>`).join("") + "</tr></thead><tbody>";
+          html += body.map((row) => `<tr>${row.map((cell) => `<td>${renderInline(cell)}</td>`).join("")}</tr>`).join("");
+          html += "</tbody></table>";
+        }
+        tableLines = [];
+      }
+
+      function flushAll() {
+        flushParagraph();
+        flushBlockquote();
+        flushList();
+        flushTable();
+      }
+
+      while (index < lines.length) {
+        const line = lines[index];
+
+        if (inCode) {
+          if (line.startsWith("```")) {
+            if ((codeLang || "").toLowerCase() === "mermaid") {
+              html += `<div class="mermaid-shell"><div class="mermaid">${escapeHtml(sanitizeMermaidDefinition(codeLines.join("\n")))}</div></div>`;
+            } else {
+              html += `<pre><code class="language-${escapeHtml(codeLang || "text")}">${escapeHtml(codeLines.join("\n"))}</code></pre>`;
+            }
+            inCode = false;
+            codeLang = "";
+            codeLines = [];
+          } else {
+            codeLines.push(line);
+          }
+          index += 1;
+          continue;
+        }
+
+        if (line.startsWith("```")) {
+          flushAll();
+          inCode = true;
+          codeLang = line.slice(3).trim();
+          index += 1;
+          continue;
+        }
+
+        if (!line.trim()) {
+          flushAll();
+          index += 1;
+          continue;
+        }
+
+        if (line.startsWith("|")) {
+          flushParagraph();
+          flushBlockquote();
+          flushList();
+          tableLines.push(line);
+          index += 1;
+          continue;
+        }
+
+        if (tableLines.length) {
+          flushTable();
+        }
+
+        const headingMatch = line.match(/^(#{1,4})\s+(.*)$/);
+        if (headingMatch) {
+          flushAll();
+          const level = headingMatch[1].length;
+          const title = headingMatch[2].trim();
+          html += `<h${level} id="${slugify(title)}">${renderInline(title)}</h${level}>`;
+          index += 1;
+          continue;
+        }
+
+        if (/^---+$/.test(line.trim())) {
+          flushAll();
+          html += "<hr>";
+          index += 1;
+          continue;
+        }
+
+        if (line.startsWith(">")) {
+          flushParagraph();
+          flushList();
+          blockquoteLines.push(line.replace(/^>\s?/, ""));
+          index += 1;
+          continue;
+        }
+
+        const unorderedMatch = line.match(/^[-*]\s+(.*)$/);
+        if (unorderedMatch) {
+          flushParagraph();
+          flushBlockquote();
+          if (listMode !== "ul") {
+            flushList();
+            listMode = "ul";
+            html += "<ul>";
+          }
+          html += `<li>${renderInline(unorderedMatch[1])}</li>`;
+          index += 1;
+          continue;
+        }
+
+        const orderedMatch = line.match(/^\d+\.\s+(.*)$/);
+        if (orderedMatch) {
+          flushParagraph();
+          flushBlockquote();
+          if (listMode !== "ol") {
+            flushList();
+            listMode = "ol";
+            html += "<ol>";
+          }
+          html += `<li>${renderInline(orderedMatch[1])}</li>`;
+          index += 1;
+          continue;
+        }
+
+        flushBlockquote();
+        flushList();
+        paragraphLines.push(line.trim());
+        index += 1;
+      }
+
+      flushAll();
+      return html;
+    }
+
+    function extractSections(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      const sections = [];
+      let current = { title: "Overview", lines: [] };
+
+      for (const line of lines) {
+        const match = line.match(/^##\s+(.*)$/);
+        if (match) {
+          sections.push(current);
+          current = { title: match[1].trim(), lines: [line] };
+        } else {
+          current.lines.push(line);
+        }
+      }
+      sections.push(current);
+      return sections.filter((section) => section.lines.join("").trim());
+    }
+
+    function cleanSectionTitle(title) {
+      return title
+        .replace(/^\d+\.\s*/, "")
+        .replace(/[�]/g, "")
+        .trim();
+    }
+
+    function parseSkills(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      const skills = new Map();
+      const sections = extractSections(markdown);
+      const sectionHtml = new Map();
+      const sectionMarkdown = new Map();
+      for (const section of sections) {
+        const cleanTitle = cleanSectionTitle(section.title);
+        sectionMarkdown.set(cleanTitle, section.lines.join("\n"));
+        sectionHtml.set(cleanTitle, renderMarkdown(section.lines.join("\n")));
+      }
+
+      let currentSection = "Overview";
+
+      function upsertSkill(id, patch) {
+        const normalizedId = normalizeSkillId(id);
+        const existing = skills.get(normalizedId) || { id: normalizedId };
+        skills.set(normalizedId, { ...existing, ...patch, id: normalizedId });
+      }
+
+      for (let index = 0; index < lines.length; index += 1) {
+        const line = lines[index];
+        const sectionMatch = line.match(/^##\s+(.*)$/);
+        if (sectionMatch) {
+          currentSection = cleanSectionTitle(sectionMatch[1]);
+          continue;
+        }
+
+        if (line.trim() === "| Skill | ID | Description | When to Use It |") {
+          index += 2;
+          while (index < lines.length && lines[index].startsWith("|")) {
+            const row = splitTableRow(lines[index]);
+            if (row.length >= 4) {
+              const displayName = row[0].replace(/^\*\*|\*\*$/g, "").trim();
+              const id = row[1].replace(/`/g, "").trim();
+              upsertSkill(id, {
+                name: displayName,
+                category: currentSection,
+                description: row[2].trim(),
+                whenToUse: row[3].trim(),
+                categoryHtml: sectionHtml.get(currentSection) || "",
+                categoryMarkdown: sectionMarkdown.get(currentSection) || ""
+              });
+            }
+            index += 1;
+          }
+          index -= 1;
+          continue;
+        }
+
+        if (line.trim() === "| Skill | Tier | Ingress Mode | Canonical Handoff Artifact | Governed Destination | Notes |") {
+          index += 2;
+          while (index < lines.length && lines[index].startsWith("|")) {
+            const row = splitTableRow(lines[index]);
+            if (row.length >= 6) {
+              const id = row[0].replace(/`/g, "").trim();
+              upsertSkill(id, {
+                tier: row[1].trim(),
+                ingressMode: row[2].replace(/`/g, "").trim(),
+                handoffArtifact: row[3].replace(/`/g, "").trim(),
+                destination: row[4].replace(/`/g, "").trim(),
+                routingNotes: row[5].trim()
+              });
+            }
+            index += 1;
+          }
+          index -= 1;
+          continue;
+        }
+
+        if (line.trim() === "| Skill | Tier | Deterministic |") {
+          index += 2;
+          while (index < lines.length && lines[index].startsWith("|")) {
+            const row = splitTableRow(lines[index]);
+            if (row.length >= 3) {
+              const id = row[0].trim();
+              upsertSkill(id, {
+                tier: row[1].trim(),
+                deterministic: row[2].trim().toLowerCase() === "true"
+              });
+            }
+            index += 1;
+          }
+          index -= 1;
+          continue;
+        }
+      }
+
+      const releaseSection = sectionMarkdown.get("Release Gate Status (Beta Enforcement)") || "";
+      let releaseStatus = null;
+      releaseSection.split("\n").forEach((line) => {
+        if (/^Released skills/.test(line)) {
+          releaseStatus = "released";
+          return;
+        }
+        if (/^Beta skills/.test(line)) {
+          releaseStatus = "beta";
+          return;
+        }
+        if (/^Hidden skills/.test(line)) {
+          releaseStatus = "hidden";
+          return;
+        }
+        if (/^Deprecated skills/.test(line)) {
+          releaseStatus = "deprecated";
+          return;
+        }
+        const match = line.match(/`([^`]+)`/);
+        if (releaseStatus && match) {
+          upsertSkill(match[1], { releaseStatus });
+        }
+      });
+
+      const compositionSection = sectionMarkdown.get("🔗 Frequent Compositions") || sectionMarkdown.get("8. 🔗 Frequent Compositions") || "";
+      if (compositionSection) {
+        const linesComp = compositionSection.split("\n");
+        let currentComposition = null;
+        let inCode = false;
+        let buffer = [];
+        for (const line of linesComp) {
+          const headingMatch = line.match(/^###\s+(.*)$/);
+          if (headingMatch) {
+            currentComposition = headingMatch[1].trim();
+            continue;
+          }
+          if (line.startsWith("```")) {
+            if (inCode) {
+              const code = buffer.join("\n").trim();
+              buffer = [];
+              inCode = false;
+              if (currentComposition && code) {
+                for (const [skillId, skill] of skills.entries()) {
+                  if (code.includes(skillId)) {
+                    const existing = Array.isArray(skill.compositions) ? skill.compositions : [];
+                    skill.compositions = existing.concat({ title: currentComposition, flow: code });
+                  }
+                }
+              }
+            } else {
+              inCode = true;
+            }
+            continue;
+          }
+          if (inCode) {
+            buffer.push(line);
+          }
+        }
+      }
+
+      const skillsArray = Array.from(skills.values())
+        .filter((skill) => skill.name)
+        .sort((left, right) => left.name.localeCompare(right.name));
+
+      return {
+        skills: skillsArray,
+        sectionHtml,
+        sectionMarkdown
+      };
+    }
+
+    const state = {
+      search: "",
+      category: "all",
+      ingress: "all",
+      tier: "all",
+      release: "all",
+      selectedSkillId: skillData[0] ? skillData[0].id : null,
+      userPrompt: "",
+      promptDraft: ""
+    };
+
+    const elements = {
+      heroStats: document.getElementById("hero-stats"),
+      resultsCount: document.getElementById("results-count"),
+      categoryChips: document.getElementById("category-chips"),
+      ingressChips: document.getElementById("ingress-chips"),
+      tierSelect: document.getElementById("tier-select"),
+      releaseSelect: document.getElementById("release-select"),
+      searchInput: document.getElementById("search-input"),
+      skillList: document.getElementById("skill-list"),
+      skillDetail: document.getElementById("skill-detail"),
+      openCatalogWindowButton: document.getElementById("open-catalog-window-button"),
+      catalogSourceStatus: document.getElementById("catalog-source-status")
+    };
+
+    function rebuildCatalogState() {
+      parsed = parseSkills(markdownSource);
+      skillData = parsed.skills;
+      categoryNames = Array.from(new Set(skillData.map((skill) => skill.category))).sort((a, b) => a.localeCompare(b));
+      ingressModes = Array.from(new Set(skillData.map((skill) => skill.ingressMode).filter(Boolean))).sort();
+      tiers = ["all", ...Array.from(new Set(skillData.map((skill) => skill.tier).filter(Boolean))).sort()];
+      releases = ["all", ...Array.from(new Set(skillData.map((skill) => skill.releaseStatus).filter(Boolean))).sort()];
+      if (!skillData.some((skill) => skill.id === state.selectedSkillId)) {
+        state.selectedSkillId = skillData[0] ? skillData[0].id : null;
+        state.promptDraft = "";
+      }
+    }
+
+    async function enhanceMermaid(root) {
+      if (!window.mermaid) {
+        return;
+      }
+      if (!window.__aecfMermaidInitialized) {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "loose",
+          theme: "base",
+          themeVariables: {
+            primaryColor: "#dceec8",
+            primaryTextColor: "#1b211c",
+            primaryBorderColor: "#4e7a38",
+            secondaryColor: "#d6eef0",
+            secondaryTextColor: "#132423",
+            secondaryBorderColor: "#0b8da0",
+            tertiaryColor: "#f6ebc6",
+            tertiaryTextColor: "#2b2414",
+            tertiaryBorderColor: "#c48f18",
+            lineColor: "#6f685f",
+            mainBkg: "#fffdf8",
+            textColor: "#1b211c",
+            nodeBorder: "#356765",
+            clusterBkg: "#f8f3e8",
+            clusterBorder: "#d8cbb9"
+          },
+          flowchart: { useMaxWidth: true, htmlLabels: false, curve: "basis" }
+        });
+        window.__aecfMermaidInitialized = true;
+      }
+      const nodes = Array.from((root || document).querySelectorAll(".mermaid")).filter((node) => !node.dataset.processed);
+      if (!nodes.length) {
+        return;
+      }
+      try {
+        await window.mermaid.run({ nodes });
+      } catch (error) {
+        console.error("Mermaid render failed", error);
+      }
+    }
+
+    async function loadCanonicalMarkdown() {
+      try {
+        const response = await fetch("./SKILL_CATALOG.md", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const canonicalMarkdown = (await response.text()).replace(/^\uFEFF/, "").replace(/^\n+/, "");
+        if (canonicalMarkdown.trim()) {
+          markdownSource = canonicalMarkdown;
+          markdownSourceMode = "canonical";
+          rebuildCatalogState();
+          renderApp();
+          renderCatalogSourceStatus();
+          return;
+        }
+        throw new Error("Empty markdown payload");
+      } catch (error) {
+        markdownSource = fallbackMarkdownSource;
+        markdownSourceMode = "fallback";
+        rebuildCatalogState();
+        renderApp();
+        renderCatalogSourceStatus();
+      }
+    }
+
+    async function loadAssetVersionManifest() {
+      try {
+        const response = await fetch("./AECF_ASSET_VERSIONS.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = JSON.parse(await response.text());
+        hydrateAssetVersionManifest(payload);
+        versionSourceMode = assetVersionManifest ? "loaded" : "missing";
+      } catch (error) {
+        hydrateAssetVersionManifest(null);
+        versionSourceMode = "missing";
+      } finally {
+        renderApp();
+        renderCatalogSourceStatus();
+      }
+    }
+
+    function getDefaultTopicForSkill(skillId) {
+      const normalized = (skillId || "")
+        .replace(/^aecf_/, "")
+        .replace(/_(audit|review|assessment|summary)$/, "")
+        .trim();
+      return normalized || "topic_name";
+    }
+
+    function escapePromptArgument(value) {
+      return String(value || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    }
+
+    function buildReleaseSummaryMarkup() {
+      const releaseGroups = [
+        { key: "released", label: "Released", emptyLabel: "No released skills", badge: "released" },
+        { key: "beta", label: "Beta", emptyLabel: "No beta skills", badge: "beta" },
+        { key: "deprecated", label: "Deprecated", emptyLabel: "No deprecated skills", badge: "deprecated" },
+        { key: "hidden", label: "Hidden", emptyLabel: "No hidden skills", badge: "hidden" }
+      ];
+
+      return releaseGroups.map((group) => {
+        const skillsForStatus = skillData
+          .filter((skill) => skill.releaseStatus === group.key)
+          .map((skill) => skill.id)
+          .sort((left, right) => left.localeCompare(right));
+        const itemsHtml = skillsForStatus.length
+          ? `<ul>${skillsForStatus.map((skillId) => `<li><code>${escapeHtml(skillId)}</code></li>`).join("")}</ul>`
+          : `<p>${escapeHtml(group.emptyLabel)}</p>`;
+        return `
+          <section class="release-card" data-status="${escapeHtml(group.key)}">
+            <div class="release-card-top">
+              <h2>${escapeHtml(group.label)}</h2>
+              <span class="release-badge" data-status="${escapeHtml(group.badge)}">${skillsForStatus.length}</span>
+            </div>
+            ${itemsHtml}
+          </section>
+        `;
+      }).join("");
+    }
+
+    function buildCatalogPopupHtml() {
+      const renderedCatalog = renderMarkdown(markdownSource);
+      const sourceStatus = escapeHtml(elements.catalogSourceStatus.textContent || "");
+      const releaseSummary = buildReleaseSummaryMarkup();
+      return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AECF Skills Catalog</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4efe5;
+      --surface: rgba(255, 252, 246, 0.96);
+      --text: #231f1a;
+      --muted: #645b52;
+      --line: rgba(60, 46, 32, 0.14);
+      --shadow: 0 24px 60px rgba(71, 53, 37, 0.12);
+      --brand: #1a6b68;
+      --font-sans: "Segoe UI", "Aptos", "Trebuchet MS", sans-serif;
+      --font-display: "Georgia", "Palatino Linotype", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(212, 131, 46, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(26, 107, 104, 0.18), transparent 25%),
+        linear-gradient(180deg, #f8f3e9 0%, var(--bg) 38%, #efe6d8 100%);
+    }
+
+    .popup-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .popup-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .popup-card h1 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .popup-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .release-summary {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .release-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.76);
+      padding: 18px;
+    }
+
+    .release-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .release-card h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      line-height: 1.1;
+    }
+
+    .release-card p,
+    .release-card li {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .release-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .release-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      line-height: 1;
+      border: 1px solid rgba(58, 45, 29, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .release-badge[data-status="released"] {
+      background: rgba(35, 123, 83, 0.12);
+      color: #237b53;
+    }
+
+    .release-badge[data-status="beta"] {
+      background: rgba(182, 106, 0, 0.12);
+      color: #b66a00;
+    }
+
+    .release-badge[data-status="hidden"] {
+      background: rgba(111, 102, 144, 0.12);
+      color: #6f6690;
+    }
+
+    .release-badge[data-status="deprecated"] {
+      background: rgba(156, 58, 50, 0.12);
+      color: #9c3a32;
+    }
+
+    .markdown {
+      margin-top: 24px;
+      color: var(--text);
+    }
+
+    .markdown > :first-child { margin-top: 0; }
+    .markdown h1,
+    .markdown h2,
+    .markdown h3,
+    .markdown h4 {
+      font-family: var(--font-display);
+      line-height: 1.15;
+      margin: 1.6rem 0 0.75rem;
+    }
+
+    .markdown h1,
+    .markdown h2 {
+      border-bottom: 1px solid rgba(58, 45, 29, 0.12);
+      padding-bottom: 0.35rem;
+    }
+
+    .markdown h1 { font-size: 2rem; }
+    .markdown h2 { font-size: 1.5rem; }
+    .markdown h3 { font-size: 1.12rem; }
+    .markdown h4 { font-size: 1rem; }
+    .markdown p,
+    .markdown li,
+    .markdown blockquote {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .markdown p code,
+    .markdown li code,
+    .markdown td code,
+    .markdown th code {
+      font-family: Consolas, "Courier New", monospace;
+      background: rgba(0, 224, 255, 0.06);
+      color: var(--brand);
+      border-radius: 8px;
+      padding: 0.12em 0.38em;
+      font-size: 0.92em;
+    }
+
+    .markdown pre {
+      background: #0c0e18;
+      color: #e0e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .markdown pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+    }
+
+    .markdown blockquote {
+      border-left: 4px solid rgba(26, 107, 104, 0.24);
+      margin: 1rem 0;
+      padding: 0.2rem 0 0.2rem 1rem;
+    }
+
+    .markdown table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.4rem;
+      font-size: 0.94rem;
+    }
+
+    .markdown th,
+    .markdown td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(58, 45, 29, 0.12);
+      vertical-align: top;
+    }
+
+    .markdown th {
+      background: rgba(26, 107, 104, 0.08);
+      color: var(--text);
+    }
+
+    .markdown hr {
+      border: none;
+      height: 1px;
+      background: rgba(58, 45, 29, 0.12);
+      margin: 1.4rem 0;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"><\/script>
+</head>
+<body>
+  <div class="popup-shell">
+    <section class="popup-card">
+      <h1>AECF Skills — Catalog by Use Category</h1>
+      <p>${sourceStatus}</p>
+      <div class="release-summary">${releaseSummary}</div>
+      <div class="markdown">${renderedCatalog}</div>
+    </section>
+  </div>
+  <script>
+    if (window.mermaid) {
+      window.mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
+    }
+  <\/script>
+</body>
+</html>`;
+    }
+
+    function openCatalogWindow() {
+      const popup = window.open("", "aecf-skill-catalog", "popup=yes,width=1320,height=920,resizable=yes,scrollbars=yes");
+      if (!popup) {
+        return;
+      }
+      popup.document.open();
+      popup.document.write(buildCatalogPopupHtml());
+      popup.document.close();
+      popup.focus();
+    }
+
+    function buildPrompt(skill, userPrompt) {
+      const parts = [
+        "@aecf run",
+        `skill=${(skill.id || "").replace(/^aecf_/, "")}`,
+        `topic=${getDefaultTopicForSkill(skill.id)}`
+      ];
+      const trimmedPrompt = (userPrompt || "").trim();
+
+      if (trimmedPrompt) {
+        parts.push(`prompt="${escapePromptArgument(trimmedPrompt)}"`);
+      }
+
+      return parts.join(" ");
+    }
+
+    function getFilteredSkills() {
+      const query = state.search.trim().toLowerCase();
+      return skillData.filter((skill) => {
+        const matchesCategory = state.category === "all" || skill.category === state.category;
+        const matchesIngress = state.ingress === "all" || skill.ingressMode === state.ingress;
+        const matchesTier = state.tier === "all" || skill.tier === state.tier;
+        const matchesRelease = state.release === "all" || skill.releaseStatus === state.release;
+        if (!matchesCategory || !matchesIngress || !matchesTier || !matchesRelease) {
+          return false;
+        }
+        if (!query) {
+          return true;
+        }
+        const haystack = [
+          skill.name,
+          skill.id,
+          skill.category,
+          skill.description,
+          skill.whenToUse,
+          skill.tier,
+          skill.ingressMode,
+          skill.releaseStatus,
+          skill.routingNotes,
+          ...(skill.compositions || []).map((composition) => `${composition.title} ${composition.flow}`)
+        ].join(" ").toLowerCase();
+        return haystack.includes(query);
+      });
+    }
+
+    function countBy(items, getter) {
+      return items.reduce((map, item) => {
+        const key = getter(item);
+        map.set(key, (map.get(key) || 0) + 1);
+        return map;
+      }, new Map());
+    }
+
+    function renderHeroStats() {
+      const releasedCount = skillData.filter((skill) => skill.releaseStatus === "released").length;
+      const betaCount = skillData.filter((skill) => skill.releaseStatus === "beta").length;
+      const readOnlyCount = skillData.filter((skill) => skill.destination === "SKILL_FINAL" || skill.destination === "EXECUTE").length;
+      const stats = [
+        { value: skillData.length, label: "skills indexadas" },
+        { value: categoryNames.length, label: "categorías navegables" },
+        { value: releasedCount, label: "skills released" },
+        { value: betaCount, label: "skills beta" },
+        { value: readOnlyCount, label: "skills read-only o finales" }
+      ];
+      if (assetVersionManifest?.skills?.collectionVersionStamp) {
+        stats.push({ value: assetVersionManifest.skills.collectionVersionStamp, label: "skill stamp" });
+      }
+      if (assetVersionManifest?.promptAssets?.collectionVersionStamp) {
+        stats.push({ value: assetVersionManifest.promptAssets.collectionVersionStamp, label: "prompt stamp" });
+      }
+      const html = stats.map((item) => `<div class="stat"><strong>${item.value}</strong><span>${escapeHtml(item.label)}</span></div>`).join("");
+      elements.heroStats.innerHTML = html;
+    }
+
+    function renderSelect(select, values, current, formatter) {
+      select.innerHTML = values.map((value) => {
+        const selected = value === current ? " selected" : "";
+        return `<option value="${escapeHtml(value)}"${selected}>${escapeHtml(formatter(value))}</option>`;
+      }).join("");
+    }
+
+    function renderChipSet(container, values, currentValue, countMap, onClick, labelFormatter) {
+      container.innerHTML = values.map((value) => {
+        const isActive = value === currentValue;
+        const count = value === "all" ? skillData.length : (countMap.get(value) || 0);
+        const label = labelFormatter(value);
+        return `<button type="button" class="chip${isActive ? " is-active" : ""}" data-value="${escapeHtml(value)}">
+          <span>${escapeHtml(label)}</span>
+          <span class="chip-count">${count}</span>
+        </button>`;
+      }).join("");
+
+      container.querySelectorAll(".chip").forEach((chip) => {
+        chip.addEventListener("click", () => onClick(chip.dataset.value));
+      });
+    }
+
+    function ensureSelection(filteredSkills) {
+      if (!filteredSkills.length) {
+        state.selectedSkillId = null;
+        state.promptDraft = "";
+        return;
+      }
+      if (!filteredSkills.some((skill) => skill.id === state.selectedSkillId)) {
+        state.selectedSkillId = filteredSkills[0].id;
+        state.promptDraft = "";
+      }
+    }
+
+    function renderSkillList(filteredSkills) {
+      if (!filteredSkills.length) {
+        elements.skillList.innerHTML = '<div class="empty-state">No hay skills que cumplan los filtros actuales. Ajusta la búsqueda o quita algún chip.</div>';
+        return;
+      }
+
+      elements.skillList.innerHTML = filteredSkills.map((skill) => {
+        const isSelected = skill.id === state.selectedSkillId;
+        const tone = sectionToneByName[(skill.category || "").toLowerCase()] || "";
+        const versionEntry = getSkillVersionEntry(skill.id);
+        return `<button type="button" class="skill-card${isSelected ? " is-selected" : ""}" data-skill-id="${escapeHtml(skill.id)}">
+          <span class="skill-id">${escapeHtml(skill.id)}</span>
+          <h3>${escapeHtml(skill.name || skill.id)}</h3>
+          <p>${escapeHtml(skill.description || "")}</p>
+          <div class="mini-chips">
+            <span class="mini-chip" data-tone="${escapeHtml(tone)}">${escapeHtml(skill.category || "Sin categoría")}</span>
+            ${skill.tier ? `<span class="mini-chip">${escapeHtml(skill.tier)}</span>` : ""}
+            ${versionEntry ? `<span class="mini-chip">${escapeHtml(versionEntry.versionStamp)}</span>` : ""}
+            ${skill.releaseStatus ? `<span class="release-badge" data-status="${escapeHtml(skill.releaseStatus)}">${escapeHtml(skill.releaseStatus)}</span>` : ""}
+          </div>
+        </button>`;
+      }).join("");
+
+      elements.skillList.querySelectorAll(".skill-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          state.selectedSkillId = card.dataset.skillId;
+          state.promptDraft = "";
+          renderApp();
+        });
+      });
+    }
+
+    function renderSkillDetail(filteredSkills) {
+      const skill = filteredSkills.find((item) => item.id === state.selectedSkillId);
+      if (!skill) {
+        elements.skillDetail.innerHTML = '<div class="empty-state">Selecciona una skill para ver el detalle.</div>';
+        return;
+      }
+
+      const promptValue = state.promptDraft || buildPrompt(skill, state.userPrompt);
+      const compositions = skill.compositions || [];
+      const sourceHtml = parsed.sectionHtml.get(skill.category) || skill.categoryHtml || "";
+      const versionEntry = getSkillVersionEntry(skill.id);
+
+      elements.skillDetail.innerHTML = `
+        <div class="detail-top">
+          <div class="meta-chips">
+            <span class="meta-chip">${escapeHtml(skill.category || "Sin categoría")}</span>
+            ${skill.tier ? `<span class="meta-chip">${escapeHtml(skill.tier)}</span>` : ""}
+            ${skill.ingressMode ? `<span class="meta-chip">${escapeHtml(skill.ingressMode)}</span>` : ""}
+            ${versionEntry ? `<span class="meta-chip">${escapeHtml(versionEntry.versionStamp)}</span>` : ""}
+            ${skill.releaseStatus ? `<span class="release-badge" data-status="${escapeHtml(skill.releaseStatus)}">${escapeHtml(skill.releaseStatus)}</span>` : ""}
+          </div>
+          <h2 id="detail-title">${escapeHtml(skill.name || skill.id)}</h2>
+          <p>${escapeHtml(skill.description || "")}</p>
+          <span class="skill-id">${escapeHtml(skill.id)}</span>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-box"><strong>When to Use</strong><span>${escapeHtml(skill.whenToUse || "N/A")}</span></div>
+          <div class="meta-box"><strong>Governed Destination</strong><code>${escapeHtml(skill.destination || "N/A")}</code></div>
+          <div class="meta-box"><strong>Canonical Handoff</strong><code>${escapeHtml(skill.handoffArtifact || "N/A")}</code></div>
+          <div class="meta-box"><strong>Deterministic</strong><span>${skill.deterministic === undefined ? "N/A" : skill.deterministic ? "true" : "false"}</span></div>
+          ${versionEntry ? `<div class="meta-box"><strong>Version Stamp</strong><code>${escapeHtml(versionEntry.versionStamp)}</code></div>` : ""}
+          ${versionEntry ? `<div class="meta-box"><strong>Canonical Source</strong><code>${escapeHtml(versionEntry.sourcePath || "N/A")}</code></div>` : ""}
+        </div>
+
+        ${skill.routingNotes ? `<section class="detail-section"><h3>Routing note</h3><p>${escapeHtml(skill.routingNotes)}</p></section>` : ""}
+
+        <section class="detail-section">
+          <h3>Prompt composer</h3>
+          <div class="composer">
+            <div class="composer-grid">
+              <label>
+                Qué quieres pedir
+                <textarea id="composer-input" class="composer-input" placeholder="Ejemplo: necesito revisar si esta API cumple GDPR y qué gaps habría para release.">${escapeHtml(state.userPrompt)}</textarea>
+              </label>
+              <label>
+                Prompt listo para copiar
+                <textarea id="composer-output" class="composer-output">${escapeHtml(promptValue)}</textarea>
+              </label>
+            </div>
+            <div class="composer-actions">
+              <button type="button" class="button" id="copy-prompt-button">Copiar prompt</button>
+              <button type="button" class="button is-secondary" id="reset-prompt-button">Regenerar desde la ficha</button>
+              <button type="button" class="button is-ghost" id="copy-skill-button">Copiar skill id</button>
+              <span class="copy-feedback" id="copy-feedback"></span>
+            </div>
+            <p class="helper">Puedes editar el prompt final antes de copiarlo. No depende de ninguna librería ni backend.</p>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h3>Frequent compositions</h3>
+          ${compositions.length ? `<ul>${compositions.map((composition) => `<li><strong>${escapeHtml(composition.title)}:</strong> ${escapeHtml(composition.flow.replace(/\s+/g, " ").trim())}</li>`).join("")}</ul>` : `<p>No hay composiciones explícitas para esta skill en la sección del catálogo.</p>`}
+        </section>
+
+        <section class="detail-section">
+          <h3>Contexto completo de su categoría</h3>
+          <div class="source-box markdown">${sourceHtml}</div>
+        </section>
+      `;
+
+      const composerInput = document.getElementById("composer-input");
+      const composerOutput = document.getElementById("composer-output");
+      const copyFeedback = document.getElementById("copy-feedback");
+
+      composerInput.addEventListener("input", () => {
+        state.userPrompt = composerInput.value;
+        state.promptDraft = buildPrompt(skill, state.userPrompt);
+        composerOutput.value = state.promptDraft;
+      });
+
+      composerOutput.addEventListener("input", () => {
+        state.promptDraft = composerOutput.value;
+      });
+
+      document.getElementById("reset-prompt-button").addEventListener("click", () => {
+        state.promptDraft = buildPrompt(skill, state.userPrompt);
+        composerOutput.value = state.promptDraft;
+        copyFeedback.textContent = "Prompt regenerado.";
+      });
+
+      document.getElementById("copy-skill-button").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(skill.id);
+        copyFeedback.textContent = `Copiado ${skill.id}.`;
+      });
+
+      document.getElementById("copy-prompt-button").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(composerOutput.value);
+        copyFeedback.textContent = "Prompt copiado al portapapeles.";
+      });
+    }
+
+    function renderFilters(filteredSkills) {
+      const categoryCountMap = countBy(skillData, (skill) => skill.category);
+      const ingressCountMap = countBy(skillData, (skill) => skill.ingressMode || "N/A");
+      renderChipSet(
+        elements.categoryChips,
+        ["all", ...categoryNames],
+        state.category,
+        categoryCountMap,
+        (value) => {
+          state.category = value;
+          renderApp();
+        },
+        (value) => value === "all" ? "Todas" : value
+      );
+      renderChipSet(
+        elements.ingressChips,
+        ["all", ...ingressModes],
+        state.ingress,
+        ingressCountMap,
+        (value) => {
+          state.ingress = value;
+          renderApp();
+        },
+        (value) => value === "all" ? "Todos" : value
+      );
+      elements.resultsCount.textContent = `${filteredSkills.length} resultado${filteredSkills.length === 1 ? "" : "s"}`;
+    }
+
+    function renderApp() {
+      renderHeroStats();
+      renderSelect(elements.tierSelect, tiers, state.tier, (value) => value === "all" ? "Todos los tiers" : value);
+      renderSelect(elements.releaseSelect, releases, state.release, (value) => value === "all" ? "Todos los release states" : value);
+      const filteredSkills = getFilteredSkills();
+      ensureSelection(filteredSkills);
+      renderFilters(filteredSkills);
+      renderSkillList(filteredSkills);
+      renderSkillDetail(filteredSkills);
+      void enhanceMermaid(document.body);
+    }
+
+    const helpToggleButton = document.getElementById("help-toggle-button");
+    const helpPanel = document.getElementById("help-panel");
+    if (helpToggleButton && helpPanel) {
+      helpToggleButton.addEventListener("click", () => {
+        const open = helpPanel.classList.toggle("is-open");
+        helpToggleButton.setAttribute("aria-expanded", String(open));
+      });
+    }
+
+    rebuildCatalogState();
+    elements.searchInput.addEventListener("input", () => {
+      state.search = elements.searchInput.value;
+      renderApp();
+    });
+    elements.tierSelect.addEventListener("change", () => {
+      state.tier = elements.tierSelect.value;
+      renderApp();
+    });
+    elements.releaseSelect.addEventListener("change", () => {
+      state.release = elements.releaseSelect.value;
+      renderApp();
+    });
+    elements.openCatalogWindowButton.addEventListener("click", () => {
+      openCatalogWindow();
+    });
+    renderApp();
+    renderCatalogSourceStatus();
+    void loadCanonicalMarkdown();
+    void loadAssetVersionManifest();
+  </script>
+</body>
+</html>

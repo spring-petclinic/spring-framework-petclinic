@@ -1,0 +1,168 @@
+{
+    "$schema": "ci_exclusions_schema",
+    "description": "Exclusion rules for AECF Codebase Intelligence file enumeration. Controls which directories, files, and patterns are filtered out during repository scanning to avoid noise from framework internals, build artifacts, IDE configs, and vendored dependencies.",
+    "version": "1.0.0",
+
+    "ignored_directories": {
+        "description": "Directory names to skip entirely during os.walk and to filter from git ls-files output. Matched by exact directory name (case-sensitive).",
+        "entries": [
+            "aecf_prompts",
+            ".conda",
+            ".git",
+            ".hg",
+            ".svn",
+            ".github",
+            ".gitlab",
+            ".circleci",
+            ".azure-pipelines",
+            "node_modules",
+            "__pycache__",
+            ".venv",
+            "venv",
+            "env",
+            ".env",
+            ".aecf",
+            ".aecf_ignore",
+            ".aecf_runtime",
+            ".agents",
+            ".tox",
+            ".nox",
+            ".mypy_cache",
+            ".ruff_cache",
+            ".pytest_cache",
+            ".hypothesis",
+            "dist",
+            "build",
+            "_build",
+            ".next",
+            ".nuxt",
+            ".output",
+            ".turbo",
+            "target",
+            "bin",
+            "obj",
+            "out",
+            ".idea",
+            ".vscode",
+            ".vs",
+            ".eclipse",
+            "coverage",
+            ".coverage",
+            "htmlcov",
+            ".nyc_output",
+            ".cache",
+            "tmp",
+            ".tmp",
+            "temp",
+            ".eggs",
+            "*.egg-info",
+            "site-packages",
+            ".terraform",
+            ".serverless",
+            "cdk.out",
+            ".angular",
+            ".parcel-cache",
+            ".vercel",
+            ".netlify",
+            ".firebase"
+        ]
+    },
+
+    "ignored_directory_patterns": {
+        "description": "Regex patterns matched against directory names. Directories matching any pattern are excluded. Applied in addition to exact-name matches above.",
+        "entries": [
+            "^\\.",
+            ".*\\.egg-info$"
+        ],
+        "notes": "The ^\\. pattern catches any hidden/dot directory not explicitly listed. The egg-info pattern catches named egg-info dirs like 'mypackage.egg-info'."
+    },
+
+    "vendor_path_segments": {
+        "description": "Path segments that indicate vendored or third-party code. Files under paths containing these segments are excluded from stack inference but may still appear in the full file list.",
+        "entries": [
+            "vendor",
+            "vendors",
+            "bower_components",
+            "plugins",
+            "third_party",
+            "third-party",
+            "3rdparty",
+            "extern",
+            "externals",
+            "bundled",
+            "vendored"
+        ]
+    },
+
+    "ignored_file_suffixes": {
+        "description": "File name suffixes. Files ending with any of these are excluded from the inventory entirely.",
+        "entries": [
+            ".min.js",
+            ".min.css",
+            ".min.js.map",
+            ".min.css.map",
+            ".bundle.js",
+            ".chunk.js",
+            ".pyc",
+            ".pyo",
+            ".class",
+            ".o",
+            ".obj",
+            ".so",
+            ".dll",
+            ".dylib",
+            ".exe",
+            ".wasm",
+            ".vsix",
+            ".nupkg",
+            ".jar",
+            ".war",
+            ".ear",
+            ".lock",
+            ".tfstate",
+            ".tfstate.backup",
+            ".pdf",
+            ".docx",
+            ".xlsx",
+            ".pptx",
+            ".log",
+            ".csv",
+            ".tsv",
+            ".zip",
+            ".tar",
+            ".tar.gz",
+            ".tgz"
+        ]
+    },
+
+    "ignored_file_prefixes": {
+        "description": "File name prefixes. Files starting with any of these are excluded from the inventory entirely.",
+        "entries": []
+    },
+
+    "ignored_file_exact": {
+        "description": "Exact file names (basename only, case-sensitive) to exclude.",
+        "entries": [
+            "package-lock.json",
+            "yarn.lock",
+            "pnpm-lock.yaml",
+            "Thumbs.db",
+            ".DS_Store",
+            "desktop.ini"
+        ]
+    },
+
+    "ignored_file_patterns": {
+        "description": "Regex patterns matched against relative file paths. Files matching any pattern are excluded from the inventory.",
+        "entries": [
+            "^aecf_executions/",
+            "^aecf_mcp\\.egg-info/",
+            "\\.egg-info/"
+        ]
+    },
+
+    "aecf_auxiliary_test_prefix": {
+        "description": "Basename prefix that flags a file as an AECF-generated auxiliary test. These files are filtered from stack inference but remain in the full inventory.",
+        "value": "test_aecf_"
+    }
+}

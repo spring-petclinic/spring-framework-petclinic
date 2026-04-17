@@ -1,0 +1,71 @@
+# AECF Federation Manifest
+#
+# This file indexes all repositories and contract boundaries
+# in a multi-repo ecosystem.
+#
+# IMPORTANT: This file MUST NOT contain local filesystem paths.
+# Use .aecf/local/federation_paths.yaml (gitignored) for local path resolution.
+#
+# Location: .aecf/runtime/federation/AECF_FEDERATION.yaml
+
+federation: "{{federation_id}}"
+version: "1.0"
+generated_at: "{{generated_at_utc}}"
+owner: "{{owner}}"
+status: "active"  # active | draft | archived
+
+# --- Repositories ---
+# Each repo has a logical ID, a canonical URL, and a role.
+# Roles: provider | consumer | transformer | orchestrator
+repos:
+  example_provider:
+    canonical_url: "https://github.com/org/example-provider"
+    role: provider
+    description: "Core service that exposes shared contracts"
+    # Optional: branch or tag policy for contract stability
+    contract_branch: "main"
+
+  example_consumer:
+    canonical_url: "https://github.com/org/example-consumer"
+    role: consumer
+    description: "Application that consumes provider contracts"
+
+  example_transformer:
+    canonical_url: "https://github.com/org/example-transformer"
+    role: transformer
+    description: "Data preprocessing pipeline"
+
+# --- Contract Boundaries ---
+# Each contract links a provider to one or more consumers.
+# contract_type: api | shared_state | data_pipeline | shared_library | message_queue | file_exchange
+# change_policy: expand_contract | versioned_schema | backward_compatible_only | coordinated_deploy
+contracts:
+  example_contract:
+    provider: "example_provider"
+    consumers:
+      - "example_consumer"
+    contract_type: "shared_state"
+    description: "Shared REDIS cache for entity lookups"
+    change_policy: "expand_contract"
+    invariants:
+      - "Keys follow pattern prefix:{entity}:{id}"
+      - "TTL managed by provider only"
+    # Optional: path to the contract boundary document in each repo
+    contract_doc: "AECF_CONTRACT_example_contract.md"
+
+  example_pipeline:
+    provider: "example_transformer"
+    consumers:
+      - "example_consumer"
+    contract_type: "data_pipeline"
+    description: "Preprocessed data files for dashboards"
+    change_policy: "versioned_schema"
+    invariants:
+      - "Output schema follows version declared in header row"
+
+# --- Cross-Repo Coordination Defaults ---
+coordination_defaults:
+  # Default strategy when a change crosses a contract boundary
+  default_strategy: "sequential"  # sequential | atomic
+  # Default execution order: provider repos first, then consumers
+  execution_order_policy: "provider_first"

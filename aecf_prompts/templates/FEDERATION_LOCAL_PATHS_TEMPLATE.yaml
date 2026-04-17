@@ -1,0 +1,16 @@
+# AECF Federation Local Path Resolution
+#
+# This file maps logical repo identifiers from AECF_FEDERATION.yaml
+# to local filesystem paths on this developer's machine.
+#
+# THIS FILE MUST BE GITIGNORED. It is developer-specific.
+#
+# Location: .aecf/local/federation_paths.yaml
+#
+# If a repo is not listed here, AECF treats its context as unavailable
+# and works only with the Contract Boundary documentation.
+
+repos:
+  # example_provider: "C:\\projects\\example-provider"
+  # example_consumer: "D:\\work\\example-consumer"
+  # example_transformer: "/home/dev/repos/example-transformer"

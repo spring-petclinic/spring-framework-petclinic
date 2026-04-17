@@ -1,0 +1,13 @@
+{
+  "_description": "Offline local skill authorization policy. Skills omitted here remain open by default.",
+  "default_access": "open",
+  "areas": {
+    "productivity": {
+      "default_access": "deny",
+      "description": "Restricted productivity analytics skills driven by local CSV-derived authorization manifests."
+    }
+  },
+  "skills": {
+    "productivity": "productivity"
+  }
+}

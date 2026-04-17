@@ -1,0 +1,25 @@
+{
+  "bootstrap_version": 5,
+  "bundle_root_dir": "aecf_prompts",
+  "bundle_id": "bdl_20260417_08a4e3e3",
+  "bootstrapped_at_utc": "2026-04-17T11:16:06Z",
+  "authorized_users": [
+    "fernando.garcia.varela@seachad.com",
+    "luis.garcia-villaraco@seachad.com",
+    "usuario_prueba@seachad.com"
+  ],
+  "authorized_principals": [
+    {
+      "user_id": "fernando.garcia.varela@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "luis.garcia-villaraco@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario_prueba@seachad.com",
+      "areas": []
+    }
+  ]
+}
