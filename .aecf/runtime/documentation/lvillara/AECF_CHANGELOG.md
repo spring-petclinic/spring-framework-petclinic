@@ -4,6 +4,87 @@
 
 ## 2026-04-18
 
+### aecf_new_feature | TOPIC: i18n_locale_selector
+
+- **Skill**: `aecf_new_feature`
+- **Status**: COMPLETE — Gate: GO (AUDIT_PLAN + AUDIT_CODE)
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_01_PLAN.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_02_AUDIT_PLAN.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_03_TEST_STRATEGY.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_04_IMPLEMENTATION.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_05_AUDIT_CODE.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_06_VERSION.md`
+  - `src/main/resources/spring/mvc-core-config.xml` — CookieLocaleResolver + LocaleChangeInterceptor + mvc:interceptors added
+  - `src/main/resources/messages/messages.properties` — 4 lang.* keys added (EN)
+  - `src/main/resources/messages/messages_es.properties` — 4 lang.* keys added (ES)
+  - `src/main/resources/messages/messages_de.properties` — 4 lang.* keys added (DE)
+  - `src/main/webapp/WEB-INF/tags/menu.tag` — fmt taglib + Bootstrap 5 language dropdown
+  - `src/test/java/.../web/LocaleChangeInterceptorTests.java` — 6 integration tests (created)
+- **Summary**: Implementación completa del selector de idioma runtime en PetClinic. Sin LocaleResolver previo — Spring usaba `AcceptHeaderLocaleResolver` (no programable). `CookieLocaleResolver` añadido con `id=localeResolver` (convención fija Spring MVC), `cookieName=PETCLINIC_LOCALE`, `defaultLocale=en`. `LocaleChangeInterceptor` global (sin restricción de path) intercept parámetro `lang`. Dropdown Bootstrap 5 en navbar con 3 idiomas (EN/ES/DE) usando `${pageContext.request.requestURI}?lang=XX`. 6 tests via `webAppContextSetup(wac)` — necesario para incluir interceptores del contexto; `standaloneSetup` los bypasaría. 87 tests existentes sin regresión + 6 nuevos = 93 total. SemVer 7.1.0 → 7.2.0 (MINOR). R1🟡: lang switch pierde query params existentes (p.ej. ?page=2 en paginación).
+
+---
+
+### aecf_refactor | TOPIC: xml_to_java_config
+
+- **Skill**: `aecf_refactor`
+- **Status**: PHASE1_COMPLETE — Gate: GO (AUDIT_PLAN + AUDIT_CODE)
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_01_DOCUMENT_EXISTING.md`
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_02_REFACTOR_PLAN.md`
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_03_AUDIT_PLAN.md` (Gate: GO, 3 WARNINGs non-blocking)
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_04_TEST_STRATEGY.md`
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_05_REFACTORING.md`
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_06_AUDIT_CODE.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_07_VERSION.md`
+  - `src/main/java/.../config/BusinessConfig.java` — global beans + @EnableTransactionManagement + static PSPC
+  - `src/main/java/.../config/DataSourceConfig.java` — Phase 1 bridge via @ImportResource
+  - `src/main/java/.../config/JpaSharedConfig.java` — @Profile({"jpa","spring-data-jpa"}): EMF + JpaTransactionManager + PETP
+  - `src/main/java/.../config/JpaRepositoryConfig.java` — @Profile("jpa") @ComponentScan(repository.jpa)
+  - `src/main/java/.../config/JdbcConfig.java` — @Profile("jdbc"): DataSourceTxManager + JdbcClient + NPJT + scan
+  - `src/main/java/.../config/SpringDataJpaConfig.java` — @Profile("spring-data-jpa") @EnableJpaRepositories
+- **Summary**: Migración Phase 1 de business-config.xml a Java @Configuration completa. 6 clases creadas en `config/` package. XML files intactos — bridge DataSourceConfig via @ImportResource. Correcciones clave: (1) `PropertySourcesPlaceholderConfigurer.setSystemPropertiesMode()` no existe en PSPC — StandardEnvironment maneja OVERRIDE automáticamente; (2) `AdviceMode` es enum standalone, no inner class de `@EnableTransactionManagement`. Pendiente Phase 2 (tests paralelos), Phase 3 (switch tests locations→classes), Phase 4 (AnnotationConfigWebApplicationContext en PetclinicInitializer), Phase 5 (datasource-config.xml), Phase 6 (borrar XML). SemVer 7.0.3→7.0.4 PATCH diferido a Phase 3.
+
+---
+
+### aecf_security_review | TOPIC: controller_security
+
+- **Skill**: `aecf_security_review`
+- **Status**: AUDIT_COMPLETE — VERDICT: NO-GO
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/controller_security/AECF_01_SECURITY_AUDIT.md`
+  - `.aecf/runtime/documentation/AECF_SECURITY_REVIEW_SEVERITY_MATRIX.md` (bootstrapped + v1.3 after 3 auto-applied rules)
+- **Summary**: Auditoría exhaustiva de la capa web (OwnerController, PetController, VisitController, CrashController, PetclinicInitializer, PetValidator, VetRestController, mvc-core-config.xml). 2 CRITICAL: (1) cero autenticación — todos los endpoints de mutación accesibles sin credenciales (CVSS 9.8 SEC-AUTH-01), (2) IDOR en PetController — petId no validado contra ownerId del path (CVSS 9.1 SEC-AUTHZ-01). 3 HIGH: mass assignment vía @InitBinder blacklist (SEC-INPUT-01), ausencia total de CSRF (SEC-CSRF-01), IDOR en VisitController con wildcard * (SEC-AUTHZ-01). 5 MEDIUM: headers de seguridad ausentes, ruta /oups expuesta en producción, enumeración de owners vía búsqueda vacía, sin logging de seguridad, sin rate limiting. 2 LOW. Severity matrix bootstrapped (v1) + 3 reglas auto-aplicadas (SEC-CSRF-01, SEC-INFO-01, SEC-ENUM-01) → v1.3. MATRIX-PENDING: 3 ADD_RULE ✅, 2 NO_ADD_RULE.
+
+---
+
+### aecf_new_feature | TOPIC: vet_rest_api
+
+- **Skill**: `aecf_new_feature`
+- **Status**: COMPLETE — Gate: GO (AUDIT_PLAN + AUDIT_CODE)
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_01_PLAN.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_02_AUDIT_PLAN.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_03_TEST_STRATEGY.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_04_IMPLEMENTATION.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_05_AUDIT_CODE.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_06_VERSION.md`
+- **Summary**: VetController HTML flow preservado intacto. Nuevo `VetRestController` en `GET /api/vets` con produces JSON+XML vía Accept header. SpringDoc `2.8.0` añadido al pom. `OpenApiConfiguration` bean expone `/v3/api-docs` y Swagger UI. 8 tests en `VetRestControllerTests`. SemVer 7.0.3 → 7.1.0 (MINOR). Riesgo R1🔴 (Jackson 3.x / SpringDoc compat) pendiente de verificación en runtime.
+
+---
+
+### aecf_explain_behaviour | TOPIC: aop_monitoring_aspect
+
+- **Skill**: `aecf_explain_behaviour`
+- **Status**: COMPLETE — Gate: GO (all 3 phases)
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_01_BEHAVIORAL_ANALYSIS.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_02_GOVERNANCE_GATES.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_03_EXPLAIN_BEHAVIOR_FINAL.md` (Gate: GO)
+- **Summary**: `within(@Repository *)` selects only concrete classes annotated with `@org.springframework.stereotype.Repository`. Under `spring-data-jpa` profile, Spring Data creates JDK dynamic proxies (`$ProxyXX`) for repository interfaces — neither the interface nor the proxy class carries `@Repository`, so no join points are selected and monitoring is silently absent. Under `jpa`/`jdbc` profiles, CGLIB subclass proxies of annotated concrete classes match correctly. 4 fix options documented: `execution()` by package, `@target()` with explicit annotation, `proxy-target-class="true"`, and `||` pointcut composition. Risks: R1–R3 WARNING (silent gap, no test coverage, hidden profile coupling).
+
+---
+
 ### aecf_new_test_set | TOPIC: jdbc_repository_tests
 
 - **Skill**: `aecf_new_test_set`

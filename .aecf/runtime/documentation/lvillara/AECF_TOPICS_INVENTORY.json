@@ -3,6 +3,97 @@
   "last_updated": "2026-04-18T00:00:00Z",
   "topics": [
     {
+      "topic_id": "i18n_locale_selector",
+      "display_name": "i18n Locale Selector",
+      "status": "COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_new_feature"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_01_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_02_AUDIT_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_03_TEST_STRATEGY.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_04_IMPLEMENTATION.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_05_AUDIT_CODE.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/i18n_locale_selector/AECF_06_VERSION.md",
+        "src/main/resources/spring/mvc-core-config.xml",
+        "src/main/resources/messages/messages.properties",
+        "src/main/resources/messages/messages_es.properties",
+        "src/main/resources/messages/messages_de.properties",
+        "src/main/webapp/WEB-INF/tags/menu.tag",
+        "src/test/java/org/springframework/samples/petclinic/web/LocaleChangeInterceptorTests.java"
+      ],
+      "notes": "Gate: GO (AUDIT_PLAN + AUDIT_CODE). CookieLocaleResolver (id=localeResolver, defaultLocale=en, cookieName=PETCLINIC_LOCALE) + LocaleChangeInterceptor (paramName=lang) added to mvc-core-config.xml. Bootstrap 5 dropdown in menu.tag with fmt:message keys. 6 integration tests via webAppContextSetup. SemVer 7.1.0 → 7.2.0 (MINOR). R1🟡: lang switch loses existing query params (pageContext.request.requestURI has no query string)."
+    },
+    {
+      "topic_id": "xml_to_java_config",
+      "display_name": "XML to Java Config",
+      "status": "PHASE1_COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_refactor"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_01_DOCUMENT_EXISTING.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_02_REFACTOR_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_03_AUDIT_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_04_TEST_STRATEGY.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_05_REFACTORING.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_06_AUDIT_CODE.md",
+        ".aecf/runtime/documentation/lvillara/xml_to_java_config/AECF_07_VERSION.md",
+        "src/main/java/org/springframework/samples/petclinic/config/BusinessConfig.java",
+        "src/main/java/org/springframework/samples/petclinic/config/DataSourceConfig.java",
+        "src/main/java/org/springframework/samples/petclinic/config/JpaSharedConfig.java",
+        "src/main/java/org/springframework/samples/petclinic/config/JpaRepositoryConfig.java",
+        "src/main/java/org/springframework/samples/petclinic/config/JdbcConfig.java",
+        "src/main/java/org/springframework/samples/petclinic/config/SpringDataJpaConfig.java"
+      ],
+      "notes": "Gate: GO (AUDIT_PLAN + AUDIT_CODE). Phase 1 complete: 6 @Configuration classes created in config/. XML files untouched — bridge via DataSourceConfig @ImportResource. Pending: Phase 2 (parallel tests), Phase 3 (switch test locations→classes), Phase 4 (AnnotationConfigWebApplicationContext), Phase 5 (datasource-config.xml full migration), Phase 6 (delete XML). Version: 7.0.3→7.0.4 PATCH deferred to Phase 3. WARN: PropertySourcesPlaceholderConfigurer.setSystemPropertiesMode() does not exist — StandardEnvironment handles OVERRIDE semantics automatically."
+    },
+    {
+      "topic_id": "controller_security",
+      "display_name": "Controller Security",
+      "status": "AUDIT_COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_security_review"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/controller_security/AECF_01_SECURITY_AUDIT.md",
+        ".aecf/runtime/documentation/AECF_SECURITY_REVIEW_SEVERITY_MATRIX.md"
+      ],
+      "notes": "VERDICT: NO-GO. 2 CRITICAL (zero auth CVSS 9.8, IDOR CVSS 9.1), 3 HIGH (mass assignment, CSRF absent, VisitController IDOR), 5 MEDIUM, 2 LOW. 3 matrix rules auto-applied (SEC-CSRF-01, SEC-INFO-01, SEC-ENUM-01). Matrix bootstrapped v1→v1.3."
+    },
+    {
+      "topic_id": "vet_rest_api",
+      "display_name": "Vet REST API",
+      "status": "COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_new_feature"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_01_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_02_AUDIT_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_03_TEST_STRATEGY.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_04_IMPLEMENTATION.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_05_AUDIT_CODE.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/vet_rest_api/AECF_06_VERSION.md"
+      ],
+      "notes": "Gate: GO (AUDIT_PLAN + AUDIT_CODE). Decision: extract VetRestController at /api/vets (JSON+XML via Accept), keep VetController HTML unchanged. SpringDoc 2.8.0 added; mvc-core-config.xml scans org.springdoc. 8 tests (VetRestControllerTests). SemVer 7.0.3 → 7.1.0. R1🔴: Jackson 3.x / SpringDoc 2.x compat needs mvn runtime verification."
+    },
+    {
+      "topic_id": "aop_monitoring_aspect",
+      "display_name": "AOP Monitoring Aspect",
+      "status": "COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_explain_behaviour"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_01_BEHAVIORAL_ANALYSIS.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_02_GOVERNANCE_GATES.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/aop_monitoring_aspect/AECF_03_EXPLAIN_BEHAVIOR_FINAL.md"
+      ],
+      "notes": "Gate: GO (all 3 phases). within(@Repository *) only matches concrete @Repository classes (CGLIB proxy-visible). Spring Data JPA repos are interfaces → JDK proxy ($ProxyXX) has no @Repository → zero join points → monitoring silent under spring-data-jpa profile. 4 fix options: execution() by package, @target() + annotation, proxy-target-class=true, || composition. Risks: R1-R3 WARNING."
+    },
+    {
       "topic_id": "jdbc_repository_tests",
       "display_name": "JDBC Repository Tests",
       "status": "STRATEGY_COMPLETE",
