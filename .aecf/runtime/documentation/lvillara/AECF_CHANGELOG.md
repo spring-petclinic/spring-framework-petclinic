@@ -2,6 +2,20 @@
 
 ---
 
+## 2026-04-18
+
+### aecf_new_test_set | TOPIC: jdbc_repository_tests
+
+- **Skill**: `aecf_new_test_set`
+- **Status**: STRATEGY_COMPLETE — awaiting user approval for implementation
+- **Artifacts generated**:
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_01_PLAN.md`
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_02_AUDIT_PLAN.md` (Gate: GO)
+  - `.aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_03_TEST_STRATEGY.md`
+- **Summary**: Discovery + gap sweep de 7 clases JDBC. 14 tests de contrato existentes identificados. 10 áreas de riesgo (R1+R2 HIGH). 17 tests nuevos diseñados en 4 clases: JdbcRowMapperTests, JdbcPetVisitExtractorTests, JdbcOwnerRepositoryIntegrationTests, JdbcPetRepositoryIntegrationTests. Gaps clave: columna "pets.id" table-qualified (R1🔴), null FK extractor para mascotas sin visitas (R2🔴), exception paths para IDs inexistentes (R4/R5🟠), carga multi-mascota con fixture owner 6 (R6🟠).
+
+---
+
 ## 2026-04-17
 
 ### aecf_project_context_generator | TOPIC: project_context

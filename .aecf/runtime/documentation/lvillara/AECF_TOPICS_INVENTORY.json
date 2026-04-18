@@ -1,7 +1,21 @@
 {
   "user_id": "lvillara",
-  "last_updated": "2026-04-17T00:00:00Z",
+  "last_updated": "2026-04-18T00:00:00Z",
   "topics": [
+    {
+      "topic_id": "jdbc_repository_tests",
+      "display_name": "JDBC Repository Tests",
+      "status": "STRATEGY_COMPLETE",
+      "created_at": "2026-04-18T00:00:00Z",
+      "last_activity": "2026-04-18T00:00:00Z",
+      "skills_executed": ["aecf_new_test_set"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_01_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_02_AUDIT_PLAN.md",
+        ".aecf/runtime/documentation/lvillara/2026-04-18/jdbc_repository_tests/AECF_03_TEST_STRATEGY.md"
+      ],
+      "notes": "Gate: GO. 17 tests diseñados (14 mandatory + 3 optional) en 4 clases. Risks R1🔴 (pets.id table-qualified), R2🔴 (null FK extractor), R4/R5🟠 (exception paths), R6🟠 (multi-pet). Mockito 5.23.0 confirmado. Fixture owner 6 (2 pets × 2 visits) y owner 1 (1 pet, 0 visits) verificados. PENDING: user approval for implementation."
+    },
     {
       "topic_id": "project_context",
       "display_name": "Project Context",
