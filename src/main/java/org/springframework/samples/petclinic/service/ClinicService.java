@@ -47,6 +47,10 @@ public interface ClinicService {
 
     Collection<Owner> findOwnerByLastName(String lastName);
 
+    Collection<Owner> findOwnerByLastName(String lastName, int page, int pageSize);
+
+    int countOwnersByLastName(String lastName);
+
 	Collection<Visit> findVisitsByPetId(int petId);
 
 }

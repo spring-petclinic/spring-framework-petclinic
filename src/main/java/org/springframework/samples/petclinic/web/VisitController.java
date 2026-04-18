@@ -57,24 +57,52 @@ public class VisitController {
      * @param petId the pet identifier from the URI
      * @return Pet
      */
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * visit.setPet(pet) instead of pet.addVisit(visit) to avoid accessing the LAZY Pet.visits
+     * collection outside a transaction. Visit.pet is the owning side (@ManyToOne), so setting
+     * the FK here is sufficient for correct JPA persistence via saveVisit(visit).
+     */
     @ModelAttribute("visit")
     public Visit loadPetWithVisit(@PathVariable("petId") int petId) {
         Pet pet = this.clinicService.findPetById(petId);
         Visit visit = new Visit();
-        pet.addVisit(visit);
+        visit.setPet(pet);
         return visit;
     }
 
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Explicitly loads visits via findVisitsByPetId so the JSP can use ${visits} without
+     * accessing the LAZY Pet.visits collection outside a transaction.
+     */
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
     @GetMapping(value = "/owners/*/pets/{petId}/visits/new")
     public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
+        model.put("visits", this.clinicService.findVisitsByPetId(petId));
         return "pets/createOrUpdateVisitForm";
     }
 
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * On validation error, re-populates visits model attribute so the JSP can render
+     * previous visits without accessing LAZY Pet.visits outside a transaction.
+     */
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
     @PostMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
-    public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
+    public String processNewVisitForm(@Valid Visit visit, BindingResult result,
+                                      @PathVariable int petId, Map<String, Object> model) {
         if (result.hasErrors()) {
+            model.put("visits", this.clinicService.findVisitsByPetId(petId));
             return "pets/createOrUpdateVisitForm";
         }
 
@@ -82,9 +110,17 @@ public class VisitController {
         return "redirect:/owners/{ownerId}";
     }
 
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Uses findVisitsByPetId instead of findPetById(petId).getVisits() to avoid accessing
+     * the LAZY Pet.visits collection outside a transaction.
+     */
     @GetMapping(value = "/owners/*/pets/{petId}/visits")
     public String showVisits(@PathVariable int petId, Map<String, Object> model) {
-        model.put("visits", this.clinicService.findPetById(petId).getVisits());
+        model.put("visits", this.clinicService.findVisitsByPetId(petId));
         return "visitList";
     }
 

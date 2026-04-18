@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-04-17T00:00:00Z",
+  "project": "spring-framework-petclinic",
+  "note": "Use these keys instead of re-scanning the repository. Reference AECF_SYMBOL_INDEX.json for line numbers.",
+
+  "core_modules": [
+    "service",
+    "model",
+    "repository_interfaces",
+    "controllers",
+    "repository_springdatajpa"
+  ],
+
+  "core_classes": [
+    "ClinicService",
+    "ClinicServiceImpl",
+    "Owner",
+    "Pet",
+    "Vet",
+    "Visit",
+    "OwnerRepository",
+    "PetRepository",
+    "VetRepository",
+    "VisitRepository",
+    "OwnerController",
+    "PetclinicInitializer"
+  ],
+
+  "core_interfaces": [
+    "ClinicService",
+    "OwnerRepository",
+    "PetRepository",
+    "VetRepository",
+    "VisitRepository"
+  ],
+
+  "core_functions": [
+    "ClinicService.findOwnerById",
+    "ClinicService.saveOwner",
+    "ClinicService.findOwnerByLastName",
+    "ClinicService.findPetById",
+    "ClinicService.savePet",
+    "ClinicService.saveVisit",
+    "ClinicService.findVets",
+    "ClinicService.findPetTypes",
+    "ClinicService.findVisitsByPetId",
+    "Owner.addPet",
+    "Owner.getPet",
+    "Pet.addVisit",
+    "CallMonitoringAspect.invoke"
+  ],
+
+  "entry_points": [
+    "PetclinicInitializer (src/main/java/.../PetclinicInitializer.java:39)",
+    "GET / → welcome.jsp",
+    "GET /owners → OwnerController.processFindForm",
+    "GET /vets → VetController.showVetList",
+    "GET /vets.json → VetController.showResourcesVetList"
+  ],
+
+  "critical_files": [
+    "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java",
+    "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java",
+    "src/main/java/org/springframework/samples/petclinic/model/Owner.java",
+    "src/main/java/org/springframework/samples/petclinic/model/Pet.java",
+    "src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java",
+    "src/main/resources/spring/business-config.xml",
+    "src/main/resources/spring/datasource-config.xml",
+    "pom.xml"
+  ],
+
+  "persistence_strategy": {
+    "default_profile": "jpa",
+    "alternatives": ["spring-data-jpa", "jdbc"],
+    "active_implementation_by_profile": {
+      "jpa": ["JpaOwnerRepositoryImpl", "JpaPetRepositoryImpl", "JpaVetRepositoryImpl", "JpaVisitRepositoryImpl"],
+      "spring-data-jpa": ["SpringDataOwnerRepository", "SpringDataPetRepository", "SpringDataVetRepository", "SpringDataVisitRepository"],
+      "jdbc": ["JdbcOwnerRepositoryImpl", "JdbcPetRepositoryImpl", "JdbcVetRepositoryImpl", "JdbcVisitRepositoryImpl"]
+    }
+  },
+
+  "domain_aggregate_roots": ["Owner", "Vet"],
+
+  "cached_methods": [
+    "ClinicServiceImpl.findPetTypes (@Cacheable 'default')",
+    "ClinicServiceImpl.findVets (@Cacheable 'vets')"
+  ],
+
+  "test_coverage_areas": {
+    "unit": ["model.Owner", "model.Pet", "model.Vet", "validation"],
+    "integration": ["service.ClinicService (jdbc, jpa, spring-data-jpa profiles)"],
+    "web": ["web.OwnerController", "web.PetController", "web.VetController", "web.VisitController", "web.CrashController", "web.PetTypeFormatter"],
+    "load": ["src/test/jmeter/petclinic_test_plan.jmx"]
+  },
+
+  "configuration_files": {
+    "spring_root_context": ["src/main/resources/spring/business-config.xml", "src/main/resources/spring/tools-config.xml"],
+    "spring_mvc_context": ["src/main/resources/spring/mvc-core-config.xml", "src/main/resources/spring/mvc-view-config.xml"],
+    "datasource": "src/main/resources/spring/datasource-config.xml",
+    "runtime_properties": "src/main/resources/spring/data-access.properties",
+    "logging": "src/main/resources/logback.xml",
+    "build": "pom.xml",
+    "ci": [".github/workflows/maven-build-main.yml", ".github/workflows/maven-build-pull-request.yml"]
+  },
+
+  "risk_areas": [
+    "ClinicService — central single point of failure for all domain operations",
+    "JdbcPetRepositoryImpl — cross-repository dependency on OwnerRepository",
+    "OneToManyResultSetExtractor — complex generic JDBC logic",
+    "No Spring Security detected — no authentication/authorization layer",
+    "Cache invalidation not explicitly managed for 'vets' and 'default' caches",
+    "XML-based Spring configuration (not annotation/Java config) — harder to refactor"
+  ],
+
+  "stack_key": "java-spring-mvc-jpa",
+  "architecture_key": "modular_monolith_mvc_3tier"
+}

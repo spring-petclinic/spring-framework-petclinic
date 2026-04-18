@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
+    private static final int PAGE_SIZE = 5;
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -73,27 +74,39 @@ public class OwnerController {
         return "owners/findOwners";
     }
 
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Handles owner search with server-side pagination (PAGE_SIZE results per page).
+     * Preserves original behavior: 0 results shows error, 1 result redirects to owner detail.
+     */
     @GetMapping(value = "/owners")
-    public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
+    public String processFindForm(Owner owner, BindingResult result,
+                                  @RequestParam(value = "page", defaultValue = "1") int page,
+                                  Map<String, Object> model) {
 
-        // allow parameterless GET request for /owners to return all records
         if (owner.getLastName() == null) {
-            owner.setLastName(""); // empty string signifies broadest possible search
+            owner.setLastName("");
         }
 
-        // find owners by last name
-        Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
-        if (results.isEmpty()) {
-            // no owners found
+        int totalCount = this.clinicService.countOwnersByLastName(owner.getLastName());
+        if (totalCount == 0) {
             result.rejectValue("lastName", "notFound", "not found");
             return "owners/findOwners";
-        } else if (results.size() == 1) {
-            // 1 owner found
-            owner = results.iterator().next();
+        } else if (totalCount == 1) {
+            Collection<Owner> single = this.clinicService.findOwnerByLastName(owner.getLastName(), 1, 1);
+            owner = single.iterator().next();
             return "redirect:/owners/" + owner.getId();
         } else {
-            // multiple owners found
-            model.put("selections", results);
+            int totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            Collection<Owner> pageOwners = this.clinicService.findOwnerByLastName(owner.getLastName(), page, PAGE_SIZE);
+            model.put("selections", pageOwners);
+            model.put("currentPage", page);
+            model.put("totalPages", totalPages);
+            model.put("totalItems", totalCount);
+            model.put("lastName", owner.getLastName());
             return "owners/ownersList";
         }
     }

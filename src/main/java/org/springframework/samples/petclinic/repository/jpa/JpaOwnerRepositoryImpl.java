@@ -16,11 +16,13 @@
 package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
+import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.stereotype.Repository;
 
@@ -58,11 +60,63 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
         return query.getResultList();
     }
 
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Returns a page of owners whose last name starts with the given prefix.
+     * Uses setFirstResult/setMaxResults on a join-fetch query — Hibernate may apply
+     * in-memory pagination (HHH90003004) for correctness with collection fetch.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<Owner> findByLastName(String lastName, int page, int pageSize) {
+        Query query = this.em.createQuery(
+            "SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets " +
+            "WHERE owner.lastName LIKE :lastName ORDER BY owner.lastName, owner.id");
+        query.setParameter("lastName", lastName + "%");
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return (List<Owner>) query.getResultList();
+    }
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Counts owners whose last name starts with the given prefix.
+     */
+    @Override
+    public int countByLastName(String lastName) {
+        Query query = this.em.createQuery(
+            "SELECT COUNT(DISTINCT owner) FROM Owner owner WHERE owner.lastName LIKE :lastName");
+        query.setParameter("lastName", lastName + "%");
+        return ((Long) query.getSingleResult()).intValue();
+    }
+
+    /**
+     * AECF_META: skill=aecf_refactor topic=eager_loading_fix run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_refactor last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Carga el Owner con sus pets y, para cada pet, precarga las visitas en caché L1 de Hibernate
+     * mediante una consulta adicional dentro de la misma transacción. Esto garantiza que pet.getVisits()
+     * funcione sin LazyInitializationException en la capa de vista, con FetchType.LAZY en Pet.visits.
+     */
     @Override
     public Owner findById(int id) {
-        // using 'join fetch' because a single query should load both owners and pets
-        // using 'left join fetch' because it might happen that an owner does not have pets yet
-        Query query = this.em.createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id");
+        // Pre-warm Hibernate L1 cache: load visits for all pets of this owner within this transaction.
+        // Both queries share the same EntityManager (identity map), so the Pet instances returned by
+        // the main query already have their visits collection initialized when the session closes.
+        this.em.createQuery(
+                "SELECT p FROM Pet p left join fetch p.visits WHERE p.owner.id = :id", Pet.class)
+            .setParameter("id", id)
+            .getResultList();
+
+        Query query = this.em.createQuery(
+            "SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id");
         query.setParameter("id", id);
         return (Owner) query.getSingleResult();
     }

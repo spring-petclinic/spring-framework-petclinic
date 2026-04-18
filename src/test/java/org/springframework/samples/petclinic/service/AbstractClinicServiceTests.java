@@ -199,5 +199,50 @@ abstract class AbstractClinicServiceTests {
         assertThat(visitArr[0].getPet().getId()).isEqualTo(7);
     }
 
+    // AECF_META: skill=aecf_new_feature topic=owner_pagination generated_by=lvillara generated_at=2026-04-17T00:00:00Z touch_count=1
+    @Test
+    void shouldCountOwnersByLastName() {
+        int davisCount = this.clinicService.countOwnersByLastName("Davis");
+        assertThat(davisCount).isEqualTo(2);
+
+        int allCount = this.clinicService.countOwnersByLastName("");
+        assertThat(allCount).isGreaterThan(0);
+
+        int noneCount = this.clinicService.countOwnersByLastName("XxNonExistentXx");
+        assertThat(noneCount).isEqualTo(0);
+    }
+
+    // AECF_META: skill=aecf_new_feature topic=owner_pagination generated_by=lvillara generated_at=2026-04-17T00:00:00Z touch_count=1
+    @Test
+    void shouldFindOwnersByLastNameWithPagination() {
+        // 10 owners in data.sql — page 1 of size 5 returns 5, page 2 returns 5
+        Collection<Owner> page1 = this.clinicService.findOwnerByLastName("", 1, 5);
+        assertThat(page1).hasSize(5);
+
+        Collection<Owner> page2 = this.clinicService.findOwnerByLastName("", 2, 5);
+        assertThat(page2).hasSize(5);
+
+        java.util.Set<Integer> page1Ids = page1.stream()
+            .map(Owner::getId).collect(java.util.stream.Collectors.toSet());
+        java.util.Set<Integer> page2Ids = page2.stream()
+            .map(Owner::getId).collect(java.util.stream.Collectors.toSet());
+        assertThat(page1Ids).doesNotContainAnyElementsOf(page2Ids);
+    }
+
+    // AECF_META: skill=aecf_new_feature topic=owner_pagination generated_by=lvillara generated_at=2026-04-17T00:00:00Z touch_count=1
+    @Test
+    void shouldReturnEmptyPageBeyondRange() {
+        Collection<Owner> beyondPage = this.clinicService.findOwnerByLastName("Davis", 99, 5);
+        assertThat(beyondPage).isEmpty();
+    }
+
+    // AECF_META: skill=aecf_new_feature topic=owner_pagination generated_by=lvillara generated_at=2026-04-17T00:00:00Z touch_count=1
+    @Test
+    void shouldReturnSingleOwnerOnFirstPage() {
+        Collection<Owner> results = this.clinicService.findOwnerByLastName("Franklin", 1, 5);
+        assertThat(results).hasSize(1);
+        assertThat(results.iterator().next().getLastName()).isEqualTo("Franklin");
+    }
+
 
 }

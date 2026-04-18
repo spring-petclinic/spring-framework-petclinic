@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AECF Guides Hub</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", "Aptos", sans-serif;
+      background: linear-gradient(180deg, #06060e 0%, #0a0c1a 100%);
+      color: #e0e8f0;
+    }
+
+    main {
+      max-width: 720px;
+      padding: 32px;
+      border-radius: 28px;
+      background: rgba(10, 12, 28, 0.90);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      box-shadow: 0 24px 60px rgba(0, 180, 255, 0.08);
+    }
+
+    a {
+      color: #00e0ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="page-title">AECF Guides Hub</h1>
+    <p id="page-copy-1">El acceso principal a <a id="home-link-copy" href="../../index.html">AECF Knowledge Center</a> ahora vive en <a id="home-path-link" href="../../index.html">../../index.html</a>.</p>
+    <p id="page-copy-2">Si tu navegador no redirige automaticamente, usa ese enlace para abrir el indice canonico.</p>
+  </main>
+  <script>
+    const currentLang = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "es";
+    document.documentElement.lang = currentLang;
+    document.getElementById("page-title").textContent = "AECF Guides Hub";
+    document.getElementById("page-copy-1").innerHTML = currentLang === "en"
+      ? 'The main entry to <a id="home-link-copy" href="../../index.html">AECF Knowledge Center</a> now lives at <a id="home-path-link" href="../../index.html">../../index.html</a>.'
+      : 'El acceso principal a <a id="home-link-copy" href="../../index.html">AECF Knowledge Center</a> ahora vive en <a id="home-path-link" href="../../index.html">../../index.html</a>.';
+    document.getElementById("page-copy-2").textContent = currentLang === "en"
+      ? "If your browser does not redirect automatically, use that link to open the canonical index."
+      : "Si tu navegador no redirige automaticamente, usa ese enlace para abrir el indice canonico.";
+    const nextUrl = new URL("../../index.html", window.location.href);
+    nextUrl.searchParams.set("lang", currentLang);
+    window.location.replace(nextUrl.toString());
+  </script>
+</body>
+</html>

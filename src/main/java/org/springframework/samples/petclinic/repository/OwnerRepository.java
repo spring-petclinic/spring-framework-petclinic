@@ -42,6 +42,24 @@ public interface OwnerRepository {
     Collection<Owner> findByLastName(String lastName);
 
     /**
+     * Retrieve a page of <code>Owner</code>s from the data store by last name.
+     *
+     * @param lastName Value to search for (prefix match)
+     * @param page 1-based page number
+     * @param pageSize number of results per page
+     * @return a <code>Collection</code> of matching <code>Owner</code>s for the requested page
+     */
+    Collection<Owner> findByLastName(String lastName, int page, int pageSize);
+
+    /**
+     * Count <code>Owner</code>s whose last name starts with the given prefix.
+     *
+     * @param lastName prefix to search
+     * @return total count of matching <code>Owner</code>s
+     */
+    int countByLastName(String lastName);
+
+    /**
      * Retrieve an <code>Owner</code> from the data store by id.
      *
      * @param id the id to search for
