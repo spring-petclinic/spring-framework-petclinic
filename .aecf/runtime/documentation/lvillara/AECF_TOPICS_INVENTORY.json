@@ -85,6 +85,18 @@
         ".aecf/runtime/documentation/lvillara/2026-04-17/eager_loading_fix/AECF_08_VERSION.md"
       ],
       "notes": "Full AECF flow: DOCUMENT→PLAN→AUDIT(GO)→TEST_STRATEGY→TEST_IMPL→IMPLEMENT→AUDIT_CODE(GO)→VERSION. 87/87 tests. 6 production files + 1 test file modified. Key deviation: @EntityGraph required pets.type to avoid LazyInitializationException on PetType. SemVer 7.1.0 → 7.1.1 (PATCH)."
+    },
+    {
+      "topic_id": "spring_xml_config",
+      "display_name": "Spring XML Configuration",
+      "status": "COMPLETE",
+      "created_at": "2026-04-17T00:00:00Z",
+      "last_activity": "2026-04-17T00:00:00Z",
+      "skills_executed": ["aecf_document_legacy"],
+      "artifacts": [
+        ".aecf/runtime/documentation/lvillara/2026-04-17/spring_xml_config/AECF_01_DOCUMENT_LEGACY.md"
+      ],
+      "notes": "1 artifact. Documents 5 XML files: business-config (3-profile persistence), datasource-config (DataSource+schema init), tools-config (AOP+JMX+Caffeine), mvc-core-config (MVC routing), mvc-view-config (JSP+XML content negotiation). Key finding: mvc-core/mvc-view split is for test isolation. 7 legacy quality findings (2 RED). 4 next-skill recommendations."
     }
   ]
 }

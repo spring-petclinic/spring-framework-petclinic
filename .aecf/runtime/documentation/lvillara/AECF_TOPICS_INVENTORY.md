@@ -9,3 +9,4 @@
 | `persistence_strategies` | COMPLETE | `aecf_explain_behavior` | 2026-04-17 |
 | `owner_pagination` | COMPLETE | `aecf_new_feature` | 2026-04-17 |
 | `eager_loading_fix` | COMPLETE | `aecf_refactor` | 2026-04-17 |
+| `spring_xml_config` | COMPLETE | `aecf_document_legacy` | 2026-04-17 |

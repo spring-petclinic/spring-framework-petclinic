@@ -53,6 +53,18 @@
 
 ---
 
+## 2026-04-17 (6)
+
+### aecf_document_legacy | TOPIC: spring_xml_config
+
+- **Skill**: `aecf_document_legacy`
+- **Status**: COMPLETE
+- **Artifacts generated**:
+  - `AECF_01_DOCUMENT_LEGACY.md` — Full technical documentation of 5 XML config files with Mermaid context hierarchy diagram
+- **Key findings**: 2 context levels (root: business-config + tools-config; child: mvc-core-config → mvc-view-config). mvc-core/mvc-view separation is primarily for test isolation — all controller tests load mvc-core but NOT mvc-view. 7 legacy quality findings: `jpa.showSql=true` global (🔴), schema init not idempotent (🔴), deprecated path-extension content negotiation (🟡), JMX unauthenticated (🟡). 4 recommended next skills.
+
+---
+
 ## 2026-04-17 (5)
 
 ### aecf_refactor | TOPIC: eager_loading_fix
