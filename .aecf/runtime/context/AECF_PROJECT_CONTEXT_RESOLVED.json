@@ -1,6 +1,6 @@
 {
   "_resolved_note": "Merged source of truth: AUTO.json + HUMAN.yaml (human fields win). Re-generate with: aecf context resolve",
-  "_resolved_at": "2026-04-17T00:00:00Z",
+  "_resolved_at": "2026-04-20T15:35:00Z",
   "_human_fields_applied": false,
   "_human_fields_pending": [
     "business_criticality",
@@ -15,12 +15,12 @@
 
   "context_metadata": {
     "project_name": "spring-framework-petclinic",
-    "generated_at": "2026-04-17T00:00:00Z",
+    "generated_at": "2026-04-20T15:35:00Z",
     "context_version": "1.0.0",
-    "structural_hash": "a3f2b1c4d5e6f708",
-    "confidence_overall": 0.90,
+    "structural_hash": "b9e4d7a2c1f30856",
+    "confidence_overall": 0.91,
     "generator_skill": "aecf_project_context_generator",
-    "output_language": "ENGLISH"
+    "output_language": "es"
   },
   "technical_stack": {
     "confidence": 0.98,
@@ -37,7 +37,10 @@
       "Hibernate ORM 7.3.0.Final",
       "Hibernate Validator 9.1.0.Final",
       "AspectJ 1.9.25.1",
-      "Jakarta EE (Servlet 6.1, JPA 3.2, JSTL 3.0)"
+      "Jakarta EE (Servlet 6.1, JPA 3.2, JSTL 3.0)",
+      "Jackson BOM 3.1.1",
+      "JAXB Runtime 4.0.7",
+      "SpringDoc OpenAPI 2.8.0"
     ],
     "orms": ["Hibernate ORM 7.3.0.Final", "Spring Data JPA 2025.1.2"],
     "databases": ["H2 2.4.240 (default/embedded)", "HSQLDB 2.7.4", "MySQL 8.1.0", "PostgreSQL 42.7.9"],
@@ -68,7 +71,7 @@
       "model (JPA entities)",
       "util (AOP, EntityUtils)"
     ],
-    "api_style": "REST",
+    "api_style": "REST+MVC",
     "auth_patterns": [],
     "multi_tenant": false,
     "entry_points": ["src/main/java/.../PetclinicInitializer.java"],
@@ -177,8 +180,20 @@
     "primary_use_case": "PENDING"
   },
   "context_integrity": {
-    "structural_hash": "a3f2b1c4d5e6f708",
+    "structural_hash": "b9e4d7a2c1f30856",
     "structural_hash_match": true,
     "requires_refresh": false
+  },
+  "view_layer": {
+    "confidence": 0.99,
+    "source": "auto",
+    "technology": "JSP + JSTL 3.0.2",
+    "templates": 9,
+    "view_resolver": "InternalResourceViewResolver (WEB-INF/jsp/)",
+    "frontend_framework": "Bootstrap 5.3.8 (WebJar) + Font Awesome 4.7.0 + Flatpickr 4.6.13",
+    "i18n": {
+      "resolver": "CookieLocaleResolver (cookieName=PETCLINIC_LOCALE)",
+      "languages": ["en (default)", "es", "de"]
+    }
   }
 }

@@ -14,6 +14,7 @@ This prompt operates under the following mandatory contexts:
 
 - aecf_prompts/AECF_SYSTEM_CONTEXT.md
 - <workspace_root>/AECF_PROJECT_CONTEXT.md (if present anywhere in the active workspace)
+- **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_RUN_CONTEXT.json`** — if present, use `output_language` as the frozen language for the entire execution.
 
 Governance:
 - aecf_prompts/_governance/AECF_EXECUTIVE_SUMMARY_GOVERNANCE.md
@@ -185,6 +186,10 @@ Debes:
 - No introducir nuevas decisiones de diseno.
 - Respetar el alcance definido.
 - Implementar code claro, mantenible y documentado.
+- Si el PLAN admite >= 2 estrategias concretas de implementación (librería, patrón, layout), presentarlas en sección 1A del template antes de generar código completo.
+- Incluir sección 4A (Checkpoint de Validación del Usuario) cuando se presenten opciones. El usuario puede: APROBAR, ELEGIR OPCIÓN, REFINAR ENFOQUE o BLOQUEAR.
+- **Generación diferida:** mientras el usuario NO haya dado APROBAR, emitir SOLO el checkpoint ligero (resumen + opciones + tabla de acciones). El artefacto completo con código, tests y evidencia se genera UNA SOLA VEZ al recibir APROBAR.
+- Si el usuario elige REFINAR ENFOQUE, regenerar el checkpoint ligero incorporando el feedback sin salirse del PLAN aprobado.
 
 ────────────────────────
 ⚠️ OUTPUT SIZE CONSTRAINT (MANDATORY)

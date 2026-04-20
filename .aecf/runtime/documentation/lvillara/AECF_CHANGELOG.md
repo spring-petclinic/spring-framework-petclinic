@@ -2,6 +2,19 @@
 
 ---
 
+## 2026-04-20
+
+### aecf_project_context_generator | TOPIC: skillproject_context
+
+- **Skill**: `aecf_project_context_generator`
+- **Status**: COMPLETE — Delta refresh ejecutado
+- **Artifact**: `.aecf/runtime/context/AECF_PROJECT_CONTEXT_AUTO.json`
+- **Summary**: Delta update del contexto de proyecto. Dependencias actualizadas: Jackson BOM 3.1.1, JAXB Runtime 4.0.7, SpringDoc OpenAPI 2.8.0. output_language corregido a `es`. Añadida sección view_layer y aecf_metadata.
+- **Executed By**: luis.garcia-villaraco@seachad.com
+- **Branch**: claude/jovial-lovelace-2a5f7b
+
+---
+
 ## 2026-04-18
 
 ### aecf_new_feature | TOPIC: i18n_locale_selector

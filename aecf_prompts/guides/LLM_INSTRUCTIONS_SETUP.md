@@ -151,6 +151,47 @@ response = openai.chat.completions.create(
 
 ---
 
+## 7. Instalación de CLIs de agente
+
+Antes de configurar las instrucciones de AECF para un host CLI, es necesario tener instalada la herramienta correspondiente. A continuación se listan los comandos de instalación estándar vía npm (requieren Node.js 18+).
+
+### 7.1 Claude Code (Anthropic)
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+Tras la instalación, ejecutar `claude` en la raíz del proyecto para iniciar una sesión interactiva.
+
+### 7.2 Codex CLI (OpenAI)
+
+```bash
+npm install -g @openai/codex
+```
+
+Alternativa en macOS: `brew install --cask codex`. Tras la instalación, ejecutar `codex` en la raíz del proyecto.
+
+### 7.3 GitHub Copilot CLI
+
+Copilot CLI se instala como extensión de GitHub CLI (`gh`):
+
+```bash
+# 1. Instalar GitHub CLI (si no está instalado)
+# Windows (winget):
+winget install --id GitHub.cli
+# macOS (brew):
+brew install gh
+
+# 2. Instalar la extensión Copilot
+gh extension install github/gh-copilot
+```
+
+Tras la instalación, usar `gh copilot` para interactuar con Copilot desde la terminal.
+
+> **Nota**: Los tres CLIs requieren autenticación con sus respectivos proveedores antes del primer uso. Consultar la documentación oficial de cada herramienta para completar el flujo de autenticación.
+
+---
+
 ## 7. Contenido mínimo recomendado
 
 Independientemente del LLM, la configuración por defecto debe incluir:

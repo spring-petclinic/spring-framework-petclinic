@@ -1,90 +1,124 @@
 # AECF Prompts — Start Here
 
-LAST_REVIEW: 2026-04-13
+LAST_REVIEW: 2026-04-20
 OWNER SEACHAD
 
 ---
 
-## Si eres nuevo, empieza aqui
+## Paso 1 — Configura tu identidad de usuario
 
-Si estas leyendo la documentacion publicada en GitHub Pages, empieza por `index.html` en la raiz del repo y usa `GUIDE_VIEWER.html` para abrir esta guia y el resto de markdown sin salir de la superficie HTML.
+Define la variable de entorno `AECF_PROMPTS_USER_ID` con tu email o identificador. AECF la usa para atribuir cada topic y artefacto.
 
-Si trabajas en un workspace destino con el MCP prompt-only activo, puedes pedir esta misma guía con `aecf_show_guide` para que el host la renderice en el `output_language` efectivo y use traducción derivada solo cuando no exista copia humana localizada.
+```powershell
+# Windows (persistente para el usuario)
+setx AECF_PROMPTS_USER_ID "tu.email@empresa.com"
+# Abre un terminal nuevo para que surta efecto.
+```
 
-Si solo quieres saber por donde arrancar con `aecf_prompts`, sigue este orden:
+```bash
+# Linux / macOS
+echo 'export AECF_PROMPTS_USER_ID="tu.email@empresa.com"' >> ~/.bashrc
+source ~/.bashrc
+```
 
-1. Lee [AECF_GUIDES_MASTER.md](AECF_GUIDES_MASTER.md)
-2. Lee [QUICK_START.md](QUICK_START.md)
-3. Si no quieres redactar todo el contexto a mano, lee [AECF_PROJECT_CONTEXT_BOOTSTRAP.md](AECF_PROJECT_CONTEXT_BOOTSTRAP.md)
-4. Si quieres ahorrar tokens por sesion, lee [AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT.md](AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT.md)
-5. Si quieres usar una sintaxis parecida a `@aecf` sin componente, lee [AECF_PROMPT_ONLY_COMMANDS.md](AECF_PROMPT_ONLY_COMMANDS.md)
-6. Si quieres que la memoria del proyecto enriquezca todos los skills, lee [AECF_MEMORY_MODEL.md](AECF_MEMORY_MODEL.md)
-7. Si el repo es grande o multi-equipo, lee [AECF_SURFACE_CONTEXT_MODEL.md](AECF_SURFACE_CONTEXT_MODEL.md)
-8. Si quieres extender un skill base con reglas locales del proyecto, lee [AECF_EXTERNAL_SKILLS.md](AECF_EXTERNAL_SKILLS.md)
-9. Si necesitas detalle sobre skills, lee [../skills/README_SKILLS.md](../skills/README_SKILLS.md)
-10. Si necesitas entender la metodologia completa, lee [../AECF_METHODOLOGY.md](../AECF_METHODOLOGY.md)
-11. Si quieres entender cómo se mapea AECF con diferentes metodologías de gestión de proyectos lee [AECF_APPLICATION_LIFECYCLE_GUIDE.md](AECF_APPLICATION_LIFECYCLE_GUIDE.md)
+> Si no defines ninguna variable, el sistema genera un ID aleatorio con prefijo `user_` que no podrás rastrear. Para comprobar qué ve el bundle: `aecf_prompts\scripts\bootstrap_prompt_only_bundle.exe --diagnose-env`
 
-## Que guia usar segun el LLM
+---
 
-- ChatGPT / Copilot Chat web: empieza por [QUICK_START.md](QUICK_START.md)
-- Claude CLI: usa [AECF_PROMPTS_CLAUDE_CLI.md](AECF_PROMPTS_CLAUDE_CLI.md)
-- Codex CLI: usa [AECF_PROMPTS_CODEX_CLI.md](AECF_PROMPTS_CODEX_CLI.md)
-- External skills locales de proyecto: usa [AECF_EXTERNAL_SKILLS.md](AECF_EXTERNAL_SKILLS.md)
+## Paso 2 — Verifica que tu LLM está operativo
 
-## Orden minimo recomendado
+AECF es model-agnostic: funciona con cualquier LLM que pueda leer archivos del workspace (Copilot Chat, Claude, Codex, ChatGPT…).
 
-1. Copia `aecf_prompts/` al proyecto.
-2. Define la atribución del topic con `AECF_PROMPTS_USER_ID` o, si no existe, con `AECF_PROMPTS_MODEL_ID`/`MODEL_ID` o `AECF_PROMPTS_AGENT_ID`/`AGENT_ID`. Si el host da dudas, valida lo que ve el bundle con `aecf_prompts\scripts\bootstrap_prompt_only_bundle.exe --diagnose-env`
-3. Prepara contexto:
-   - rapido: crear `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`
-   - mejor: ejecutar `aecf_project_context_generator`
-4. Si el repo es grande o complejo, ejecuta `aecf_codebase_intelligence`.
-5. Si el repo es grande o multi-equipo, crea `surfaces` con apoyo de [AECF_SURFACE_CONTEXT_MODEL.md](AECF_SURFACE_CONTEXT_MODEL.md).
-6. Ejecuta tu primer flujo real desde [QUICK_START.md](QUICK_START.md), normalmente con `new_feature`, `refactor` o `hotfix`.
+Comprueba antes de continuar:
 
-## Donde estan los knowledge packs
+- **VS Code + Copilot Chat / GitHub Copilot**: abre el panel de chat y confirma que responde.
+- **Claude CLI**: ejecuta `claude --version` y verifica que tienes sesión activa.
+- **Codex CLI**: ejecuta `codex --version`.
+- **ChatGPT web**: abre una conversación y confirma acceso.
 
-En este repo, la fuente canónica para knowledge packs y semantic profiles que también puede consumir `aecf_prompts` está en:
+Si tu host no puede leer archivos del workspace directamente, tendrás que pegar manualmente el contenido de los prompts.
 
-- `aecf_prompts/knowledge/domains/<domain>/pack.md`
-- `aecf_prompts/knowledge/domains/<domain>/semantic_profiles/<profile>.md`
+---
 
-Ejemplo real:
+## Paso 3 — Copia el bundle y sincroniza instrucciones
 
-- `aecf_prompts/knowledge/domains/java/pack.md`
-- `aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md`
+1. Copia la carpeta `aecf_prompts/` a la raíz de tu proyecto destino.
+2. Ejecuta el bootstrap para crear los archivos de instrucciones que tu LLM necesita:
 
-`aecf_prompts` publica además la misma superficie para uso prompt-only en:
+```powershell
+# Desde la raíz del proyecto destino
+aecf_prompts\scripts\bootstrap_prompt_only_bundle.exe --sync-instructions
+```
 
-- `aecf_prompts/knowledge/domains/java/pack.md`
-- `aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md`
+Esto genera `aecf_forced_instructions.md` y las instrucciones específicas por host (`.github/copilot-instructions.md`, `CLAUDE.md`, `AGENTS.md`, `.codex/instructions.md`).
 
-Si quieres reutilizarlos en modo prompt-only, puedes:
+---
 
-1. Referenciar la fuente canónica `aecf_prompts/knowledge/...` si trabajas dentro de este repo.
-2. Usar `aecf_prompts/knowledge/...` si estás trabajando sobre el bundle prompt-only.
-3. Si haces una distribución parcial, asegurarte de que `aecf_prompts/knowledge/` viaja también con el paquete.
+## Paso 4 — Genera el contexto del proyecto
 
-## Regla de sincronizacion
+Pide al LLM que ejecute el skill de contexto. No necesitas redactarlo a mano:
 
-Si los copias dentro de este repo a otra ubicación para consumo prompt-only o para distribución, no pasan a ser una nueva fuente canónica.
+```
+@aecf run skill=project_context_generator topic=static_context
+```
 
-La fuente canónica sigue siendo `aecf_prompts/knowledge/`.
+En este caso no es necesario poner topic, lo elegiría la tool, pero es conveniente acostumbrarse a hacerlo porque es una unidad de control de tareas ejecutadas.
 
-Además, por las reglas del repo, cualquier cambio hecho en `aecf_prompts/knowledge/` debe mantenerse sincronizado con:
+El skill analiza el workspace y genera `AECF_PROJECT_CONTEXT.md` con la estructura, stack, estándares y equipo del proyecto.
 
-- `aecf_prompts/knowledge/`
-- `aecf_prompts/knowledge/`
+A continuación, si el repo es mediano o grande, ejecuta también:
 
-Si generas una copia adicional para un bundle manual, esa copia también debe mantenerse alineada con la fuente canónica para no introducir deriva documental ni de comportamiento.
+```
+@aecf run skill=codebase_intelligence
+```
 
-## Regla practica
+Este skill produce 8 artefactos de análisis en `documentation/context/` (incluyendo `STACK_JSON.json`) que enriquecen todos los skills posteriores.
 
-`START_HERE.md` orienta.
+> **Camino rápido**: si prefieres crear el contexto a mano, basta con escribir `.aecf/documentation/AECF_PROJECT_CONTEXT.md` con las secciones Project, Team, Standards y Scoring Thresholds.
 
-`QUICK_START.md` manda.
+---
 
-Si necesitas semantic profiles reutilizables en modo prompt-only dentro de este repo, usa como referencia la fuente canónica `aecf_prompts/knowledge/domains/...` y la copia publicada `aecf_prompts/knowledge/domains/...`.
+## Paso 5 — Lanza tu primer skill
 
-Si dudas, empieza siempre por [QUICK_START.md](QUICK_START.md).
+Ya estás listo. Ejecuta tu primer flujo real, normalmente con `new_feature`, `refactor` o `hotfix`:
+
+```
+@aecf run skill=new_feature TOPIC=mi_primera_feature prompt="Descripción de lo que quiero implementar"
+```
+
+Consulta [QUICK_START.md](QUICK_START.md) para el detalle de las fases y cómo iterar sobre ellas.
+
+---
+
+## Guías complementarias
+
+| Necesidad | Guía |
+|---|---|
+| Flujo completo paso a paso | [QUICK_START.md](QUICK_START.md) |
+| Sintaxis `@aecf` sin componente | [AECF_PROMPT_ONLY_COMMANDS.md](AECF_PROMPT_ONLY_COMMANDS.md) |
+| Memoria de proyecto entre sesiones | [AECF_MEMORY_MODEL.md](AECF_MEMORY_MODEL.md) |
+| Repos grandes o multi-equipo (surfaces) | [AECF_SURFACE_CONTEXT_MODEL.md](AECF_SURFACE_CONTEXT_MODEL.md) |
+| Extender un skill con reglas locales | [AECF_EXTERNAL_SKILLS.md](AECF_EXTERNAL_SKILLS.md) |
+| Ahorro de tokens por sesión | [AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT.md](AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT.md) |
+| Catálogo de skills | [../skills/README_SKILLS.md](../skills/README_SKILLS.md) |
+| Metodología completa | [../AECF_METHODOLOGY.md](../AECF_METHODOLOGY.md) |
+| Mapeo con metodologías de gestión | [AECF_APPLICATION_LIFECYCLE_GUIDE.md](AECF_APPLICATION_LIFECYCLE_GUIDE.md) |
+| Índice general de guías | [AECF_GUIDES_MASTER.md](AECF_GUIDES_MASTER.md) |
+
+### Guía específica por host LLM
+
+| Host | Guía |
+|---|---|
+| ChatGPT / Copilot Chat web | [QUICK_START.md](QUICK_START.md) |
+| Claude CLI | [AECF_PROMPTS_CLAUDE_CLI.md](AECF_PROMPTS_CLAUDE_CLI.md) |
+| Codex CLI | [AECF_PROMPTS_CODEX_CLI.md](AECF_PROMPTS_CODEX_CLI.md) |
+
+---
+
+## Knowledge packs
+
+Los knowledge packs y semantic profiles están en `aecf_prompts/knowledge/domains/<domain>/pack.md` y `.../semantic_profiles/<profile>.md`. Se cargan automáticamente cuando usas `stack=` en la invocación del skill.
+
+---
+
+> `START_HERE.md` orienta. [QUICK_START.md](QUICK_START.md) manda. Si dudas, empieza siempre por QUICK_START.

@@ -168,6 +168,171 @@ def sync_instruction_files(root: Path) -> list[str]:
         if updated != current:
             target_path.write_text(updated, encoding="utf-8")
             touched.append(str(relative_path).replace("\\", "/"))
+
+    touched.extend(sync_mcp_configs(root))
+    return touched
+
+
+# ---------------------------------------------------------------------------
+# MCP configuration sync
+# ---------------------------------------------------------------------------
+
+_MCP_EXE_NAME = "aecf-mcp.exe"
+_MCP_SERVER_KEY = "aecf"
+
+
+@dataclass(frozen=True)
+class _McpHostSpec:
+    config_path: Path
+    servers_key: str
+    include_type: bool
+    exe_host_alias: str | None = None
+    user_level: bool = False
+
+
+def _resolve_user_config_base() -> Path | None:
+    """Return the platform-specific user configuration base directory.
+
+    - Windows: ``%APPDATA%`` (typically ``C:/Users/<user>/AppData/Roaming``).
+    - macOS: ``~/Library/Application Support``.
+    - Linux/other: ``$XDG_CONFIG_HOME`` or ``~/.config``.
+
+    Returns ``None`` only when the base cannot be determined.
+    """
+    if sys.platform == "win32":
+        appdata = os.environ.get("APPDATA")
+        if appdata:
+            return Path(appdata)
+        return Path.home() / "AppData" / "Roaming"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support"
+    xdg = os.environ.get("XDG_CONFIG_HOME")
+    if xdg:
+        return Path(xdg)
+    return Path.home() / ".config"
+
+
+_MCP_HOST_SPECS: dict[str, _McpHostSpec] = {
+    "claude": _McpHostSpec(
+        config_path=Path(".mcp.json"),
+        servers_key="mcpServers",
+        include_type=True,
+    ),
+    "claude_desktop": _McpHostSpec(
+        config_path=Path("Claude") / "claude_desktop_config.json",
+        servers_key="mcpServers",
+        include_type=True,
+        exe_host_alias="claude",
+        user_level=True,
+    ),
+    "copilot": _McpHostSpec(
+        config_path=Path(".vscode") / "mcp.json",
+        servers_key="servers",
+        include_type=False,
+        exe_host_alias="claude",
+    ),
+    "codex": _McpHostSpec(
+        config_path=Path(".codex") / "mcp.json",
+        servers_key="mcpServers",
+        include_type=True,
+        exe_host_alias="claude",
+    ),
+}
+
+
+def _build_mcp_server_entry(
+    exe_absolute: Path,
+    workspace_absolute: Path,
+    *,
+    include_type: bool = True,
+) -> dict:
+    """Build the MCP server JSON entry for the aecf server."""
+    entry: dict = {}
+    if include_type:
+        entry["type"] = "stdio"
+    entry["command"] = str(exe_absolute)
+    entry["args"] = []
+    entry["env"] = {"AECF_WORKSPACE": str(workspace_absolute)}
+    return entry
+
+
+def sync_mcp_configs(root: Path) -> list[str]:
+    """Detect bundled MCP host executables and upsert their config files.
+
+    For each host directory found under ``aecf_prompts/mcp/<host>/`` that
+    contains the server executable, the function creates or merges the
+    host-specific configuration file at the workspace root (or user config
+    directory for user-level hosts).  Only the ``aecf`` server key is
+    written; any other entries the user may have configured are preserved.
+
+    Each host has its own JSON schema convention:
+
+    - **claude** → ``.mcp.json`` with ``mcpServers`` and ``type: stdio``.
+    - **claude_desktop** → ``%APPDATA%/Claude/claude_desktop_config.json``
+      (user-level) with ``mcpServers`` and ``type: stdio``.  Reuses the
+      ``claude`` binary.  Only registered when the ``Claude/`` directory
+      already exists in the user config base (i.e. Claude Desktop is installed).
+    - **copilot** → ``.vscode/mcp.json`` with ``servers`` and no ``type``.
+    - **codex** → ``.codex/mcp.json`` with ``mcpServers`` and ``type: stdio``.
+    """
+    workspace_root = resolve_workspace_root(root)
+    mcp_root = root / "mcp"
+    touched: list[str] = []
+
+    if not mcp_root.is_dir():
+        return touched
+
+    for host, spec in _MCP_HOST_SPECS.items():
+        exe_host = spec.exe_host_alias or host
+        host_dir = mcp_root / exe_host
+        exe_path = host_dir / _MCP_EXE_NAME
+        if not exe_path.is_file():
+            continue
+
+        exe_absolute = exe_path.resolve()
+
+        if spec.user_level:
+            config_base = _resolve_user_config_base()
+            if config_base is None:
+                continue
+            config_path = config_base / spec.config_path
+            # Only register if the parent directory already exists (app installed)
+            if not config_path.parent.is_dir():
+                continue
+        else:
+            config_path = workspace_root / spec.config_path
+
+        new_entry = _build_mcp_server_entry(
+            exe_absolute,
+            workspace_root.resolve(),
+            include_type=spec.include_type,
+        )
+
+        existing: dict = {}
+        if config_path.is_file():
+            try:
+                existing = json.loads(config_path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                existing = {}
+
+        if not isinstance(existing, dict):
+            existing = {}
+        servers = existing.setdefault(spec.servers_key, {})
+        if not isinstance(servers, dict):
+            servers = {}
+            existing[spec.servers_key] = servers
+
+        if servers.get(_MCP_SERVER_KEY) == new_entry:
+            continue
+
+        servers[_MCP_SERVER_KEY] = new_entry
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        config_path.write_text(
+            json.dumps(existing, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        touched.append(str(spec.config_path).replace("\\", "/"))
+
     return touched
 
 

@@ -39,7 +39,7 @@
 
 ## 7. Context Files To Load
 
-1. `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`
+1. `.aecf/documentation/AECF_PROJECT_CONTEXT.md`
 
 ## 8. Decision Notes
 

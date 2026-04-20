@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "aecf": {
+      "type": "stdio",
+      "command": "D:\\SEACHAD\\spring-framework-petclinic\\aecf_prompts\\mcp\\claude\\aecf-mcp.exe",
+      "args": [],
+      "env": {
+        "AECF_WORKSPACE": "D:\\SEACHAD\\spring-framework-petclinic"
+      }
+    }
+  }
+}

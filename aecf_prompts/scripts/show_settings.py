@@ -8,6 +8,7 @@ from pathlib import Path
 from _prompt_only_bundle_runtime import (
     DOCUMENTATION_PATH_ENV_ALIASES,
     BootstrapError,
+    _read_artifacts_path_setting,
     discover_bundle_root,
     resolve_attribution,
     resolve_documentation_path_override,
@@ -46,7 +47,7 @@ def _user_settings_rows(workspace_root: Path, user_id: str | None) -> str:
         else:
             effective, source = schema["default"], "default"
         label = schema["labels"].get(effective, effective)
-        allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"])
+        allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"]) if schema["allowed"] else schema.get("hint", "texto libre")
         lines.append(f"| `{key}` | `{effective}` ({label}) | {source} | {allowed_str} |")
     return "\n".join(lines)
 
@@ -87,10 +88,16 @@ def build_show_settings_markdown(bundle_root: Path) -> str:
     bundle_path = Path(bundle_root).expanduser().resolve()
     workspace_root = resolve_workspace_root(bundle_path)
     configured_docs_root, configured_docs_source = resolve_documentation_path_override()
+    artifacts_path_setting = _read_artifacts_path_setting(workspace_root)
     documentation_root = resolve_documentation_root(bundle_path, create=False)
     attribution = resolve_attribution()
     effective_user_id = attribution.attribution_id if attribution.attribution_source != "default_agent_fallback" else None
-    documentation_root_source = configured_docs_source or "workspace_default"
+    if artifacts_path_setting:
+        documentation_root_source = "setting:artifacts_path"
+    elif configured_docs_source:
+        documentation_root_source = configured_docs_source
+    else:
+        documentation_root_source = "workspace_default"
 
     global_present = global_settings_path(workspace_root).is_file()
     user_present = user_settings_path(workspace_root, effective_user_id).is_file() if effective_user_id else False

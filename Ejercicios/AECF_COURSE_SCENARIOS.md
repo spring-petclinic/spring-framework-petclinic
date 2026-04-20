@@ -19,7 +19,7 @@ Claude debe identificar los tres paquetes (`jpa/`, `jdbc/`, `springdatajpa/`), l
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_explain_behaviour TOPIC=persistence_strategies prompt="Explica cómo funciona el sistema de repositorios de este proyecto. Hay tres implementaciones del mismo contrato (JPA, JDBC, Spring Data JPA) activadas por Spring profiles. ¿Por qué existen las tres, cómo se activa cada una y cuáles son sus trade-offs de rendimiento?"
+@aecf run skill=aecf_explain_behaviour topic=persistence_strategies prompt="Explica cómo funciona el sistema de repositorios de este proyecto. Hay tres implementaciones del mismo contrato (JPA, JDBC, Spring Data JPA) activadas por Spring profiles. ¿Por qué existen las tres, cómo se activa cada una y cuáles son sus trade-offs de rendimiento?"
 ```
 
 ---
@@ -39,7 +39,7 @@ Claude debe proponer cambios en `OwnerRepository` (añadir `Pageable`), `ClinicS
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_new_feature TOPIC=owner_pagination prompt="Añadir paginación al listado de búsqueda de owners en OwnerController.processFindForm(). Actualmente devuelve todos los resultados sin límite. Mostrar 5 resultados por página con controles de siguiente/anterior. Modificar OwnerRepository, ClinicService, OwnerController y la vista ownersList.jsp."
+@aecf run skill=aecf_new_feature topic=owner_pagination prompt="Añadir paginación al listado de búsqueda de owners en OwnerController.processFindForm(). Actualmente devuelve todos los resultados sin límite. Mostrar 5 resultados por página con controles de siguiente/anterior. Modificar OwnerRepository, ClinicService, OwnerController y la vista ownersList.jsp."
 ```
 
 ---
@@ -59,7 +59,7 @@ Claude debe encontrar el `@OneToMany(fetch = FetchType.EAGER)` en `Pet.java`, ra
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_refactor TOPIC=eager_loading_fix prompt="El modelo Pet tiene una relación OneToMany con Visit mapeada como FetchType.EAGER en Pet.java. Analizar todos los puntos de acceso a pet.getVisits(), comparar ese acoplamiento con la carga explícita de visitas disponible en ClinicServiceImpl.findVisitsByPetId(int), trazar el impacto de cambiar a LAZY y proponer el refactor correcto sin introducir LazyInitializationException."
+@aecf run skill=aecf_refactor topic=eager_loading_fix prompt="El modelo Pet tiene una relación OneToMany con Visit mapeada como FetchType.EAGER en Pet.java. Analizar todos los puntos de acceso a pet.getVisits(), comparar ese acoplamiento con la carga explícita de visitas disponible en ClinicServiceImpl.findVisitsByPetId(int), trazar el impacto de cambiar a LAZY y proponer el refactor correcto sin introducir LazyInitializationException."
 ```
 
 ---
@@ -79,7 +79,7 @@ Claude debe producir un documento que explique qué hace cada archivo XML, qué 
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_document_legacy TOPIC=spring_xml_config prompt="Documentar los cinco archivos de configuración XML en src/main/resources/spring/ (business-config.xml, mvc-core-config.xml, mvc-view-config.xml, datasource-config.xml, tools-config.xml). Para cada uno: qué beans registra, cómo se relaciona con los demás, qué perfiles Spring activa, y su equivalente conceptual en Spring Boot. Explicar además por qué mvc-core-config.xml y mvc-view-config.xml están separados dentro de la configuración MVC."
+@aecf run skill=aecf_document_legacy topic=spring_xml_config prompt="Documentar los cinco archivos de configuración XML en src/main/resources/spring/ (business-config.xml, mvc-core-config.xml, mvc-view-config.xml, datasource-config.xml, tools-config.xml). Para cada uno: qué beans registra, cómo se relaciona con los demás, qué perfiles Spring activa, y su equivalente conceptual en Spring Boot. Explicar además por qué mvc-core-config.xml y mvc-view-config.xml están separados dentro de la configuración MVC."
 ```
 
 ---
@@ -99,7 +99,7 @@ Claude debe leer `JdbcOwnerRepositoryImpl`, identificar lógica específica no c
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_new_test_set TOPIC=jdbc_repository_tests prompt="Analizar la cobertura de tests del repositorio JDBC (JdbcOwnerRepositoryImpl, JdbcPetRepositoryImpl). Los tests actuales en ClinicServiceJdbcTests solo cubren el contrato genérico. Identificar los gaps en lógica específica de JDBC: RowMapper, ResultSetExtractor para owners con múltiples pets, SimpleJdbcInsert, y manejo de tipos. Generar los tests de integración que faltan usando perfil jdbc con H2."
+@aecf run skill=aecf_new_test_set topic=jdbc_repository_tests prompt="Analizar la cobertura de tests del repositorio JDBC (JdbcOwnerRepositoryImpl, JdbcPetRepositoryImpl). Los tests actuales en ClinicServiceJdbcTests solo cubren el contrato genérico. Identificar los gaps en lógica específica de JDBC: RowMapper, ResultSetExtractor para owners con múltiples pets, SimpleJdbcInsert, y manejo de tipos. Generar los tests de integración que faltan usando perfil jdbc con H2."
 ```
 
 ---
@@ -119,7 +119,7 @@ Claude debe leer `CallMonitoringAspect.java`, explicar el mecanismo de proxy de 
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_explain_behaviour TOPIC=aop_monitoring_aspect prompt="CallMonitoringAspect usa AOP para monitorizar repositorios pero no funciona con Spring Data JPA. Explicar por qué el pointcut real within(@org.springframework.stereotype.Repository *) selecciona las clases concretas anotadas con @Repository pero deja fuera a los proxies de interfaz generados por Spring Data JPA, qué mecanismo de proxy los diferencia de los repositorios JPA y JDBC del proyecto, y qué opciones existen para solucionar ese punto ciego."
+@aecf run skill=aecf_explain_behaviour topic=aop_monitoring_aspect prompt="CallMonitoringAspect usa AOP para monitorizar repositorios pero no funciona con Spring Data JPA. Explicar por qué el pointcut real within(@org.springframework.stereotype.Repository *) selecciona las clases concretas anotadas con @Repository pero deja fuera a los proxies de interfaz generados por Spring Data JPA, qué mecanismo de proxy los diferencia de los repositorios JPA y JDBC del proyecto, y qué opciones existen para solucionar ese punto ciego."
 ```
 
 ---
@@ -139,7 +139,7 @@ Claude debe partir de los mappings reales de `VetController` (`/vets`, `/vets.js
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_new_feature TOPIC=vet_rest_api prompt="Añadir documentación OpenAPI al área de veterinarios partiendo de los paths reales del repo. VetController hoy expone la vista HTML en GET /vets y los formatos serializados en GET /vets.json y GET /vets.xml; no asumir que ya existe negociación por Accept en /vets. Decide explícitamente si conviene documentar esos endpoints tal como están o hacer primero una consolidación hacia un endpoint REST único con produces según Accept sin romper la vista HTML. Después añade SpringDoc OpenAPI al pom.xml, anota el controlador o extrae un VetRestController con @Operation y @ApiResponse, y asegura que /v3/api-docs y swagger-ui están disponibles."
+@aecf run skill=aecf_new_feature topic=vet_rest_api prompt="Añadir documentación OpenAPI al área de veterinarios partiendo de los paths reales del repo. VetController hoy expone la vista HTML en GET /vets y los formatos serializados en GET /vets.json y GET /vets.xml; no asumir que ya existe negociación por Accept en /vets. Decide explícitamente si conviene documentar esos endpoints tal como están o hacer primero una consolidación hacia un endpoint REST único con produces según Accept sin romper la vista HTML. Después añade SpringDoc OpenAPI al pom.xml, anota el controlador o extrae un VetRestController con @Operation y @ApiResponse, y asegura que /v3/api-docs y swagger-ui están disponibles."
 ```
 
 ---
@@ -159,7 +159,7 @@ Claude debe revisar `OwnerController`, `PetController`, `PetclinicInitializer`, 
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_security_review TOPIC=controller_security prompt="Revisar la seguridad de la capa web de PetClinic. Analizar OwnerController, PetController, VisitController y PetclinicInitializer. Superficie de ataque: binding directo de formularios a entidades de dominio, @InitBinder como única protección contra mass assignment, ausencia de Spring Security, ruta /oups expuesta, y validación con @NotEmpty/@Digits. Generar informe CVSS con recomendaciones priorizadas."
+@aecf run skill=aecf_security_review topic=controller_security prompt="Revisar la seguridad de la capa web de PetClinic. Analizar OwnerController, PetController, VisitController y PetclinicInitializer. Superficie de ataque: binding directo de formularios a entidades de dominio, @InitBinder como única protección contra mass assignment, ausencia de Spring Security, ruta /oups expuesta, y validación con @NotEmpty/@Digits. Generar informe CVSS con recomendaciones priorizadas."
 ```
 
 ---
@@ -179,7 +179,7 @@ Claude debe producir clases `@Configuration` equivalentes para cada XML, mantene
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_refactor TOPIC=xml_to_java_config prompt="Migrar la configuración Spring de XML a Java Config. Empezar por business-config.xml: contiene EntityManagerFactory, TransactionManager, component-scan y tres perfiles (jpa, jdbc, spring-data-jpa). Producir clases @Configuration equivalentes conservando los @Profile, sin cambiar el comportamiento observable, y proponer una estrategia de migración gradual que no rompa los tests existentes."
+@aecf run skill=aecf_refactor topic=xml_to_java_config prompt="Migrar la configuración Spring de XML a Java Config. Empezar por business-config.xml: contiene EntityManagerFactory, TransactionManager, component-scan y tres perfiles (jpa, jdbc, spring-data-jpa). Producir clases @Configuration equivalentes conservando los @Profile, sin cambiar el comportamiento observable, y proponer una estrategia de migración gradual que no rompa los tests existentes."
 ```
 
 ---
@@ -199,7 +199,7 @@ Claude debe leer `mvc-core-config.xml` para ver si hay `LocaleResolver` configur
 
 **Prompt AECF:**
 ```
-@aecf run skill=aecf_new_feature TOPIC=i18n_locale_selector prompt="El proyecto tiene bundles de mensajes en src/main/resources/messages/ (`messages.properties`, `messages_en.properties`, `messages_es.properties`, `messages_de.properties`) pero no hay ningún mecanismo en la UI para cambiar de idioma. Analizar qué LocaleResolver y LocaleChangeInterceptor están configurados en mvc-core-config.xml, detectar gaps de cobertura entre los ficheros de mensajes, e implementar el selector de idioma completo: interceptor Spring MVC + widget en el layout JSP."
+@aecf run skill=aecf_new_feature topic=i18n_locale_selector prompt="El proyecto tiene bundles de mensajes en src/main/resources/messages/ (`messages.properties`, `messages_en.properties`, `messages_es.properties`, `messages_de.properties`) pero no hay ningún mecanismo en la UI para cambiar de idioma. Analizar qué LocaleResolver y LocaleChangeInterceptor están configurados en mvc-core-config.xml, detectar gaps de cobertura entre los ficheros de mensajes, e implementar el selector de idioma completo: interceptor Spring MVC + widget en el layout JSP."
 ```
 
 ---

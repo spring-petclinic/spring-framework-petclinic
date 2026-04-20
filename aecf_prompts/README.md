@@ -217,7 +217,7 @@ Esas guias se entregan en la raiz del bundle, junto a `README.md` y `README_EN.m
 
 El registro exacto depende del host empaquetado:
 
-- `claude`: usa la guia `QUICK_START_ES.md` para registrar `aecf_prompts\mcp\claude\aecf-mcp.exe` en `.mcp.json`.
+- `claude`: usa la guia `QUICK_START_ES.md` para registrar `aecf_prompts\mcp\claude\aecf-mcp.exe` en `.mcp.json`. Ademas, si Claude Desktop esta instalado en la maquina, el bootstrap registra automaticamente el mismo binario en `claude_desktop_config.json` (`%APPDATA%\Claude` en Windows, `~/Library/Application Support/Claude` en macOS).
 - `copilot`: usa la misma guia para registrar `aecf_prompts\mcp\copilot\aecf-mcp.exe` en `.vscode/mcp.json`.
 - `codex`: usa la misma guia para registrar `aecf_prompts\mcp\codex\aecf-mcp.exe` en la configuracion MCP de Codex.
 
@@ -249,7 +249,7 @@ Cuando el host tenga este MCP registrado, los comandos `@aecf` con tool equivale
 Debes tener este archivo:
 
 ```text
-.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+.aecf/documentation/AECF_PROJECT_CONTEXT.md
 ```
 
 Si aun no existe, crea una primera version minima o sigue la guia [guides/AECF_PROJECT_CONTEXT_BOOTSTRAP.md](guides/AECF_PROJECT_CONTEXT_BOOTSTRAP.md).
@@ -274,23 +274,23 @@ Ese paso crea el contexto de corrida del topic y fija:
 Si el trabajo va a depender del repositorio, conviene asegurar antes dos capas adicionales:
 
 1. `aecf_project_context_generator` para refrescar `AECF_PROJECT_CONTEXT.md`;
-2. `aecf_codebase_intelligence` para materializar `.aecf/context/*`.
+2. `aecf_codebase_intelligence` para materializar `documentation/context/*`.
 
-En el bundle prompt-only, esos artefactos de `.aecf/context/*` no deben copiarse completos en cada fase por defecto. Se reutilizan para derivar contexto filtrado por `TOPIC` y, en skills search-first, para congelar un `WORKING_CONTEXT` acotado a esa ejecucion.
+En el bundle prompt-only, esos artefactos de `documentation/context/*` no deben copiarse completos en cada fase por defecto. Se reutilizan para derivar contexto filtrado por `TOPIC` y, en skills search-first, para congelar un `WORKING_CONTEXT` acotado a esa ejecucion.
 
 Por defecto, las salidas viven en:
 
 ```text
-<workspace>/.aecf/runtime/documentation
+<workspace>/.aecf/documentation
 ```
 
 Patron canónico completo de artefactos por fase:
 
 ```text
-.aecf/runtime/documentation/<user_id>/<TOPIC>/<NN>_<skill_name>_<ARTEFACT_NAME>.md
+.aecf/documentation/<user_id>/<TOPIC>/<NN>_<skill_name>_<ARTEFACT_NAME>.md
 ```
 
-Si necesitas otra ubicacion, usa `AECF_PROMPTS_DOCUMENTATION_PATH`. Si en un entorno heredado ya existe `AECF_PROMPTS_DIRECTORY_PATH`, el bundle tambien lo acepta como alias legado.
+Si necesitas otra ubicacion, usa `@aecf settings set artifacts_path=<ruta>` (siempre relativa a `.aecf/`). Como fallback legacy, también se aceptan `AECF_PROMPTS_DOCUMENTATION_PATH` o `AECF_PROMPTS_DIRECTORY_PATH`.
 
 ## Como trabaja el bundle
 

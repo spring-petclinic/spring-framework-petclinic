@@ -14,6 +14,7 @@ This prompt operates under the following mandatory contexts:
 
 - aecf_prompts/AECF_SYSTEM_CONTEXT.md
 - <workspace_root>/AECF_PROJECT_CONTEXT.md (if present anywhere in the active workspace)
+- **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_RUN_CONTEXT.json`** — if present, use `output_language` as the frozen language for the entire execution.
 
 Governance:
 - aecf_prompts/_governance/AECF_EXECUTIVE_SUMMARY_GOVERNANCE.md

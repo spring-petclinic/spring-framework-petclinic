@@ -125,7 +125,7 @@ The AI MUST:
 
 This file is referenced by:
 - `_governance/AECF_EXECUTIVE_SUMMARY_GOVERNANCE.md`
-- `SKILL_DISPATCHER.md`
+- `SKILL_DISPATCHER.md` / `EXECUTION_PROTOCOL.md`
 - `AECF_SYSTEM_CONTEXT.md`
 
 Loading `TEMPLATE_HEADERS.md` is MANDATORY when generating any AECF document.

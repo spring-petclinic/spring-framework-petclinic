@@ -61,6 +61,7 @@ Rule of coherence:
 | [AECF_PROMPTS_CLAUDE_CLI.md](AECF_PROMPTS_CLAUDE_CLI.md) | Host-specific quick start for Claude CLI |
 | [AECF_PROMPTS_CODEX_CLI.md](AECF_PROMPTS_CODEX_CLI.md) | Host-specific quick start for Codex CLI |
 | [LLM_INSTRUCTIONS_SETUP.md](LLM_INSTRUCTIONS_SETUP.md) | How to set up prompt/instruction loading correctly |
+| [LLM_INSTRUCTIONS_SETUP_EN.md](LLM_INSTRUCTIONS_SETUP_EN.md) | English version of the instruction setup guide |
 
 ## Extension And Advanced Usage Guides
 
@@ -94,6 +95,7 @@ The current master guide intentionally references every Markdown guide currently
 - `AECF_SURFACE_SELECTION_INTAKE.md`
 - `CONSULTING_PLAYBOOK.md`
 - `LLM_INSTRUCTIONS_SETUP.md`
+- `LLM_INSTRUCTIONS_SETUP_EN.md`
 - `QUICK_START.md`
 - `SKILL_CATALOG.md`
 - `START_HERE.md`

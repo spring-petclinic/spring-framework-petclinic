@@ -1,6 +1,6 @@
 # AECF Prompt-Only Memory Model
 
-LAST_REVIEW: 2026-04-06
+LAST_REVIEW: 2026-04-19
 OWNER SEACHAD
 
 ---
@@ -142,18 +142,20 @@ En modo prompt-only, `@aecf memory` puede apoyarse en las vistas Markdown, pero 
 3. `global=True` apunta a memoria general del proyecto.
 4. `global=False` apunta a memoria específica del usuario activo.
 
-Equivalencias:
+Equivalencias (CRUD completo, todas con tool MCP):
 
-1. `@aecf memory add=... [global=True|False]` -> añadir una nueva entrada en el scope correcto.
-2. `@aecf memory list` -> listar las entradas activas del archivo o combinación de archivos aplicables.
-3. `@aecf memory search=...` -> buscar por texto, id o categoría.
-4. `@aecf memory update id=... [global=True|False]` -> actualizar el bloque de esa entrada y, si aplica, moverla de scope.
-5. `@aecf memory archive id=...` -> cambiar `status: archived`.
+| Operación | Gramática prompt-only | Tool MCP | Descripción |
+| --- | --- | --- | --- |
+| List | `@aecf memory list` | `aecf_memory_list` | Listar entradas activas (global + usuario) |
+| Add | `@aecf memory add=<text> [category=<cat>] [global=True\|False]` | `aecf_memory_add` | Añadir una nueva entrada |
+| Search | `@aecf memory search=<query>` | `aecf_memory_search` | Buscar por texto, id o categoría |
+| Update | `@aecf memory update id=<id> text=<text> [category=<cat>]` | `aecf_memory_update` | Actualizar texto y/o categoría de una entrada existente |
+| Delete | `@aecf memory delete id=<id>` | `aecf_memory_delete` | Eliminar permanentemente una entrada por id |
 
 Selección del destino:
 
-1. Si la memoria aplica a todo el proyecto, escribir en `AECF_MEMORY.md`.
-2. Si aplica solo a un usuario concreto, escribir en `AECF_MEMORY_<user_id>.md`.
+1. Si la memoria aplica a todo el proyecto, escribir en `AECF_MEMORY.md` (`global=True` o `global_mem=true`).
+2. Si aplica solo a un usuario concreto, escribir en `AECF_MEMORY_<user_id>.md` (default).
 
 ---
 
@@ -164,8 +166,7 @@ Todo skill enviado al LLM debe enriquecerse con memoria aplicable usando esta po
 1. Cargar siempre memoria general si existe.
 2. Cargar además memoria del usuario activo si existe.
 3. Si hay conflicto, prevalece la memoria general.
-4. Si una entrada está archivada, no se inyecta.
-5. Si una entrada ya quedó obsoleta, no debe borrarse silenciosamente: debe marcarse o reescribirse explícitamente.
+4. Si una entrada ya quedó obsoleta, eliminarla con `@aecf memory delete id=<id>` o actualizarla con `@aecf memory update id=<id> text=...`.
 
 ---
 

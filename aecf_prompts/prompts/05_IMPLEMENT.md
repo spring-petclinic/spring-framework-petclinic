@@ -9,7 +9,7 @@
 
 > **INSTRUCCIÓN PARA EL LLM:** DEBES cargar y leer los siguientes archivos ANTES de generar cualquier output. Si alguno no existe, indicarlo y ABORTAR.
 
-1. **`.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`** — contexto humano legible del proyecto.
+1. **`.aecf/documentation/AECF_PROJECT_CONTEXT.md`** — contexto humano legible del proyecto.
 2. **`<DOCS_ROOT>/AECF_PROJECT_CONTEXT.md`** — si existe, cargarlo como contexto humano legible del proyecto para stack, estándares y restricciones técnicas.
 3. **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_RUN_CONTEXT.json`** — si existe, usar `output_language` como idioma congelado para toda la ejecución.
 4. **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/01_<skill_name>_PLAN.md`** — plan aprobado.
@@ -40,9 +40,11 @@ Implementar el código según el plan aprobado. La implementación debe:
 
 1. Seguir exactamente las decisiones del PLAN aprobado
 2. Implementar los tests diseñados en TEST_STRATEGY
-3. Producir código que cumpla los estándares del proyecto
-4. Incluir documentación de código (docstrings, tipos)
-5. Ejecutar tests y reportar resultados
+3. **Si existen múltiples estrategias de implementación viables** (librería, patrón, estructura de archivos), presentar opciones en la sección 1A antes de generar código completo
+4. Producir código que cumpla los estándares del proyecto
+5. Incluir documentación de código (docstrings, tipos)
+6. Ejecutar tests y reportar resultados
+7. **Presentar un checkpoint de validación** al usuario con acciones posibles: APROBAR, ELEGIR OPCIÓN, REFINAR ENFOQUE o BLOQUEAR
 
 ## REGLAS ESTRICTAS
 
@@ -50,6 +52,26 @@ Implementar el código según el plan aprobado. La implementación debe:
 - **PROHIBIDO** expandir el alcance más allá del PLAN
 - Si hay desviaciones necesarias → documentarlas explícitamente
 - La implementación completa debe caber en ~8000 tokens / ~2500 líneas
+- **Opciones de implementación:** cuando el PLAN admita más de una estrategia concreta de implementación (librería, patrón, layout de archivos), DEBES presentarlas en la sección 1A antes de generar el código completo. Si el PLAN ya fija una única estrategia sin ambigüedad, justifica brevemente por qué no hay alternativas
+- **Checkpoint de validación:** la sección 4A es un punto de parada. Si se presentaron opciones, el usuario debe indicar una acción antes de que la implementación se considere definitiva
+
+## ITERACIÓN INTRA-FASE (IMPLEMENT REFINEMENT LOOP)
+
+IMPLEMENT soporta un bucle de refinamiento controlado por el usuario con **generación diferida del artefacto**:
+
+1. **Mientras el usuario NO haya dado APROBAR, el LLM emite SOLO un checkpoint ligero** — NO el código ni el artefacto completo. El checkpoint ligero contiene únicamente:
+   - Resumen de implementación (sección 1, en 3-5 líneas)
+   - Opciones de implementación (sección 1A, si el PLAN admite alternativas)
+   - Tabla de acciones del checkpoint (sección 4A)
+2. **El usuario responde** con una de estas acciones:
+   - **APROBAR** → el LLM genera el artefacto IMPLEMENT completo (`05_<skill_name>_IMPLEMENT.md`) con TODO el código, tests, evidencia y compliance, y lo persiste en disco.
+   - **ELEGIR OPCIÓN `<N>`** → el LLM regenera el checkpoint ligero aplicando la opción elegida.
+   - **REFINAR ENFOQUE** (con feedback) → el LLM regenera el checkpoint ligero incorporando el feedback del usuario (sin salirse del PLAN aprobado).
+   - **BLOQUEAR** (con razón) → la implementación se cierra con NO-GO y la razón del usuario. No se genera artefacto.
+3. **El artefacto completo (código + tests + evidencia) se genera UNA SOLA VEZ** — al recibir APROBAR. Esto minimiza consumo de tokens y creación de artefactos intermedios.
+4. **El refinamiento NO es un nuevo TOPIC** — el artefacto final usa el mismo TOPIC.
+5. **El refinamiento NO puede rediseñar la solución** — solo ajusta la estrategia de implementación dentro de los límites del PLAN.
+6. En metadata del artefacto final, registrar `Refinement Iteration | {{N}}` (empezando en 1; si se aprueba sin refinar, omitir la fila).
 
 ## ANTI-PATTERNS PROHIBIDOS (TIER3 — obligatorio)
 
@@ -120,9 +142,28 @@ Acción: CREATE / MODIFY / DELETE
 | Topic | {{TOPIC}} |
 | Date | {{fecha}} |
 | Plan Reference | 01_<skill_name>_PLAN.md |
+| Refinement Iteration | {{N o omitir si primera entrega aprobada}} |
+| Selected Option | {{opción elegida o N/A si solo había una}} |
 
 ## 1. Implementation Summary
 <!-- Resumen de lo implementado -->
+
+## 1A. Opciones de Implementación
+<!-- OBLIGATORIO cuando el PLAN admita >= 2 estrategias concretas de implementación. -->
+<!-- Si el PLAN fija una única estrategia, justificar brevemente y omitir opciones. -->
+<!-- Marcar la opción recomendada con [RECOMENDADA]. -->
+
+### Opción A: {{nombre}}
+- **Estrategia:** <!-- descripción breve -->
+- **Pros:** <!-- ventajas -->
+- **Contras:** <!-- desventajas -->
+
+### Opción B: {{nombre}}
+- **Estrategia:** <!-- descripción breve -->
+- **Pros:** <!-- ventajas -->
+- **Contras:** <!-- desventajas -->
+
+**Recomendación:** Opción {{X}} — <!-- justificación breve -->
 
 ## 2. Desviaciones del plan
 | Desviación | Justificación |
@@ -148,6 +189,20 @@ Acción: CREATE / MODIFY / DELETE
 `generated_by` y `last_modified_by` deben usar el `Executed By ID` efectivo del flujo
 (o `N/A` si no existe identidad disponible), nunca valores genéricos como `aecf`,
 `copilot`, `assistant`, el nombre del skill o el modelo.
+
+## 4A. Checkpoint de Validación del Usuario
+<!-- PUNTO DE PARADA si se presentaron opciones en 1A. Si no hubo opciones, indicar "Implementación única — no requiere selección". -->
+
+**Opción aplicada:** {{X}} — {{nombre de la opción o "única"}}
+
+| Acción | Instrucción para el usuario |
+|---|---|
+| **APROBAR** | La implementación está lista → avanza a AUDIT_CODE |
+| **ELEGIR OPCIÓN `<N>`** | Seleccionar otra opción de la sección 1A → se regenera la implementación con esa opción |
+| **REFINAR ENFOQUE** | Proporcionar feedback sobre la implementación → se regenera sin salir del PLAN aprobado |
+| **BLOQUEAR** | Indicar razón → la implementación se cierra con NO-GO |
+
+> **Responda con la acción deseada.** Si elige REFINAR ENFOQUE, incluya el feedback a continuación.
 
 ## 5. Tests implementados
 

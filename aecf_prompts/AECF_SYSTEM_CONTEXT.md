@@ -131,18 +131,33 @@ When generating ANY document:
 3. Insert the `## METADATA` section at the end of the document in compact format
 4. Fill Document Type and Phase from the directive; auto-resolve all other fields
 
-## MANDATORY SKILL DISPATCHER
+## MANDATORY SKILL DISPATCH
 
-**aecf/SKILL_DISPATCHER.md**
+When ANY skill invocation is detected (explicit `skill:` reference, skill filename, or natural language intent matching a skill), the following dispatch contract applies:
 
-When ANY skill invocation is detected (explicit `skill:` reference, skill filename, or natural language intent matching a skill), the **SKILL_DISPATCHER** MUST be loaded and its execution protocol MUST be followed.
+### Path A — MCP dispatch (preferred when available)
 
-The SKILL_DISPATCHER guarantees:
-- Simple, natural prompts trigger full AECF-compliant execution
-- All parameters are auto-resolved (TOPIC, scope, numbering)
-- Output files are ALWAYS created (chat-only responses are INVALID)
-- AECF naming conventions are ALWAYS enforced
-- Executive summaries are generated on-demand via `skill_executive_summary`
+If an **MCP tool named `aecf_dispatch_skill`** (or equivalent AECF skill dispatcher tool) is registered in the current session:
+
+1. **Use the MCP tool exclusively** to resolve the skill, parameters, and execution protocol.
+2. **Do NOT load `SKILL_DISPATCHER.md`** — the MCP response already contains the resolved skill file path, auto-resolved parameters, and the embedded execution protocol.
+3. Load only the skill file returned by the MCP tool, then follow the embedded execution protocol.
+
+### Path B — Prompt-only dispatch (fallback)
+
+If **no MCP skill dispatcher tool is available** in the current session:
+
+1. Load **`SKILL_DISPATCHER.md`** for skill recognition and parameter resolution.
+2. Load **`EXECUTION_PROTOCOL.md`** for the universal execution contract.
+3. Load the resolved `skill_*.md` file (each skill contains its own `## DISPATCHER GUIDE`).
+
+### Shared guarantees (both paths)
+
+- Simple, natural prompts trigger full AECF-compliant execution.
+- All parameters are auto-resolved (TOPIC, scope, numbering).
+- Output files are ALWAYS created (chat-only responses are INVALID).
+- AECF naming conventions are ALWAYS enforced.
+- Executive summaries are generated on-demand via `skill_executive_summary`.
 
 **Developers should NEVER need verbose prompts to invoke a skill.**
 

@@ -25,6 +25,7 @@ flowchart LR
     ROOT --> GR[Governance and Release]
     ROOT --> PR[Productivity]
     ROOT --> EX[Explorators]
+    ROOT --> BM[Benchmark]
 
     DD --> F1(aecf_new_feature)
     DD --> F26(aecf_new_test_set)
@@ -64,7 +65,9 @@ flowchart LR
     BS --> F25(aecf_new_project)
     BS --> F27(aecf_codebase_intelligence)
     BS --> F28(aecf_set_stack)
-    BS --> F36(aecf_surface_discovery)    
+    BS --> F36(aecf_surface_discovery)
+
+    BM --> F37(aecf_bypass)
 
     style ROOT fill:#5B9BD5,stroke:#3A7CC0,stroke-width:3px,color:#fff
     style DD fill:#70AD47,stroke:#548235,stroke-width:2px,color:#fff
@@ -75,6 +78,7 @@ flowchart LR
     style PR fill:#7CB342,stroke:#558B2F,stroke-width:2px,color:#fff
     style BS fill:#00BCD4,stroke:#00838F,stroke-width:2px,color:#fff
     style EX fill:#C45AB3,stroke:#9B3A8A,stroke-width:2px,color:#fff
+    style BM fill:#FF7043,stroke:#D84315,stroke-width:2px,color:#fff
 
     style F1 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
     style F26 fill:#3B5E2E,stroke:#70AD47,color:#C6EFBE
@@ -108,7 +112,8 @@ flowchart LR
     style F25 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
     style F27 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
     style F28 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
-    style F36 fill:#004D40,stroke:#00BCD4,color:#B2EBF2    
+    style F36 fill:#004D40,stroke:#00BCD4,color:#B2EBF2
+    style F37 fill:#4E2A15,stroke:#FF7043,color:#FFD0B5
 
 ```
 
@@ -119,9 +124,10 @@ flowchart LR
 | 🔍 **Audit and Quality** | `aecf_code_standards_audit` · `aecf_security_review` · `aecf_security_review_gdpr` · `aecf_security_review_eu_ai_act` · `aecf_security_review_dora` · `aecf_dependency_audit` · `aecf_tech_debt_assessment` · `aecf_coupling_assessment` · `aecf_resolve_linting` |
 | 📚 **Documentation and Understanding** | `aecf_document_legacy` · `aecf_explain_behavior` |
 | 🏛️ **Governance and Release** | `aecf_maturity_assessment` · `aecf_release_readiness` · `aecf_executive_summary` · `aecf_data_governance_audit` · `aecf_model_governance_audit` · `aecf_ai_risk_assessment` · `aecf_define_impact_metrics` · `aecf_application_lifecycle` |
-| ⚡ **Productivity** | `aecf_productivity` |
+| ⚡ **Productivity** | `aecf_productivity` (supports `verbose=true` for Cuadro de Mando) |
 | 🚀 **Bootstrap y Setup** | `aecf_project_context_generator` · `aecf_document_context_ingestion` (hidden) · `aecf_new_project` · `aecf_codebase_intelligence` · `aecf_set_stack` · `aecf_surface_discovery` |
 | 🔬 **Explorators** | `aecf_data_classification` · `aecf_data_strategy` |
+| 🧪 **Benchmark** | `aecf_bypass` |
 
 ---
 
@@ -185,12 +191,13 @@ Mandatory ingress rules:
 | `aecf_model_governance_audit` | TIER1 | `RESOLVE_TO_FINAL` | `MODEL_SCOPE` | `SKILL_FINAL` | Resolve AI-related scope first, then audit in `AECF_MODEL_GOVERNANCE_AUDIT`. |
 | `aecf_define_impact_metrics` | TIER2 | `RESOLVE_TO_FINAL` | `METRICS_SCOPE` | `SKILL_FINAL` | Resolve scope and success intent first, then generate the metrics spec in `AECF_DEFINE_IMPACT_METRICS`. |
 | `aecf_application_lifecycle` | TIER2 | `INTAKE_FIRST` | `LIFECYCLE_SCOPE` | `SKILL_FINAL` | The methodology identifier is mandatory, so the skill must block in intake until one accepted lifecycle standard is confirmed and then map AECF skills phase by phase. |
-| `aecf_productivity` | TIER2 | `DISCOVERY_FIRST` | `PRODUCTIVITY_SCOPE` | `SKILL_FINAL` | Must discover `TOPICS_INVENTORY` and `CHANGELOG` evidence first, then calculate per-person and group productivity KPIs in `AECF_PRODUCTIVITY`. |
+| `aecf_productivity` | TIER2 | `DISCOVERY_FIRST` | `PRODUCTIVITY_SCOPE` | `SKILL_FINAL` | Must discover `TOPICS_INVENTORY` and `CHANGELOG` evidence first, then calculate per-person and group productivity KPIs in `AECF_PRODUCTIVITY`. When `verbose=true`, also reads topic artifacts for narrative and builds Cuadro de Mando. |
 | `aecf_data_strategy` | TIER2 | `RESOLVE_TO_FINAL` | `STRATEGY_SCOPE` | `SKILL_FINAL` | Design-only skill; enriched prompt resolution is acceptable before `AECF_DATA_STRATEGY`. |
 | `aecf_project_context_generator` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | The skill is itself a governed discovery/bootstrap phase and lands in `AECF_PROJECT_CONTEXT_GENERATOR`. |
 | `aecf_codebase_intelligence` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Phase-0 intelligence generator that lands in `AECF_CODEBASE_INTELLIGENCE`. |
 | `aecf_set_stack` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Same as codebase intelligence, but with explicit stack input and terminal phase `AECF_SET_STACK`. |
 | `aecf_surface_discovery` | TIER2 | `DIRECT_FINAL` | `codebase_intelligence_artifacts_present` | `SKILL_FINAL` | Phase-0 surface discovery; requires `aecf_codebase_intelligence` artifacts (NO-GO if missing); produces `AECF_SURFACE_DISCOVERY.md` + `surfaces_draft.md` for human validation; re-run enriches draft without replacing it. |
+| `aecf_bypass` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Context-enriched direct prompt execution without AECF phases; produces `AECF_<NN>_BYPASS.md` with standard metadata. |
 Rule for new skills:
 
 - No new skill is complete until this matrix is updated with its canonical ingress mode, handoff artifact, and governed destination.
@@ -230,6 +237,7 @@ Rule for new skills:
 | aecf_system_replayability_adaptive | TIER3 | false |
 | aecf_tech_debt_assessment | TIER1 | true |
 | aecf_surface_discovery | TIER2 | true |
+| aecf_bypass | TIER2 | false |
 
 ---
 
@@ -400,6 +408,7 @@ Skills to evaluate process maturity and validate preparation for releases. Orien
 | "Which application lifecycle should we adopt for methodology=PRINCE2 and where does each AECF skill fit?" | `aecf_application_lifecycle` |
 | "Which linting and static-analysis profile applies before we plan or implement this change?" | `aecf_resolve_linting` |
 | "How productive are Ana and Luis between two dates and on which topics/files?" | `aecf_productivity` |
+| "Generate a detailed workload dashboard (cuadro de mando) for Ana this quarter" | `aecf_productivity` (`verbose=true`) |
 | "What PII/SENSITIVE fields exist in the project?" | `aecf_data_classification` |
 | "Does our code comply with GDPR?" | `aecf_security_review_gdpr` |
 | "Does our AI system comply with the EU AI Act?" | `aecf_security_review_eu_ai_act` |
@@ -414,7 +423,7 @@ Skills to analyze delivery throughput and evidence-backed productivity using AEC
 
 | Skill | ID | Description | When to Use It |
 |-------|----|-------------|---------------|
-| **Productivity** | `aecf_productivity` | Calculates productivity KPIs per person and per group using `TOPICS_INVENTORY`, `CHANGELOG`, date windows, topics, and touched file evidence | Review one developer, compare several users, or evaluate team throughput by period, topic, or repository area |
+| **Productivity** | `aecf_productivity` | Calculates productivity KPIs per person and per group using `TOPICS_INVENTORY`, `CHANGELOG`, date windows, topics, and touched file evidence. With `verbose=true`: reads artifacts, produces per-topic narrative with critique, and generates a 4-quadrant Cuadro de Mando AECF (Adopción, Calidad, Productividad, Riesgo) | Review one developer, compare several users, evaluate team throughput, or generate a detailed human-ready workload report with dashboard |
 
 ### Minimum output expectations
 
@@ -427,6 +436,17 @@ Group Productivity KPIs
 Topic and File Analysis
 Coverage Gaps
 Recommendations
+```
+
+### Additional output when verbose=true
+
+```
+Topic Narratives (per-topic human-ready description + critique)
+Cuadro de Mando AECF:
+  Q1 · Adopción
+  Q2 · Calidad
+  Q3 · Productividad
+  Q4 · Riesgo
 ```
 
 ### Recommended usage flow
@@ -490,7 +510,17 @@ aecf_document_context_ingestion (optional hidden/internal documentary context)
 
 ---
 
-## 8. Quick Decision Guide
+## 8. 🧪 Benchmark
+
+Skills to benchmark LLM performance with AECF context enrichment vs vanilla prompting. These skills bypass the AECF phase methodology but still produce governed, traceable artifacts.
+
+| Skill | ID | Description | When to Use It |
+|-------|----|-------------|---------------|
+| **Bypass** | `aecf_bypass` | Execute any prompt directly against the LLM with the full AECF context stack (system context, project context, methodology, knowledge, domains, memory, surfaces, codebase intelligence) but without AECF phases, gates, or scoring | Compare LLM quality with AECF context vs without it, quick ad-hoc queries that benefit from project context, proof-of-value demonstrations for AECF adoption |
+
+---
+
+## 9. Quick Decision Guide
 
 ### "What skill do I need?"
 
@@ -535,16 +565,19 @@ What do you need to do?
 │ ├─ Is there model impact? → aecf_model_governance_audit
 │ ├─ What is the AI ​​risk? → aecf_ai_risk_assessment
 │ ├─ How do we measure impact? → aecf_define_impact_metrics
-│ └─ Who is delivering which topics/files and at what cadence? → aecf_productivity
+│ └─ Who is delivering which topics/files and at what cadence? → aecf_productivity (verbose=true for detailed dashboard)
 │
 └─ Explore/discover data
   ├─ What PII/SENSITIVE data does the project have? → aecf_data_classification
   └─ Need ingestion/storage strategy for high-volume data? → aecf_data_strategy
+│
+└─ Benchmark LLM with AECF context (no phases)
+  └─ Execute any prompt with full AECF context enrichment → aecf_bypass
 ```
 
 ---
 
-## 9. Complete Skills Matrix
+## 10. Complete Skills Matrix
 
 | Skill | Modify Code | Generate Docs | Estimated Time | Mode |
 |-------|:-:|:-:|:-:|:-:|
@@ -573,15 +606,16 @@ What do you need to do?
 | `aecf_ai_risk_assessment` | ❌ | ✅ | 30min – 3h | Read-only |
 | `aecf_application_lifecycle` | ❌ | ✅ | 20min – 90min | Read-only |
 | `aecf_define_impact_metrics` | ❌ | ✅ | 20min – 2h | Read-only |
-| `aecf_productivity` | ❌ | ✅ | 15min – 2h | Read-only |
+| `aecf_productivity` | ❌ | ✅ | 15min – 2h (verbose: 30min – 3h) | Read-only |
 | `aecf_data_classification` | ❌ | ✅ | 15min – 2h | Explorator |
 | `aecf_new_project` | ✅ | ✅ | 15 – 30min | Bootstrap |
 | `aecf_codebase_intelligence` | ❌ | ✅ | 1 – 5min | Bootstrap |
 | `aecf_set_stack` | ❌ | ✅ | 1 – 5min | Bootstrap |
 | `aecf_surface_discovery` | ❌ | ✅ | 2 – 10min | Bootstrap |
+| `aecf_bypass` | ❌ | ✅ | 1 – 15min | Benchmark |
 ---
 
-## 10. Release Gate Status (Beta Enforcement)
+## 11. Release Gate Status (Beta Enforcement)
 
 > **Single source of truth**: [`SKILL_RELEASE.json`](SKILL_RELEASE.json)
 >
@@ -625,6 +659,7 @@ Beta skills (visible in `list skills`, blocked for non-owner):
 - 🚧 `aecf_security_review_dora`
 - 🚧 `aecf_system_replayability_adaptive`
 - 🚧 `aecf_tech_debt_assessment`
+- 🚧 `aecf_bypass`
 
 Hidden skills (not visible in `list skills`, blocked for non-owner):
 
@@ -640,7 +675,7 @@ Deprecated skills (superseded, not available):
 
 ---
 
-## 11. Frequent Compositions
+## 12. Frequent Compositions
 
 ### New project from scratch (greenfield)
 ```
@@ -764,4 +799,92 @@ aecf_security_review → aecf_security_review_gdpr → aecf_security_review_dora
 - Model impact (YES/NO)
 - Risk impact
 - Compliance check
+
+---
+
+## Appendix A: NEW SKILL REGISTRATION PROTOCOL
+
+This section is the AUTHORITATIVE GATE for registering any new AECF skill.
+It applies to ALL skill creation activities — whether triggered by a meta-prompt,
+a direct user request, or an AI-generated skill. No skill is operational until
+ALL steps in this protocol are completed.
+
+### A.1 When this protocol activates
+
+This protocol MUST be executed whenever:
+- A new `skills/skill_<name>.md` file is created
+- A meta-prompt of type `CREATE_SKILL_*` is executed
+- The user requests "add a new skill" or equivalent
+- Any AI generates a new skill file as part of any task
+
+### A.2 Mandatory Registration Steps
+
+Execute ALL steps in order. Each step is REQUIRED. None may be skipped.
+
+#### Step R1 — SKILL_DISPATCHER.md: Compact Skill List
+Location: `aecf_prompts/SKILL_DISPATCHER.md` → §1 Compact Skill List
+
+Add the new skill with 2-3 trigger keywords to the compact skill list.
+
+#### Step R2 — Skill File: DISPATCHER GUIDE
+Location: `aecf_prompts/skills/skill_<id>.md` → `## DISPATCHER GUIDE`
+
+Add a `## DISPATCHER GUIDE` section with:
+- **Minimal valid invocations** (at least 3 copy-pasteable examples)
+- **Auto-resolution rules**: TOPIC default, Scope default, Output path (`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_<NN>_<DOCUMENT_NAME>.md`)
+- **Special behaviour** notes (anything diverging from standard execution protocol)
+- Pointer to `EXECUTION_PROTOCOL.md`
+
+#### Step R3 — SKILL_CATALOG.md
+Location: `aecf_prompts/skills/SKILL_CATALOG.md`
+
+- Add node to Mermaid diagram (with styling)
+- Add row to category summary table
+- Add entry in the correct category section
+- Add row to Matriz de Skills Completa (with Modifica Código, Genera Docs, Tiempo Estimado, Modo)
+- Add to composition chains if applicable
+
+#### Step R4 — README_SKILLS.md
+Location: `aecf_prompts/skills/README_SKILLS.md`
+
+Add numbered section `### N. <emoji> \`aecf_<id>\`` containing:
+`Purpose` / `Layer` / `Time` / `Phases` / `Use when` / `Modifies code` / `Output` / `[Full Documentation]` link
+
+#### Step R5 — SKILL_RELEASE.json
+Location: `aecf_prompts/skills/SKILL_RELEASE.json`
+
+Add the skill entry with initial status `"beta"`.
+
+#### Step R6 — Go Dispatcher (MCP hosts)
+Location: `internal/aecf_prompts/mcp.*/internal/tools/dispatcher.go`
+
+Add entries to `skillResolutionTable` with canonical name, file path, output fragment, and keyword triggers.
+Propagate to all 3 hosts (claude, copilot, codex) and compile.
+
+#### Step R7 — Course / Executive Documentation (conditional)
+If skill relates to data governance, model governance, AI risk, or impact metrics:
+- Add **Related AECF Skills** row in the relevant `documentation/courses/0X_*.md`
+
+### A.3 SKILL_CREATION_VALIDATION BLOCK
+
+Before declaring the skill creation task complete, confirm:
+
+| # | Check | Required | Status |
+|---|-------|----------|--------|
+| R1 | Compact skill list in SKILL_DISPATCHER.md | Entry with 2-3 triggers | |
+| R2 | DISPATCHER GUIDE in skill file | Full guide with output path | |
+| R3 | SKILL_CATALOG.md updated | Mermaid, table, section, matrix | |
+| R4 | README_SKILLS.md entry added | Numbered section, all fields | |
+| R5 | SKILL_RELEASE.json entry added | Status = beta | |
+| R6 | Go dispatcher registration (all 3 hosts) | Canonical + keywords, compiles | |
+| R7 | Course documentation updated (if applicable) | Row in relevant course module | |
+
+**If ANY row is empty → STOP. Complete missing steps. Do NOT declare the task done.**
+
+### A.4 Enforcement Rule
+
+A skill file that exists in `skills/` but is NOT registered in all locations above
+is INVISIBLE to the dispatch system and WILL NOT execute with AECF conventions.
+The naming convention, output path, and numbering protocol will NOT apply.
+The skill is INOPERABLE until all registration steps are complete.
 

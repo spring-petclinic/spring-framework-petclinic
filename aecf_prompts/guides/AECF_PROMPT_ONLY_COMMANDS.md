@@ -1,6 +1,6 @@
 # AECF Prompt-Only Command Equivalents
 
-LAST_REVIEW: 2026-04-16
+LAST_REVIEW: 2026-04-19
 OWNER SEACHAD
 
 ---
@@ -36,7 +36,7 @@ El LLM debe interpretarlo así:
 Si quieres conservar sintaxis tipo `@aecf`, carga esta guía como contexto por defecto y aplica estas reglas:
 
 1. Si el usuario escribe `@aecf ...`, no digas que el comando no existe: si hay tool MCP equivalente, úsalo primero; si no, resuélvelo contra `aecf_prompts/`.
-2. Usa `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md` si existe.
+2. Usa `.aecf/documentation/AECF_PROJECT_CONTEXT.md` si existe.
 3. Si existen `AECF_SURFACES_INDEX.md` o `AECF_SURFACES_INDEX.json`, úsalos para resolver qué `surface` o `surfaces` deben cargarse para el trabajo actual.
 4. Usa `aecf_prompts/skills/` como fuente para flujos y skill selection.
 5. Usa `aecf_prompts/prompts/` como fuente de fases ejecutables.
@@ -74,6 +74,9 @@ Mapeo MCP preferido:
 | `@aecf status [topic=...]` | `aecf_status` | `status.py` o inferencia manual |
 | `@aecf memory list` | `aecf_memory_list` | Leer memoria prompt-only |
 | `@aecf memory add ...` | `aecf_memory_add` | Escritura manual asistida |
+| `@aecf memory search=...` | `aecf_memory_search` | Buscar entradas por texto, id o categoría |
+| `@aecf memory update id=... text=...` | `aecf_memory_update` | Actualizar una entrada existente |
+| `@aecf memory delete id=...` | `aecf_memory_delete` | Eliminar una entrada por id |
 
 ---
 
@@ -93,21 +96,21 @@ Mapeo MCP preferido:
 | `@aecf show commands` | Alias de `list commands` | Soportado | Igual que `list commands` |
 | `@aecf show workspace_statistics` | Estadísticas del workspace por helper o inspección manual | Soportado | Preferir `python aecf_prompts/scripts/workspace_statistics.py`; si el host no ejecuta herramientas, reproducir el contrato leyendo el workspace y las exclusiones CI |
 | `@aecf find skills prompt=...` | Resolver skill por intención | Soportado | Recomendar uno o varios skills con justificación breve |
-| `@aecf context` / `@aecf context examine` | Examinar `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md` y, si existen, `AECF_SURFACES_INDEX.*` | Soportado | Resumir contexto, huecos, surfaces activables y riesgos de contexto incompleto |
+| `@aecf context` / `@aecf context examine` | Examinar `.aecf/documentation/AECF_PROJECT_CONTEXT.md` y, si existen, `AECF_SURFACES_INDEX.*` | Soportado | Resumir contexto, huecos, surfaces activables y riesgos de contexto incompleto |
 | `@aecf continue [topic=...]` | Reanudar desde artefactos existentes | Parcial | Detectar la última fase completada y proponer la siguiente fase manual |
 | `@aecf status [topic=...]` | Inspección de artefactos existentes | Soportado | Preferir `python aecf_prompts/scripts/status.py --topic <topic>`; si no puede ejecutarse, inferir estado desde `AECF_RUN_CONTEXT.json` y artefactos del topic |
 | `@aecf show settings` | Estado efectivo prompt-only | Soportado | Preferir `python aecf_prompts/scripts/show_settings.py`; si no puede ejecutarse, reproducir los valores efectivos de bundle, atribución, `DOCS_ROOT` y user settings |
 | `@aecf settings show` | Alias de `show settings` | Soportado | Igual que `@aecf show settings` |
 | `@aecf settings set <key>=<value>` | Cambiar un setting de usuario | Soportado | Preferir `python aecf_prompts/scripts/settings.py set <key>=<value>`; si el valor no pertenece al conjunto cerrado, mostrar opciones y pedir al usuario que elija |
-| `@aecf list topics` | Inventario de topics | Soportado | Leer `.aecf/runtime/documentation/<user_id>/AECF_TOPICS_INVENTORY.json` o `.md`; si falta, bootstrap desde artefactos existentes |
+| `@aecf list topics` | Inventario de topics | Soportado | Leer `.aecf/documentation/<user_id>/AECF_TOPICS_INVENTORY.json` o `.md`; si falta, bootstrap desde artefactos existentes |
 | `@aecf resolve_issue ...` | Resolver issue pegando su contenido | Parcial | Pedir el body del issue o URL accesible; luego recomendar skill y plan manual |
 | `@aecf implement_feature ...` | Implementar feature pegando su contenido | Parcial | Pedir el texto de la feature; luego resolver a `new_feature` u otro skill |
-| `@aecf init` | Preparación manual | Parcial | Explicar bootstrap de `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`; usar la atribución resuelta por entorno si ya existe y solo pedirla si no puede resolverse |
+| `@aecf init` | Preparación manual | Parcial | Explicar bootstrap de `.aecf/documentation/AECF_PROJECT_CONTEXT.md`; usar la atribución resuelta por entorno si ya existe y solo pedirla si no puede resolverse |
 | `@aecf send issue` / `@aecf send feature` | Publicar tickets GitHub desde prompt-only | Soportado | Si el host puede ejecutar herramientas, generar un payload JSON y llamar a `python aecf_prompts/scripts/publish_github_ticket.py create --payload-file <file>`; si falla la API, usar la `compose_url` devuelta |
 | `@aecf create ...` | Proponer scaffold manual | Parcial | Puede generar el contenido sugerido, pero no materializarlo automáticamente |
 | `@aecf prueba ...` | Demo de UI | No soportado | Depende de webview/chat participante del componente |
 | `@aecf test skills ...` | Revisión documental de skills | Parcial | Puede revisar coherencia del skill, pero no ejecutar la suite del engine |
-| `@aecf memory ...` | Memoria general y por usuario | Parcial | Puede operar sobre `.aecf/memories/project/AECF_MEMORY.md` y `AECF_MEMORY_<user_id>.md` si existen |
+| `@aecf memory ...` | Memoria general y por usuario | Soportado | CRUD completo (list, add, search, update, delete) sobre `.aecf/memories/project/AECF_MEMORY.md` y `AECF_MEMORY_<user_id>.md` vía MCP |
 | `@aecf command ...` | Ejecutar CLIs | No soportado | Requiere runtime/herramientas del componente |
 
 ---
@@ -147,7 +150,7 @@ Resolución mínima:
 2. Si existen `AECF_SURFACES_INDEX.*`, resolver primero la `surface` primaria del trabajo y las `related_surfaces` necesarias.
 3. Identificar la primera fase del skill.
 4. Indicar qué prompt de `aecf_prompts/prompts/` corresponde.
-5. Resolver `DOCS_ROOT`: usar `AECF_PROMPTS_DOCUMENTATION_PATH`; si tampoco existe, aceptar `AECF_PROMPTS_DIRECTORY_PATH` como alias legado; y si no, usar `<workspace>/.aecf/runtime/documentation`.
+5. Resolver `DOCS_ROOT`: usar `artifacts_path` de `.aecf/user_settings.json` (como `.aecf/<artifacts_path>`); si no, `AECF_PROMPTS_DOCUMENTATION_PATH`; si tampoco existe, aceptar `AECF_PROMPTS_DIRECTORY_PATH` como alias legado; y si no, usar `<workspace>/.aecf/documentation`.
 6. Recordar la ruta de salida canónica en `<DOCS_ROOT>/<user_id>/<TOPIC>/`.
 7. Recordar la prioridad de atribución: `AECF_PROMPTS_USER_ID`, después `AECF_PROMPTS_MODEL_ID`/`MODEL_ID`, y finalmente `AECF_PROMPTS_AGENT_ID`/`AGENT_ID`.
 
@@ -204,8 +207,8 @@ En prompt-only, este comando sí puede resolverse de forma bastante fiable porqu
 
 Orden de resolución:
 
-1. Leer `.aecf/runtime/documentation/<user_id>/AECF_TOPICS_INVENTORY.json`.
-2. Si no existe, leer `.aecf/runtime/documentation/<user_id>/AECF_TOPICS_INVENTORY.md`.
+1. Leer `.aecf/documentation/<user_id>/AECF_TOPICS_INVENTORY.json`.
+2. Si no existe, leer `.aecf/documentation/<user_id>/AECF_TOPICS_INVENTORY.md`.
 3. Si tampoco existe, inferir topics desde `<DOCS_ROOT>/<user_id>/<TOPIC>/`.
 4. Si se infiere desde artefactos, recomendar regenerar el inventario canónico.
 
@@ -217,7 +220,7 @@ Resolución manual:
 
 1. Si el host permite ejecutar herramientas y existe `aecf_prompts/scripts/bootstrap_prompt_only_bundle.exe`, ejecutar primero `aecf_prompts\scripts\bootstrap_prompt_only_bundle.exe --diagnose-env` y usar su salida como fuente canónica para `DOCS_ROOT` y atribución.
 2. Cuando el `.exe --diagnose-env` esté disponible, NO intentes inspeccionar variables de entorno con `pwsh`, `cmd`, `set`, `echo %VAR%`, `$env:`, ni herramientas equivalentes del sistema.
-3. Solo si el `.exe` no puede ejecutarse, resolver `DOCS_ROOT` con esta prioridad: `AECF_PROMPTS_DOCUMENTATION_PATH`, después `AECF_PROMPTS_DIRECTORY_PATH`, y si ninguno existe usar `<workspace>/.aecf/runtime/documentation`.
+3. Solo si el `.exe` no puede ejecutarse, resolver `DOCS_ROOT` con esta prioridad: `artifacts_path` de `.aecf/user_settings.json`, después `AECF_PROMPTS_DOCUMENTATION_PATH`, después `AECF_PROMPTS_DIRECTORY_PATH`, y si ninguno existe usar `<workspace>/.aecf/documentation`.
 4. Si `AECF_PROJECT_CONTEXT.md` no existe, indicar que debe generarse con `skill_project_context_generator`.
 5. Resolver la atribución activa con prioridad `AECF_PROMPTS_USER_ID`, `AECF_PROMPTS_MODEL_ID`/`MODEL_ID`, y `AECF_PROMPTS_AGENT_ID`/`AGENT_ID`.
 6. Si la atribución ya se ha resuelto desde `--diagnose-env`, desde entorno o desde `AECF_RUN_CONTEXT.json`, no preguntar al usuario otra vez; declarar qué valor se ha resuelto y continuar.
@@ -369,13 +372,13 @@ Orden mínimo de lectura para `@aecf memory list`:
 4. Si existe `.aecf/memories/project/events/`, usarlo como apoyo para confirmar materialización o trazabilidad.
 5. Solo si las rutas canónicas no existen, responder que el store no está inicializado; no empezar por `AECF_STATIC_PROJECT_CONTEXT.md` ni por búsquedas glob amplias.
 
-Equivalencias prácticas:
+Equivalencias prácticas (CRUD completo, todas con tool MCP):
 
-- `@aecf memory add=... global=True|False` -> añadir una entrada nueva a la memoria general o a la memoria del usuario activo.
-- `@aecf memory list` -> listar entradas activas de la memoria general y, si aplica, de la memoria del usuario.
-- `@aecf memory search=...` -> buscar por texto, id o categoría en ambas capas de memoria.
-- `@aecf memory update id=...` -> reescribir la entrada manteniendo trazabilidad simple.
-- `@aecf memory archive id=...` -> mover la entrada a estado archivado.
+- `@aecf memory list` -> `aecf_memory_list` -> listar entradas activas de la memoria general y, si aplica, de la memoria del usuario.
+- `@aecf memory add=<text> [category=<cat>] [global=True|False]` -> `aecf_memory_add` -> añadir una entrada nueva a la memoria general o a la memoria del usuario activo.
+- `@aecf memory search=<query>` -> `aecf_memory_search` -> buscar por texto, id o categoría en ambas capas de memoria.
+- `@aecf memory update id=<id> text=<text> [category=<cat>]` -> `aecf_memory_update` -> reescribir el texto (y opcionalmente la categoría) de una entrada existente.
+- `@aecf memory delete id=<id>` -> `aecf_memory_delete` -> eliminar permanentemente una entrada por id.
 
 Límite importante:
 
@@ -487,7 +490,7 @@ Si el usuario escribe `@aecf ...`, interprétalo como una intención textual res
 
 Aplica estas reglas:
 
-1. Usa `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md` si existe.
+1. Usa `.aecf/documentation/AECF_PROJECT_CONTEXT.md` si existe.
 2. Si existen `AECF_SURFACES_INDEX.md` o `AECF_SURFACES_INDEX.json`, úsalos para resolver la `surface` primaria y las `surfaces` relacionadas del trabajo actual.
 3. Si existe `AECF_RUN_CONTEXT.json`, úsalo como contrato congelado de idioma y de selección de `surface` para el `TOPIC` actual.
 4. Usa `.aecf/memories/project/AECF_MEMORY.md` si existe.
@@ -498,7 +501,7 @@ Aplica estas reglas:
 9. Usa `aecf_prompts/prompts/` para resolver fases ejecutables.
 10. Si el comando depende de runtime, GitHub, memoria persistente o terminal, dilo claramente y ofrece el equivalente manual más cercano.
 11. Para `@aecf run`, resuelve al equivalente `use skill=<skill> TOPIC=<topic> prompt=<texto>`.
-12. Para `@aecf continue` y `@aecf status`, infiere el estado solo desde artefactos existentes en `.aecf/runtime/documentation/`.
+12. Para `@aecf continue` y `@aecf status`, infiere el estado solo desde artefactos existentes en `.aecf/documentation/`.
 13. Para `@aecf list commands`, usa la guía `aecf_prompts/guides/AECF_PROMPT_ONLY_COMMANDS.md` como referencia exhaustiva.
 14. Para cualquier entrada con gramática explícita `@aecf <command>`, no la conviertas primero en una tarea de investigación abierta: aplica el contrato del comando y lee únicamente las rutas canónicas que ese contrato exige.
 15. Para `@aecf memory list`, comprueba primero `.aecf/memories/project/` y, si falta, devuelve un estado determinista de store vacío o no inicializado.

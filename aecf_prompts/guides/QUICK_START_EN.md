@@ -40,7 +40,7 @@ my-project/
 └── ...
 ```
 
-> `.aecf/runtime/documentation/` will be created automatically to store skill/topic outputs without depending on the bundle folder.
+> `.aecf/documentation/` will be created automatically to store skill/topic outputs without depending on the bundle folder.
 
 If the repository is large, use `AECF_PROJECT_CONTEXT.md` as the minimum global layer and partition the rest of the context with the `surface` model described in `AECF_SURFACE_CONTEXT_MODEL.md`.
 
@@ -84,9 +84,9 @@ If you are working on the repository source copy rather than on the client bundl
 
 This creates or refreshes `aecf_forced_instructions.md` with the canonical English instruction block from the bundle and keeps `.github/copilot-instructions.md`, `copilot-instructions.md`, `CLAUDE.md`, `AGENTS.md`, and `.codex/instructions.md` as the minimum instruction-loading surfaces.
 
-### 1.3 Create .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+### 1.3 Create .aecf/documentation/AECF_PROJECT_CONTEXT.md
 
-Create this file in `.aecf/runtime/documentation/` with at least the following structure:
+Create this file in `.aecf/documentation/` with at least the following structure:
 
 ```markdown
 # AECF Project Context
@@ -226,7 +226,7 @@ Each prompt already knows:
 
 All outputs are stored under `<DOCS_ROOT>/<user_id>/{{TOPIC}}/`.
 
-`<DOCS_ROOT>` uses `AECF_PROMPTS_DOCUMENTATION_PATH` if it exists; otherwise it accepts `AECF_PROMPTS_DIRECTORY_PATH` as a legacy alias; if neither exists, it defaults to `<workspace>/.aecf/runtime/documentation`:
+`<DOCS_ROOT>` uses `artifacts_path` from `.aecf/user_settings.json` (as `.aecf/<artifacts_path>`) if set; otherwise `AECF_PROMPTS_DOCUMENTATION_PATH` if it exists; otherwise it accepts `AECF_PROMPTS_DIRECTORY_PATH` as a legacy alias; if none exists, it defaults to `<workspace>/.aecf/documentation`:
 
 | Phase | Output file |
 | --- | --- |
@@ -290,7 +290,7 @@ Conceptual example for a `new_feature` flow:
 use skill=new_feature TOPIC=zk_order_screen prompt=Create a ZKoss screen to manage orders
 
 Before answering, also read:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```
@@ -305,7 +305,7 @@ To document or plan over a Java + ZKoss project:
 use skill=document_legacy TOPIC=zk_backoffice prompt=Document the backoffice module built with ZUL and composers
 
 Mandatory additional context:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```
@@ -316,7 +316,7 @@ To implement a new feature:
 use skill=new_feature TOPIC=zk_customer_search prompt=Implement customer search in a ZKoss screen
 
 Mandatory additional context:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```

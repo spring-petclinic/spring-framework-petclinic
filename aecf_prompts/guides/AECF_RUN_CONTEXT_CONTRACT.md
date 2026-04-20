@@ -64,7 +64,7 @@ Artefactos de gobernanza asociados que tambien deben existir tras una ejecucion 
 
 ### 3.3 Artefactos dinamicos de inteligencia
 
-`aecf_codebase_intelligence` debe dejar materializados en `.aecf/context/` los 8 artefactos estructurados:
+`aecf_codebase_intelligence` debe dejar materializados en `documentation/context/` los 8 artefactos estructurados:
 
 1. `STACK_JSON.json`
 2. `AECF_ARCHITECTURE_GRAPH.json`
@@ -105,7 +105,7 @@ Se obtiene al resolver AUTO + HUMAN. Es la capa combinada donde lo humano preval
 
 Es la version humana legible del contexto del proyecto para consumo directo por prompts y operadores del bundle.
 
-### 4.6 Los 8 artefactos de `.aecf/context/`
+### 4.6 Los 8 artefactos de `documentation/context/`
 
 Los genera `aecf_codebase_intelligence` como inventario estructurado y reutilizable del repositorio.
 
@@ -129,7 +129,7 @@ Interpretacion practica:
 
 ### 5.2 `aecf_codebase_intelligence`
 
-Una ejecucion prompt-only correcta de este skill no debe considerarse completa si falta cualquiera de los 8 artefactos de `.aecf/context/`.
+Una ejecucion prompt-only correcta de este skill no debe considerarse completa si falta cualquiera de los 8 artefactos de `documentation/context/`.
 
 Interpretacion practica:
 
@@ -242,13 +242,13 @@ Uso operativo:
 2. servir de contexto reutilizable para documentacion y razonamiento de arquitectura;
 3. complementar `AECF_PROJECT_CONTEXT.md` con una capa mas dinamica y tecnica.
 
-### 6.10 Uso de `.aecf/context/*` en la construccion del prompt efectivo
+### 6.10 Uso de `documentation/context/*` en la construccion del prompt efectivo
 
-En `aecf_prompts`, los artefactos de `.aecf/context/` deben entrar como capa reutilizable de inteligencia estructurada para skills dependientes del repositorio.
+En `aecf_prompts`, los artefactos de `documentation/context/` deben entrar como capa reutilizable de inteligencia estructurada para skills dependientes del repositorio.
 
 Uso operativo:
 
-1. antes de reexplorar el repo entero, revisar si ya existen artefactos estructurados relevantes en `.aecf/context/`;
+1. antes de reexplorar el repo entero, revisar si ya existen artefactos estructurados relevantes en `documentation/context/`;
 2. derivar desde esos artefactos un bloque compacto y filtrado para la ejecucion actual;
 3. filtrar por `TOPIC`, `surface`, skill y fase cuando aplique;
 4. priorizar evidencia resumida y reutilizable frente a pegar JSON completos;
@@ -256,7 +256,7 @@ Uso operativo:
 
 Regla practica:
 
-`.aecf/context/*` no sustituye al prompt del skill ni a `AECF_PROJECT_CONTEXT.md`; actua como capa estructurada de apoyo para construir mejor el prompt efectivo.
+`documentation/context/*` no sustituye al prompt del skill ni a `AECF_PROJECT_CONTEXT.md`; actua como capa estructurada de apoyo para construir mejor el prompt efectivo.
 
 ### 6.11 Uso de `WORKING_CONTEXT`
 
@@ -265,13 +265,13 @@ En `aecf_prompts`, `WORKING_CONTEXT` debe entenderse como un artefacto de eviden
 Uso operativo:
 
 1. se construye para una ejecucion concreta y para un `TOPIC` concreto;
-2. puede derivarse de `AECF_RUN_CONTEXT.json`, de los artefactos relevantes de `.aecf/context/` y de evidencia nueva descubierta durante esa ejecucion;
+2. puede derivarse de `AECF_RUN_CONTEXT.json`, de los artefactos relevantes de `documentation/context/` y de evidencia nueva descubierta durante esa ejecucion;
 3. debe congelar solo el recorte de evidencia necesario para la siguiente fase gobernada o para la fase final del skill;
-4. no debe reemplazar ni duplicar toda la inteligencia global de `.aecf/context/`.
+4. no debe reemplazar ni duplicar toda la inteligencia global de `documentation/context/`.
 
 Consecuencia practica:
 
-si dos `TOPIC` distintos trabajan sobre el mismo repo, ambos pueden compartir `.aecf/context/*` como base global, pero cada uno debe poder tener un `WORKING_CONTEXT` distinto segun su alcance.
+si dos `TOPIC` distintos trabajan sobre el mismo repo, ambos pueden compartir `documentation/context/*` como base global, pero cada uno debe poder tener un `WORKING_CONTEXT` distinto segun su alcance.
 
 ### 6.12 Secuencia recomendada para construir el prompt efectivo downstream
 
@@ -279,7 +279,7 @@ Para skills prompt-only dependientes del repositorio, la secuencia recomendada e
 
 1. cargar `AECF_RUN_CONTEXT.json` si existe para congelar idioma, atribucion y `surface`;
 2. cargar `AECF_PROJECT_CONTEXT.md` como capa humana base del proyecto;
-3. inspeccionar `.aecf/context/*` para reutilizar inteligencia estructurada ya generada;
+3. inspeccionar `documentation/context/*` para reutilizar inteligencia estructurada ya generada;
 4. derivar un bloque compacto de contexto filtrado para la ejecucion actual;
 5. si el skill es `DISCOVERY_FIRST`, congelar despues un `WORKING_CONTEXT` de esa ejecucion antes de la fase final;
 6. solo entonces completar el resto del prompt de skill o de fase.
@@ -290,7 +290,7 @@ En prompt-only conviene separar cuatro capas:
 
 1. `AECF_RUN_CONTEXT.json` = contrato congelado por `TOPIC`.
 2. `AECF_PROJECT_CONTEXT.*` = bootstrap y fuente de verdad del contexto del proyecto.
-3. `.aecf/context/*` = inteligencia dinamica reutilizable del repositorio.
+3. `documentation/context/*` = inteligencia dinamica reutilizable del repositorio.
 4. `WORKING_CONTEXT` = artefacto de evidencia acotado a una ejecucion/topic.
 
 No son equivalentes y no deben sustituirse entre si.
@@ -301,8 +301,8 @@ Para dejar el sistema estable antes de ejecutar skills multifase:
 
 1. inicializar o refrescar `AECF_RUN_CONTEXT.json` para el `TOPIC` real;
 2. ejecutar `aecf_project_context_generator` para fijar `AUTO`, `HUMAN`, `RESOLVED` y `AECF_PROJECT_CONTEXT.md`;
-3. ejecutar `aecf_codebase_intelligence` para fijar los 8 artefactos dinamicos en `.aecf/context/`;
-4. derivar desde `.aecf/context/*` el contexto filtrado que haga falta para la ejecucion actual;
+3. ejecutar `aecf_codebase_intelligence` para fijar los 8 artefactos dinamicos en `documentation/context/`;
+4. derivar desde `documentation/context/*` el contexto filtrado que haga falta para la ejecucion actual;
 5. si el skill es `DISCOVERY_FIRST`, congelar un `WORKING_CONTEXT` acotado al `TOPIC` antes de la fase final;
 6. ejecutar despues `aecf_new_feature`, `aecf_refactor`, `aecf_hotfix`, `aecf_new_test_set`, auditorias o documentacion reutilizando esos artefactos.
 
@@ -314,5 +314,5 @@ Si quieres controlar al 100% el contexto en `aecf_prompts`, la lectura correcta 
 2. `aecf_project_context_generator` fija el bootstrap estructurado del proyecto.
 3. `aecf_codebase_intelligence` fija la inteligencia dinamica reutilizable del repo.
 4. Los prompts de fase consumen `AECF_RUN_CONTEXT.json` y `AECF_PROJECT_CONTEXT.md` como entrada directa.
-5. Los skills posteriores reutilizan los artefactos de `.aecf/context/` para derivar contexto estructurado acotado a la ejecucion actual.
+5. Los skills posteriores reutilizan los artefactos de `documentation/context/` para derivar contexto estructurado acotado a la ejecucion actual.
 6. `WORKING_CONTEXT` queda reservado para el handoff de evidencia por ejecucion y por `TOPIC`, no para almacenar la inteligencia global del repo.

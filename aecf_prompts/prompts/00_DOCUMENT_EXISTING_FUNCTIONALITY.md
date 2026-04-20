@@ -15,6 +15,7 @@ This prompt operates under the following mandatory contexts:
 
 - aecf_prompts/AECF_SYSTEM_CONTEXT.md
 - <workspace_root>/AECF_PROJECT_CONTEXT.md (if present anywhere in the active workspace)
+- **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_RUN_CONTEXT.json`** — if present, use `output_language` as the frozen language for the entire execution.
 
 Governance:
 - aecf_prompts/_governance/AECF_EXECUTIVE_SUMMARY_GOVERNANCE.md
@@ -22,6 +23,16 @@ Governance:
 If any of these contexts exist, they MUST be considered active constraints.
 
 Execution is INVALID if these contexts are not acknowledged.
+
+------------------------------------------------------------
+
+## OUTPUT LANGUAGE
+
+1. Resolve `OUTPUT_LANGUAGE` from `AECF_RUN_CONTEXT.json` if it exists.
+2. If missing, use `OUTPUT_LANGUAGE` from `AECF_PROJECT_CONTEXT.md`.
+3. If both are missing, use ENGLISH.
+4. Visible narrative must use the resolved language.
+5. Control-plane contract elements must remain stable and in English where applicable.
 
 ------------------------------------------------------------
 
@@ -74,6 +85,7 @@ AECF_<NN>_
    - Truncate to max 20 characters if needed (Windows path limits)
    - Replace spaces with underscores
    - Convert to lowercase
+   - Reject reserved names: `context`
    - Store as {{TOPIC}} for this entire session
 
 2. IF user does NOT provide TOPIC:

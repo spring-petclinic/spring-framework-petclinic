@@ -9,7 +9,7 @@
 
 > **INSTRUCCIÓN PARA EL LLM:** DEBES cargar y leer los siguientes archivos ANTES de generar cualquier output. Si alguno no existe, indicarlo y ABORTAR.
 
-1. **`.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`** — contexto humano legible del proyecto.
+1. **`.aecf/documentation/AECF_PROJECT_CONTEXT.md`** — contexto humano legible del proyecto.
 2. **`<DOCS_ROOT>/AECF_PROJECT_CONTEXT.md`** — si existe, cargarlo como contexto humano legible del proyecto para restricciones, stack y convenciones.
 3. **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/AECF_RUN_CONTEXT.json`** — si existe, usar `output_language` como idioma congelado para toda la ejecución.
 4. **`<DOCS_ROOT>/<user_id>/{{TOPIC}}/01_<skill_name>_PLAN.md`** — plan aprobado (verificar que tiene veredicto GO en AUDIT_PLAN).

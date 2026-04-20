@@ -10,7 +10,7 @@
 
 | Field | Value |
 |-------|-------|
-| Timestamp (UTC) | 2026-04-17T00:00:00Z |
+| Timestamp (UTC) | 2026-04-20T15:35:00Z |
 | Executed By | lvillara |
 | Executed By ID | lvillara |
 | Execution Identity Source | git config user |
@@ -32,7 +32,7 @@
 | **Artifact** | `org.springframework.samples:spring-framework-petclinic` (WAR) |
 | **Description** | Spring Framework application based on JSP, Spring MVC, Spring Data JPA, Hibernate and JDBC — veterinary practice management demo |
 | **License** | Apache License 2.0 |
-| **Structural Hash** | `a3f2b1c4d5e6f708` |
+| **Structural Hash** | `b9e4d7a2c1f30856` |
 
 ---
 
@@ -55,6 +55,9 @@
 | Jakarta Servlet API | 6.1.0 |
 | Jakarta JPA API | 3.2.0 |
 | JSTL | 3.0.2 |
+| Jackson BOM | 3.1.1 |
+| JAXB Runtime | 4.0.7 |
+| SpringDoc OpenAPI | 2.8.0 |
 
 ### Frontend
 - JSP views + JSTL tags

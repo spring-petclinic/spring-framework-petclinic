@@ -15,6 +15,6 @@
   "surface_selection_confidence": 0.0,
   "missing_context": [],
   "context_files_to_load": [
-    ".aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md"
+    ".aecf/documentation/AECF_PROJECT_CONTEXT.md"
   ]
 }

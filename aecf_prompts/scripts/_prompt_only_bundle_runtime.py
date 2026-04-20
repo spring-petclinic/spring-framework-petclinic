@@ -361,26 +361,55 @@ def resolve_documentation_path_override() -> tuple[str, str] | tuple[None, None]
     return None, None
 
 
+def _read_artifacts_path_setting(workspace_root: Path) -> str | None:
+    """Read ``artifacts_path`` from global settings without importing settings module.
+
+    This avoids a circular import: settings.py already imports from this module.
+    """
+    path = workspace_root / ".aecf" / "user_settings.json"
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            value = data.get("artifacts_path")
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+    except (json.JSONDecodeError, OSError):
+        pass
+    return None
+
+
 def resolve_documentation_root(bundle_root: Path, *, create: bool = False) -> Path:
     """Resolve the prompt-only documentation root.
 
     Precedence:
-    1. `AECF_PROMPTS_DOCUMENTATION_PATH` when defined.
-    2. `AECF_PROMPTS_DIRECTORY_PATH` as legacy alias.
-    3. `<workspace>/.aecf/runtime/documentation` by default.
+    1. ``artifacts_path`` setting from ``.aecf/user_settings.json`` → ``<workspace>/.aecf/<artifacts_path>``.
+    2. ``AECF_PROMPTS_DOCUMENTATION_PATH`` env var (legacy).
+    3. ``AECF_PROMPTS_DIRECTORY_PATH`` env var (legacy alias).
+    4. ``<workspace>/.aecf/documentation`` by default.
 
-    Relative overrides are anchored to the user workspace that contains the
-    prompt-only bundle, not to the repository that produced the bundle.
+    The ``artifacts_path`` setting is always relative to ``<workspace>/.aecf/``.
+    Environment-variable overrides are anchored to the user workspace that
+    contains the prompt-only bundle, not to the repository that produced it.
     """
 
     bundle_path = Path(bundle_root).expanduser().resolve()
     workspace_root = resolve_workspace_root(bundle_path)
-    configured, _ = resolve_documentation_path_override()
-    if configured:
-        candidate = Path(configured).expanduser()
-        documentation_root = candidate.resolve() if candidate.is_absolute() else (workspace_root / candidate).resolve()
+
+    # 1. Check artifacts_path setting
+    artifacts_path = _read_artifacts_path_setting(workspace_root)
+    if artifacts_path:
+        documentation_root = (workspace_root / ".aecf" / artifacts_path).resolve()
     else:
-        documentation_root = (workspace_root / ".aecf" / "runtime" / "documentation").resolve()
+        # 2–3. Legacy env-var overrides
+        configured, _ = resolve_documentation_path_override()
+        if configured:
+            candidate = Path(configured).expanduser()
+            documentation_root = candidate.resolve() if candidate.is_absolute() else (workspace_root / candidate).resolve()
+        else:
+            # 4. Default fallback
+            documentation_root = (workspace_root / ".aecf" / "documentation").resolve()
 
     if create:
         documentation_root.mkdir(parents=True, exist_ok=True)

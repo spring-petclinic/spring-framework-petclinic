@@ -204,7 +204,7 @@ If the user does not pass stack explicitly, AECF can still infer it from persist
 
 The important artifact is STACK_JSON.json.
 
-Codebase intelligence can generate and persist that artifact under .aecf/context/. Repo intelligence can also provide stack evidence consumed by the same resolver. Knowledge loading also checks persisted stack artifacts under the AECF runtime/context folders.
+Codebase intelligence can generate and persist that artifact under documentation/context/. Repo intelligence can also provide stack evidence consumed by the same resolver. Knowledge loading also checks persisted stack artifacts under the AECF runtime/context folders.
 
 That allows a workflow like this:
 

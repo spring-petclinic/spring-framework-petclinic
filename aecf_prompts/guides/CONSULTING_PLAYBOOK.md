@@ -69,7 +69,7 @@ Empezar siempre con un skill TIER 1 para la primera demostración:
    - ¿Qué features pasan por AECF?
    - ¿Qué skills aplican?
    - ¿Quién hace las auditorías?
-   - ¿Dónde se guardan los documentos en `.aecf/runtime/documentation/`?
+   - ¿Dónde se guardan los documentos en `.aecf/documentation/`?
 
 ---
 
@@ -119,7 +119,7 @@ Regla práctica:
 ### Semana 1-2: Adopción inicial
 
 - [ ] El equipo ejecuta al menos 1 skill TIER 1 de forma autónoma
-- [ ] Los outputs se guardan en `.aecf/runtime/documentation/`
+- [ ] Los outputs se guardan en `.aecf/documentation/`
 - [ ] `AECF_PROJECT_CONTEXT.md` existe en la raíz del proyecto
 
 ### Semana 3-4: Adopción de gates
@@ -133,7 +133,7 @@ Regla práctica:
 
 - [ ] AECF se usa para todas las features nuevas
 - [ ] Los scores se usan como métrica de calidad
-- [ ] La documentación en `.aecf/runtime/documentation/` crece con cada feature
+- [ ] La documentación en `.aecf/documentation/` crece con cada feature
 - [ ] El equipo identifica qué skills necesita crear
 
 ---
@@ -146,7 +146,7 @@ Regla práctica:
 | Score promedio (features) | ≥ 60 | ≥ 75 |
 | % features con AECF | ≥ 30% | ≥ 70% |
 | Defectos en producción | Baseline | -30% vs baseline |
-| Documentos en `.aecf/runtime/documentation/` | ≥ 5 | ≥ 20 |
+| Documentos en `.aecf/documentation/` | ≥ 5 | ≥ 20 |
 
 ---
 

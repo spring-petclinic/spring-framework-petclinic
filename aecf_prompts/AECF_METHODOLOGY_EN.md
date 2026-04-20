@@ -295,7 +295,7 @@ documentation/
 Prompt-only operational rules:
 
 1. `aecf_prompts` remains a single shared folder per project.
-2. execution attribution resolves through `AECF_PROMPTS_USER_ID`, then model-level identifiers, then agent identifiers.
+2. execution attribution resolves through: `AECF_PROMPTS_USER_ID`, then `AECF_PROMPTS_MODEL_ID` or `MODEL_ID`, then `AECF_PROMPTS_AGENT_ID` or `AGENT_ID`, then `bootstrap_prompt_only_bundle.exe --diagnose-env` if available; if no source resolves, generate a random 8-character alphanumeric identifier prefixed with `user_` (e.g. `user_k7m2p9xa`). Never silently fall back to OS username or hostname.
 3. if the repository uses surfaces, minimum context should include `AECF_SURFACES_INDEX.*`, `AECF_RUN_CONTEXT.json`, and the active surface files.
 4. surface selection should be frozen before governed phases whenever possible.
 5. the automated component keeps its own runtime behavior; these rules apply specifically to prompt-only usage.

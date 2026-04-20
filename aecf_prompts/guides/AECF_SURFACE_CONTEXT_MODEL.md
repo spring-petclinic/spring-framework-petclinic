@@ -83,7 +83,7 @@ El modelo de `surface` se recomienda cuando ocurre al menos una de estas condici
 
 Archivo:
 
-- `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`
+- `.aecf/documentation/AECF_PROJECT_CONTEXT.md`
 
 Debe contener solo lo transversal y estable:
 
@@ -98,8 +98,8 @@ Debe contener solo lo transversal y estable:
 
 Archivos:
 
-- `.aecf/runtime/documentation/AECF_SURFACES_INDEX.md`
-- `.aecf/runtime/documentation/AECF_SURFACES_INDEX.json`
+- `.aecf/documentation/AECF_SURFACES_INDEX.md`
+- `.aecf/documentation/AECF_SURFACES_INDEX.json`
 
 Estos archivos describen:
 
@@ -113,11 +113,11 @@ Estos archivos describen:
 
 Carpeta recomendada:
 
-- `.aecf/runtime/documentation/surfaces/`
+- `.aecf/documentation/surfaces/`
 
 Archivo recomendado por `surface`:
 
-- `.aecf/runtime/documentation/surfaces/AECF_SURFACE_<surface_id>.md`
+- `.aecf/documentation/surfaces/AECF_SURFACE_<surface_id>.md`
 
 ### 4.4 Resolucion por TOPIC
 

@@ -57,7 +57,30 @@ def user_settings_path(workspace_root: Path, user_id: str) -> Path:
 
 # Each entry describes a configurable setting that affects aecf_prompts behavior.
 # Settings with a non-empty "allowed" list are closed enumerations: the user must
-# choose one of the listed values.
+# choose one of the listed values.  Settings with an empty "allowed" list are
+# free-form and use the optional "validate" callable for acceptance checks.
+
+_RESERVED_AECF_DIRS = frozenset({"context", "runtime"})
+
+
+def _validate_artifacts_path(value: str) -> tuple[bool, str]:
+    """Validate an artifacts_path value (must be a safe relative path under .aecf/)."""
+    if not value or not value.strip():
+        return False, "El valor no puede estar vacío."
+    # Reject absolute paths
+    if Path(value).is_absolute() or value.startswith("/") or value.startswith("\\"):
+        return False, "La ruta debe ser relativa a .aecf/, no absoluta."
+    # Reject ..
+    segments = value.replace("\\", "/").split("/")
+    if ".." in segments:
+        return False, "La ruta no puede contener '..' (traversal no permitido)."
+    # Reject reserved top-level names
+    top_level = segments[0].strip().lower()
+    if top_level in _RESERVED_AECF_DIRS:
+        return False, f"'{segments[0]}' es un directorio reservado de .aecf/ y no se puede usar como artifacts_path."
+    return True, ""
+
+
 SETTINGS_SCHEMA: dict[str, dict] = {
     "output_language": {
         "description": "Idioma de los outputs generados por AECF (prompts, artefactos, respuestas).",
@@ -74,6 +97,17 @@ SETTINGS_SCHEMA: dict[str, dict] = {
         "default": "auto",
         "aliases": ["language", "idiom", "idioma", "lang"],
         "impacts": ["AECF_RUN_CONTEXT.json → output_language", "todos los artefactos de fase"],
+    },
+    "artifacts_path": {
+        "description": "Ruta relativa a .aecf/ donde se guardan los artefactos generados por AECF (DOCS_ROOT).",
+        "allowed": [],
+        "labels": {},
+        "default": "documentation",
+        "aliases": ["docs_root", "documentation_path", "docs_path"],
+        "impacts": ["<DOCS_ROOT> resolution", "todas las rutas de artefactos de fase"],
+        "hint": "ruta relativa a .aecf/ (excluye context, runtime)",
+        "force_global": True,
+        "validate": _validate_artifacts_path,
     },
 }
 
@@ -180,7 +214,7 @@ def _format_show(workspace_root: Path, user_id: str | None, global_only: bool = 
         for key, schema in SETTINGS_SCHEMA.items():
             current = display_settings.get(key, schema["default"])
             label = schema["labels"].get(current, current)
-            allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"])
+            allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"]) if schema["allowed"] else schema.get("hint", "texto libre")
             source = "global" if key in display_settings else "default"
             lines.append(f"| `{key}` | `{current}` ({label}) — {source} | {allowed_str} |")
     else:
@@ -201,7 +235,7 @@ def _format_show(workspace_root: Path, user_id: str | None, global_only: bool = 
             else:
                 effective, source = schema["default"], "default"
             label = schema["labels"].get(effective, effective)
-            allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"])
+            allowed_str = ", ".join(f"`{v}`" for v in schema["allowed"]) if schema["allowed"] else schema.get("hint", "texto libre")
             lines.append(f"| `{key}` | `{effective}` ({label}) | {source} | {allowed_str} |")
 
     lines += [
@@ -223,8 +257,10 @@ def _format_show(workspace_root: Path, user_id: str | None, global_only: bool = 
         "```",
         "@aecf settings set output_language=es          # por usuario",
         "@aecf settings set output_language=es --global # para todos",
+        "@aecf settings set artifacts_path=mis_docs     # siempre global",
         "python aecf_prompts/scripts/settings.py set output_language=es",
         "python aecf_prompts/scripts/settings.py set output_language=es --global",
+        "python aecf_prompts/scripts/settings.py set artifacts_path=mis_docs --global",
         "```",
     ]
     return "\n".join(lines)
@@ -233,6 +269,31 @@ def _format_show(workspace_root: Path, user_id: str | None, global_only: bool = 
 def _format_set_options(key: str, schema: dict, bad_value: str | None = None) -> str:
     """Return markdown showing available values when value is missing or invalid."""
     lines: list[str] = []
+
+    if not schema["allowed"]:
+        # Free-form setting — show description and hint
+        lines += [
+            f"## AECF · settings set `{key}`",
+            "",
+            schema["description"],
+            "",
+            f"- Valor actual por defecto: `{schema['default']}`",
+            f"- Formato: {schema.get('hint', 'texto libre')}",
+        ]
+        if schema.get("force_global"):
+            lines.append("- Scope: siempre global")
+        scope_example = "" if schema.get("force_global") else "           # por usuario"
+        lines += [
+            "",
+            "Ejemplo de uso:",
+            "",
+            "```",
+            f"@aecf settings set {key}=<valor>{scope_example}",
+            f"python aecf_prompts/scripts/settings.py set {key}=<valor> --global",
+            "```",
+        ]
+        return "\n".join(lines)
+
     if bad_value:
         lines += [
             f"## AECF · settings set `{key}` — valor no válido",
@@ -315,11 +376,26 @@ def cmd_set(
         return 2
 
     schema = SETTINGS_SCHEMA[canonical_key]
-    value = raw_value.strip().lower()
 
-    if value not in schema["allowed"]:
-        print(_format_set_options(canonical_key, schema, bad_value=value))
-        return 1
+    # Force global scope for settings that require it
+    if schema.get("force_global"):
+        global_scope = True
+
+    if schema["allowed"]:
+        # Closed enumeration
+        value = raw_value.strip().lower()
+        if value not in schema["allowed"]:
+            print(_format_set_options(canonical_key, schema, bad_value=value))
+            return 1
+    else:
+        # Free-form with optional validation
+        value = raw_value.strip()
+        validator = schema.get("validate")
+        if validator:
+            ok, err = validator(value)
+            if not ok:
+                print(f"ERROR: {err}", file=sys.stderr)
+                return 2
 
     if global_scope:
         settings = load_global_settings(workspace_root)

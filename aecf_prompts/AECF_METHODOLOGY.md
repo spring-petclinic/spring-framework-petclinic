@@ -324,7 +324,7 @@ documentation/
 Reglas operativas del modo prompt-only:
 
 1. `aecf_prompts` debe permanecer como una única carpeta compartida por proyecto.
-2. La atribución correcta de ejecuciones requiere resolver, en este orden, `AECF_PROMPTS_USER_ID`, `AECF_PROMPTS_MODEL_ID` o `MODEL_ID`, y finalmente `AECF_PROMPTS_AGENT_ID` o `AGENT_ID`.
+2. La atribución correcta de ejecuciones requiere resolver, en este orden: `AECF_PROMPTS_USER_ID`, `AECF_PROMPTS_MODEL_ID` o `MODEL_ID`, `AECF_PROMPTS_AGENT_ID` o `AGENT_ID`, salida de `bootstrap_prompt_only_bundle.exe --diagnose-env` si disponible; si ninguna fuente resuelve, generar un identificador aleatorio de 8 caracteres alfanuméricos con prefijo `user_` (ej. `user_k7m2p9xa`). Nunca usar el nombre de usuario del SO ni el hostname como fallback silencioso.
 3. Si el repositorio usa `surfaces`, el contexto mínimo debe incluir `AECF_SURFACES_INDEX.*`, `AECF_RUN_CONTEXT.json` y los archivos de superficie activos.
 4. En modo prompt-only, la resolución de `surface` debe quedar congelada antes de entrar en fases gobernadas siempre que sea posible.
 5. El componente automatizado mantiene su propio comportamiento; este contrato aplica solo a `aecf_prompts`.

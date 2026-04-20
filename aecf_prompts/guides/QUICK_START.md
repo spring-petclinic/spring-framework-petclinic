@@ -40,7 +40,7 @@ mi-proyecto/
 └── ...
 ```
 
-> `.aecf/runtime/documentation/` se creará automáticamente para almacenar las salidas de cada skill/topic sin depender de la carpeta del bundle.
+> `.aecf/documentation/` se creará automáticamente para almacenar las salidas de cada skill/topic sin depender de la carpeta del bundle.
 
 Si el repositorio es grande, usa `AECF_PROJECT_CONTEXT.md` como capa global minima y particiona el resto del contexto con el modelo de `surface` descrito en `AECF_SURFACE_CONTEXT_MODEL.md`.
 
@@ -53,6 +53,8 @@ Prioridad canónica de atribución:
 1. `AECF_PROMPTS_USER_ID`
 2. `AECF_PROMPTS_MODEL_ID` o `MODEL_ID`
 3. `AECF_PROMPTS_AGENT_ID` o `AGENT_ID`
+4. Salida de `bootstrap_prompt_only_bundle.exe --diagnose-env` si disponible
+5. Fallback: identificador aleatorio con prefijo `user_` (ej. `user_k7m2p9xa`). Nunca se usa el nombre de usuario del SO ni el hostname.
 
 Si necesitas memoria específica, usa el identificador efectivo congelado en `AECF_RUN_CONTEXT.json`. Ver [AECF_MEMORY_MODEL.md](AECF_MEMORY_MODEL.md).
 
@@ -84,9 +86,9 @@ Si estás trabajando sobre la copia fuente del repo y no sobre el bundle entrega
 
 Esto crea o actualiza `aecf_forced_instructions.md` con el bloque canónico en inglés del bundle y deja `.github/copilot-instructions.md`, `copilot-instructions.md`, `CLAUDE.md`, `AGENTS.md` y `.codex/instructions.md` como superficies mínimas de carga.
 
-### 1.3 Crear .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+### 1.3 Crear .aecf/documentation/AECF_PROJECT_CONTEXT.md
 
-Crear en `.aecf/runtime/documentation/` con esta estructura mínima:
+Crear en `.aecf/documentation/` con esta estructura mínima:
 
 ```markdown
 # AECF Project Context
@@ -226,7 +228,7 @@ Cada prompt sabe:
 
 Todas las salidas se guardan dentro de `<DOCS_ROOT>/<user_id>/{{TOPIC}}/`.
 
-`<DOCS_ROOT>` usa `AECF_PROMPTS_DOCUMENTATION_PATH` si existe; si no, acepta `AECF_PROMPTS_DIRECTORY_PATH` como alias legado; si tampoco existe, cae por defecto en `<workspace>/.aecf/runtime/documentation`:
+`<DOCS_ROOT>` usa `artifacts_path` de `.aecf/user_settings.json` (como `.aecf/<artifacts_path>`) si está definido; si no, `AECF_PROMPTS_DOCUMENTATION_PATH` si existe; si no, acepta `AECF_PROMPTS_DIRECTORY_PATH` como alias legado; si tampoco existe, cae por defecto en `<workspace>/.aecf/documentation`:
 
 | Fase | Archivo de salida |
 | --- | --- |
@@ -244,7 +246,7 @@ Todas las salidas se guardan dentro de `<DOCS_ROOT>/<user_id>/{{TOPIC}}/`.
 ## 5. Tips
 
 - **Cada prompt sabe qué necesita** — no tienes que decirle al LLM qué cargar, el prompt lo manda
-- **La atribución correcta depende del primer identificador disponible** — `AECF_PROMPTS_USER_ID`, luego `AECF_PROMPTS_MODEL_ID`/`MODEL_ID`, y luego `AECF_PROMPTS_AGENT_ID`/`AGENT_ID`
+- **La atribución correcta depende del primer identificador disponible** — `AECF_PROMPTS_USER_ID`, luego `AECF_PROMPTS_MODEL_ID`/`MODEL_ID`, luego `AECF_PROMPTS_AGENT_ID`/`AGENT_ID`, luego `--diagnose-env`; si ninguno está disponible, se genera un ID aleatorio con prefijo `user_`
 - **Si el host de chat no ve el entorno, valida con `--diagnose-env`** — el `.exe` usa `os.environ` directamente y te dirá exactamente qué variables AECF están visibles para el bundle
 - **Congela el idioma por TOPIC** — usa `bootstrap_prompt_only_bundle.exe --topic ...` antes de la primera fase de cada ejecución real
 - **Si el repo es grande, activa una `surface` primaria** — evita cargar todo el contexto global si el trabajo toca solo una parte del sistema
@@ -290,7 +292,7 @@ Ejemplo conceptual para un flujo `new_feature`:
 use skill=new_feature TOPIC=zk_order_screen prompt=Crear una pantalla ZKoss para gestionar pedidos
 
 Antes de responder, lee también:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```
@@ -305,7 +307,7 @@ Para documentar o planificar sobre un proyecto Java con ZKoss:
 use skill=document_legacy TOPIC=zk_backoffice prompt=Documentar el módulo backoffice construido con ZUL y composers
 
 Contexto adicional obligatorio:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```
@@ -316,7 +318,7 @@ Para implementar una feature nueva:
 use skill=new_feature TOPIC=zk_customer_search prompt=Implementar búsqueda de clientes en una pantalla ZKoss
 
 Contexto adicional obligatorio:
-- .aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md
+- .aecf/documentation/AECF_PROJECT_CONTEXT.md
 - aecf_prompts/knowledge/domains/java/pack.md
 - aecf_prompts/knowledge/domains/java/semantic_profiles/zkoss.md
 ```
