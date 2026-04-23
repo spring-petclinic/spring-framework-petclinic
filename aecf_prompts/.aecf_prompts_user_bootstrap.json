@@ -1,16 +1,53 @@
 {
   "bootstrap_version": 5,
   "bundle_root_dir": "aecf_prompts",
-  "bundle_id": "bdl_20260420_08a4e3e3",
-  "bootstrapped_at_utc": "2026-04-20T16:59:32Z",
+  "bundle_id": "bdl_20260420_f5b1f490",
+  "bootstrapped_at_utc": "2026-04-20T20:00:30Z",
   "authorized_users": [
+    "dcyanes@virtualdesk.es",
+    "ejbucott@virtualdesk.es",
+    "emartin@virtualdesk.es",
     "fernando.garcia.varela@seachad.com",
+    "grodriguez@virtualdesk.es",
+    "lmartin@virtualdesk.es",
+    "lmartinh@virtualdesk.es",
     "luis.garcia-villaraco@seachad.com",
-    "usuario_prueba@seachad.com"
+    "rbetancourt@virtualdesk.es",
+    "usuario1@seachad.com",
+    "usuario2@seachad.com",
+    "usuario3@seachad.com",
+    "usuario4@seachad.com",
+    "usuario5@seachad.com",
+    "usuario6@seachad.com",
+    "usuario7@seachad.com"
   ],
   "authorized_principals": [
     {
+      "user_id": "dcyanes@virtualdesk.es",
+      "areas": []
+    },
+    {
+      "user_id": "ejbucott@virtualdesk.es",
+      "areas": []
+    },
+    {
+      "user_id": "emartin@virtualdesk.es",
+      "areas": []
+    },
+    {
       "user_id": "fernando.garcia.varela@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "grodriguez@virtualdesk.es",
+      "areas": []
+    },
+    {
+      "user_id": "lmartin@virtualdesk.es",
+      "areas": []
+    },
+    {
+      "user_id": "lmartinh@virtualdesk.es",
       "areas": []
     },
     {
@@ -18,7 +55,35 @@
       "areas": []
     },
     {
-      "user_id": "usuario_prueba@seachad.com",
+      "user_id": "rbetancourt@virtualdesk.es",
+      "areas": []
+    },
+    {
+      "user_id": "usuario1@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario2@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario3@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario4@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario5@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario6@seachad.com",
+      "areas": []
+    },
+    {
+      "user_id": "usuario7@seachad.com",
       "areas": []
     }
   ]

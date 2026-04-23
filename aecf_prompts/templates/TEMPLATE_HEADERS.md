@@ -41,7 +41,7 @@ After these standard fields, **document-type specific extension rows** are added
 | Scope | Files, modules, or directories in scope | YES | User or auto-resolved |
 | Phase | AECF phase that generated this document | YES | Defined per template in `@METADATA` directive |
 | Date | Generation date in `YYYY-MM-DD` format | YES | Auto-generated |
-| Timestamp (UTC) | Precise generation timestamp in UTC (ISO-8601, e.g., `2026-02-20T15:21:09Z`) | YES | Auto-generated |
+| Timestamp (UTC) | Precise generation timestamp in UTC (ISO-8601, e.g., `2026-02-20T15:21:09Z`). **When dispatched via MCP (`aecf_dispatch_skill`), use the `injected_at_utc` value from the dispatch response verbatim — do NOT substitute a date-only value or zero the time component.** | YES | Auto-generated; use `injected_at_utc` from MCP dispatch when available |
 | Executed By | User who triggered the execution. Preferred: VS Code logged-in user. Fallback: OS/session user | YES | Auto-detected |
 | Executed By ID | Stable user identifier when available (e.g., VS Code account/email/login). Use `N/A` if unavailable | YES | Auto-detected |
 | Execution Identity Source | Source used to resolve execution identity (`vscode_account`, `os_user`, `manual`, `unknown`) | YES | Auto-detected |

@@ -74,6 +74,24 @@ After file creation, update `<DOCS_ROOT>/<user_id>/AECF_TOPICS_INVENTORY.json` a
 
 Append entry to `<DOCS_ROOT>/<user_id>/AECF_CHANGELOG.md` with date, TOPIC, skill, artifact path, and summary. Create if missing.
 
+### 4.3 Generate/Update Stakeholder Summary (mandatory, every execution)
+
+After every skill execution, generate or update a **simplified stakeholder summary** at:
+```
+<DOCS_ROOT>/<user_id>/summaries/{{TOPIC}}_EXECUTIVE_SUMMARY.md
+```
+
+Rules:
+1. **Create** `summaries/` directory if it does not exist.
+2. **Use template** `templates/STAKEHOLDER_SUMMARY_TEMPLATE.md`.
+3. **Content**: a short, non-technical summary synthesizing the current state of the TOPIC based on ALL artifacts produced so far in `<DOCS_ROOT>/<user_id>/{{TOPIC}}/`. This is NOT a copy of the detailed artifact — it is a **simplified version for stakeholders**.
+4. **Cumulative**: each execution OVERWRITES the previous summary for the same TOPIC with the latest consolidated state.
+5. **Include artifacts table**: the `<details>` section at the bottom MUST list ALL `AECF_<NN>_*.md` files currently in the TOPIC folder, with their skill and date.
+6. **Language**: follows the resolved `output_language` for narrative text.
+7. **Audience**: written for non-technical stakeholders — avoid AECF-internal jargon, phase names, and governance terms. Translate findings into business impact.
+
+This summary is the **everyday review document** for stakeholders. The detailed artifacts in `<DOCS_ROOT>/<user_id>/{{TOPIC}}/` remain as execution detail for when deeper inspection is needed.
+
 ## Step 5: CONFIRM COMPLETION
 
 ```
@@ -81,6 +99,7 @@ Append entry to `<DOCS_ROOT>/<user_id>/AECF_CHANGELOG.md` with date, TOPIC, skil
 📄 File created: <DOCS_ROOT>/<user_id>/<TOPIC>/AECF_<NN>_<DOCUMENT_NAME>.md
 📊 TOPICS_INVENTORY updated: <TOPIC> → <STATUS>
 📝 CHANGELOG updated: <DOCS_ROOT>/<user_id>/AECF_CHANGELOG.md
+📋 Stakeholder summary: <DOCS_ROOT>/<user_id>/summaries/<TOPIC>_EXECUTIVE_SUMMARY.md
 ```
 
 ---

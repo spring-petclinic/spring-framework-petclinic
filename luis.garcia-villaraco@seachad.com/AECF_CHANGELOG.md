@@ -6,3 +6,9 @@
 - 2026-04-20T17:41:09Z | skillaecf_refactor_t | AUDIT_PLAN | luis.garcia-villaraco@seachad.com/skillaecf_refactor_t/AECF_04_AUDIT_PLAN.md | verdict: NO-GO
 - 2026-04-20T17:42:06Z | skillaecf_refactor_t | FIX_PLAN | luis.garcia-villaraco@seachad.com/skillaecf_refactor_t/AECF_05_FIX_PLAN.md | verdict: n/a
 - 2026-04-20T17:44:39Z | skillaecf_refactor_t | AUDIT_PLAN | luis.garcia-villaraco@seachad.com/skillaecf_refactor_t/AECF_06_AUDIT_PLAN.md | verdict: GO
+- 2026-04-20T17:59:46Z | aecf_skillaecf_docum | DOCUMENT_EXISTING | luis.garcia-villaraco@seachad.com/aecf_skillaecf_docum/AECF_01_DOCUMENT_LEGACY.md | verdict: n/a
+- 2026-04-22T08:28:00Z | aecf_skillnew_projec | INTAKE | luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/00_NEW_PROJECT_INTAKE.md | verdict: GO
+- 2026-04-22T08:30:00Z | aecf_skillnew_projec | PLAN | luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_01_NEW_PROJECT.md | verdict: GO
+- 2026-04-22T08:30:30Z | aecf_skillnew_projec | AUDIT_PLAN | luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_02_NEW_PROJECT_AUDIT_PLAN.md | verdict: GO
+- 2026-04-22T08:32:00Z | aecf_skillnew_projec | IMPLEMENT | luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_05_NEW_PROJECT_IMPLEMENT.md | verdict: GO
+- 2026-04-22T08:32:30Z | aecf_skillnew_projec | AUDIT_IMPLEMENT | luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_06_NEW_PROJECT_AUDIT.md | verdict: GO

@@ -47,6 +47,55 @@
           "registered_at": "2026-04-20T17:42:06Z"
         }
       ]
+    },
+    {
+      "topic": "aecf_skillaecf_docum",
+      "status": "ACTIVE",
+      "phases": [
+        {
+          "phase": "DOCUMENT_EXISTING",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillaecf_docum/AECF_01_DOCUMENT_LEGACY.md",
+          "verdict": "n/a",
+          "registered_at": "2026-04-20T17:59:46Z"
+        }
+      ]
+    }
+  ,
+    {
+      "topic": "aecf_skillnew_projec",
+      "status": "COMPLETE",
+      "phases": [
+        {
+          "phase": "INTAKE",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/00_NEW_PROJECT_INTAKE.md",
+          "verdict": "GO",
+          "registered_at": "2026-04-22T08:28:00Z"
+        },
+        {
+          "phase": "PLAN",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_01_NEW_PROJECT.md",
+          "verdict": "GO",
+          "registered_at": "2026-04-22T08:30:00Z"
+        },
+        {
+          "phase": "AUDIT_PLAN",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_02_NEW_PROJECT_AUDIT_PLAN.md",
+          "verdict": "GO",
+          "registered_at": "2026-04-22T08:30:30Z"
+        },
+        {
+          "phase": "IMPLEMENT",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_05_NEW_PROJECT_IMPLEMENT.md",
+          "verdict": "GO",
+          "registered_at": "2026-04-22T08:32:00Z"
+        },
+        {
+          "phase": "AUDIT_IMPLEMENT",
+          "doc_path": "luis.garcia-villaraco@seachad.com/aecf_skillnew_projec/AECF_06_NEW_PROJECT_AUDIT.md",
+          "verdict": "GO",
+          "registered_at": "2026-04-22T08:32:30Z"
+        }
+      ]
     }
   ]
 }

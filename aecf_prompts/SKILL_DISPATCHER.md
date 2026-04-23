@@ -115,12 +115,21 @@ Priority order:
 
 ### 2.3 TOPIC Directory
 
-Once TOPIC is resolved, ALL outputs go to:
+Once TOPIC is resolved, ALL detailed execution artifacts go to:
 ```
 <DOCS_ROOT>/<user_id>/{{TOPIC}}/
 ```
 
 `<DOCS_ROOT>` resolves as: `artifacts_path` setting from `.aecf/user_settings.json` (as `.aecf/<artifacts_path>`) → `AECF_PROMPTS_DOCUMENTATION_PATH` env var → `AECF_PROMPTS_DIRECTORY_PATH` (legacy alias) → `<workspace>/.aecf/documentation` (default).
+
+#### Stakeholder Summaries Directory
+
+Every skill execution MUST also generate/update a **simplified stakeholder summary** at:
+```
+<DOCS_ROOT>/<user_id>/summaries/{{TOPIC}}_EXECUTIVE_SUMMARY.md
+```
+
+This is a **parallel, cumulative document** separate from the detailed artifacts. It is updated (created or overwritten) after every skill execution for the same TOPIC. Its purpose is to provide a single, stakeholder-friendly entry point for each TOPIC without navigating the full artifact tree. See EXECUTION_PROTOCOL.md Step 4.3 for generation rules.
 
 ### 2.4 Sequential Numbering
 

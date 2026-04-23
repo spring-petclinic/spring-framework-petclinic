@@ -161,43 +161,43 @@ Mandatory ingress rules:
 
 ### Skill Routing Matrix
 
-| Skill | Tier | Ingress Mode | Canonical Handoff Artifact | Governed Destination | Notes |
-|-------|------|--------------|----------------------------|----------------------|-------|
-| `aecf_new_feature` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | New code generation must be routed into the full planning flow. |
-| `aecf_new_feature_ma` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | Same as `aecf_new_feature`, with multi-agent downstream flow. |
-| `aecf_hotfix` | TIER3 | `RESOLVE_TO_PLAN` | `INCIDENT_BRIEF` | `PLAN` | Urgency changes depth, not the need for governed planning. |
-| `aecf_refactor` | TIER3 | `DISCOVERY_FIRST` | `REFACTOR_SCOPE` | `PLAN` | Must delimit upstream files/problems before refactor planning. |
-| `aecf_new_test_set` | TIER3 | `DISCOVERY_FIRST` | `TEST_SCOPE` | `PLAN` | Test creation needs evidence of modules, tests, and runnable commands before planning; `execute=True` pre-approves the post-strategy implementation/report path. |
-| `aecf_system_replayability_adaptive` | TIER3 | `DISCOVERY_FIRST` | `ARCHITECTURE_SCOPE` | `PLAN` | Replayability design depends on architecture discovery first. |
-| `aecf_new_project` | TIER3 | `INTAKE_FIRST` | `INTAKE_CONTRACT` | `PLAN` | Mandatory project parameters must be resolved before planning. |
-| `aecf_document_legacy` | TIER2 | `RESOLVE_TO_FINAL` (default) / `RESOLVE_TO_PLAN` (`document_code=True`) | `DOCUMENT_SCOPE` | `SKILL_FINAL` (default) / `PLAN` (`document_code=True`) | Default mode stays read-only and lands in `AECF_DOCUMENT_LEGACY`; `document_code=True` routes through governed planning to allow documentation-only edits in code and docs. |
-| `aecf_explain_behavior` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Behavioral explanation must start from IDE-discovered evidence and land in `AECF_EXPLAIN_BEHAVIOR`, not a legacy generic final phase. |
-| `aecf_code_standards_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first audit that lands in `AECF_CODE_STANDARDS_AUDIT`. |
-| `aecf_security_review` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first security audit that lands in `AECF_SECURITY_REVIEW`. |
-| `aecf_security_review_gdpr` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_GDPR`. |
-| `aecf_security_review_eu_ai_act` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_EU_AI_ACT`. |
-| `aecf_security_review_dora` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_DORA`. |
-| `aecf_dependency_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Needs package/config evidence before the `AECF_DEPENDENCY_AUDIT` terminal phase. |
-| `aecf_tech_debt_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first debt assessment that lands in `AECF_TECH_DEBT_ASSESSMENT`. |
-| `aecf_coupling_assessment` | TIER1 | `DISCOVERY_FIRST` | `COUPLING_SCOPE` | `SKILL_FINAL` | Search-first coupling audit that lands in `AECF_COUPLING_ASSESSMENT` and routes remediation into `aecf_new_test_set` and `aecf_refactor`. |
-| `aecf_resolve_linting` | TIER2 | `RESOLVE_TO_FINAL` | `LINTING_SCOPE` | `SKILL_FINAL` | Resolves the deterministic `static_analysis_profile` and `static_analysis_matrix` into a reusable read-only quality contract before planning or implementation. |
-| `aecf_maturity_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Needs repository/process evidence before `AECF_MATURITY_ASSESSMENT`. |
-| `aecf_release_readiness` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Must inspect release evidence, docs, and artifacts before `AECF_RELEASE_READINESS`. |
-| `aecf_executive_summary` | TIER2 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Must scan topic artifacts before consolidating into `AECF_EXECUTIVE_SUMMARY`. |
-| `aecf_data_governance_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | Search-first governance audit that lands in `AECF_DATA_GOVERNANCE_AUDIT`. |
-| `aecf_document_context_ingestion` | TIER2 | `DISCOVERY_FIRST` | `SOURCE_CONTEXT` | `SKILL_FINAL` | First inventory and normalize external/documentary evidence before `AECF_DOCUMENT_CONTEXT_INGESTION`. |
-| `aecf_data_classification` | TIER1 | `DISCOVERY_FIRST` | `DATA_INVENTORY_SCOPE` | `SKILL_FINAL` | Must locate models, schemas, DTOs and stores before `AECF_DATA_CLASSIFICATION`. |
-| `aecf_ai_risk_assessment` | TIER1 | `RESOLVE_TO_FINAL` | `RISK_SCOPE` | `SKILL_FINAL` | Prompt resolution can stay permissive, but final assessment lands in `AECF_AI_RISK_ASSESSMENT`. |
-| `aecf_model_governance_audit` | TIER1 | `RESOLVE_TO_FINAL` | `MODEL_SCOPE` | `SKILL_FINAL` | Resolve AI-related scope first, then audit in `AECF_MODEL_GOVERNANCE_AUDIT`. |
-| `aecf_define_impact_metrics` | TIER2 | `RESOLVE_TO_FINAL` | `METRICS_SCOPE` | `SKILL_FINAL` | Resolve scope and success intent first, then generate the metrics spec in `AECF_DEFINE_IMPACT_METRICS`. |
-| `aecf_application_lifecycle` | TIER2 | `INTAKE_FIRST` | `LIFECYCLE_SCOPE` | `SKILL_FINAL` | The methodology identifier is mandatory, so the skill must block in intake until one accepted lifecycle standard is confirmed and then map AECF skills phase by phase. |
-| `aecf_productivity` | TIER2 | `DISCOVERY_FIRST` | `PRODUCTIVITY_SCOPE` | `SKILL_FINAL` | Must discover `TOPICS_INVENTORY` and `CHANGELOG` evidence first, then calculate per-person and group productivity KPIs in `AECF_PRODUCTIVITY`. When `verbose=true`, also reads topic artifacts for narrative and builds Cuadro de Mando. |
-| `aecf_data_strategy` | TIER2 | `RESOLVE_TO_FINAL` | `STRATEGY_SCOPE` | `SKILL_FINAL` | Design-only skill; enriched prompt resolution is acceptable before `AECF_DATA_STRATEGY`. |
-| `aecf_project_context_generator` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | The skill is itself a governed discovery/bootstrap phase and lands in `AECF_PROJECT_CONTEXT_GENERATOR`. |
-| `aecf_codebase_intelligence` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Phase-0 intelligence generator that lands in `AECF_CODEBASE_INTELLIGENCE`. |
-| `aecf_set_stack` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Same as codebase intelligence, but with explicit stack input and terminal phase `AECF_SET_STACK`. |
-| `aecf_surface_discovery` | TIER2 | `DIRECT_FINAL` | `codebase_intelligence_artifacts_present` | `SKILL_FINAL` | Phase-0 surface discovery; requires `aecf_codebase_intelligence` artifacts (NO-GO if missing); produces `AECF_SURFACE_DISCOVERY.md` + `surfaces_draft.md` for human validation; re-run enriches draft without replacing it. |
-| `aecf_bypass` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | Context-enriched direct prompt execution without AECF phases; produces `AECF_<NN>_BYPASS.md` with standard metadata. |
+| Skill | Tier | Ingress Mode | Canonical Handoff Artifact | Governed Destination | Upstream Type Accepted | Emits SCOPE_HANDOFF | Notes |
+|-------|------|--------------|----------------------------|----------------------|------------------------|:-------------------:|-------|
+| `aecf_new_feature` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | Exploratory (optional) | No | New code generation must be routed into the full planning flow. |
+| `aecf_new_feature_ma` | TIER3 | `RESOLVE_TO_PLAN` | `INTENT_BRIEF` | `PLAN` | Exploratory (optional) | No | Same as `aecf_new_feature`, with multi-agent downstream flow. |
+| `aecf_hotfix` | TIER3 | `RESOLVE_TO_PLAN` | `INCIDENT_BRIEF` | `PLAN` | Exploratory (optional) | No | Urgency changes depth, not the need for governed planning. |
+| `aecf_refactor` | TIER3 | `DISCOVERY_FIRST` | `REFACTOR_SCOPE` | `PLAN` | Diagnostic (mandatory) or Exploratory via SCOPE_HANDOFF (mandatory) | No | Must delimit upstream files/problems before refactor planning. Exploratory upstream accepted when SCOPE_HANDOFF block present. |
+| `aecf_new_test_set` | TIER3 | `DISCOVERY_FIRST` | `TEST_SCOPE` | `PLAN` | Exploratory (optional) | No | Test creation needs evidence of modules, tests, and runnable commands before planning; `execute=True` pre-approves the post-strategy implementation/report path. |
+| `aecf_system_replayability_adaptive` | TIER3 | `DISCOVERY_FIRST` | `ARCHITECTURE_SCOPE` | `PLAN` | — | No | Replayability design depends on architecture discovery first. |
+| `aecf_new_project` | TIER3 | `INTAKE_FIRST` | `INTAKE_CONTRACT` | `PLAN` | — | No | Mandatory project parameters must be resolved before planning. |
+| `aecf_document_legacy` | TIER2 | `RESOLVE_TO_FINAL` (default) / `RESOLVE_TO_PLAN` (`document_code=True`) | `DOCUMENT_SCOPE` | `SKILL_FINAL` (default) / `PLAN` (`document_code=True`) | — | **Yes** | Default mode stays read-only and lands in `AECF_DOCUMENT_LEGACY`; `document_code=True` routes through governed planning to allow documentation-only edits in code and docs. |
+| `aecf_explain_behavior` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | **Yes** | Behavioral explanation must start from IDE-discovered evidence and land in `AECF_EXPLAIN_BEHAVIOR`, not a legacy generic final phase. |
+| `aecf_code_standards_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first audit that lands in `AECF_CODE_STANDARDS_AUDIT`. Requires Coverage Self-Check at close. |
+| `aecf_security_review` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first security audit that lands in `AECF_SECURITY_REVIEW`. Requires Coverage Self-Check at close. |
+| `aecf_security_review_gdpr` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_GDPR`. |
+| `aecf_security_review_eu_ai_act` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_EU_AI_ACT`. |
+| `aecf_security_review_dora` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first regulatory audit that lands in `AECF_SECURITY_REVIEW_DORA`. |
+| `aecf_dependency_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Needs package/config evidence before the `AECF_DEPENDENCY_AUDIT` terminal phase. |
+| `aecf_tech_debt_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first debt assessment that lands in `AECF_TECH_DEBT_ASSESSMENT`. |
+| `aecf_coupling_assessment` | TIER1 | `DISCOVERY_FIRST` | `COUPLING_SCOPE` | `SKILL_FINAL` | — | No | Search-first coupling audit that lands in `AECF_COUPLING_ASSESSMENT` and routes remediation into `aecf_new_test_set` and `aecf_refactor`. |
+| `aecf_resolve_linting` | TIER2 | `RESOLVE_TO_FINAL` | `LINTING_SCOPE` | `SKILL_FINAL` | — | No | Resolves the deterministic `static_analysis_profile` and `static_analysis_matrix` into a reusable read-only quality contract before planning or implementation. |
+| `aecf_maturity_assessment` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Needs repository/process evidence before `AECF_MATURITY_ASSESSMENT`. |
+| `aecf_release_readiness` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Must inspect release evidence, docs, and artifacts before `AECF_RELEASE_READINESS`. |
+| `aecf_executive_summary` | TIER2 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Must scan topic artifacts before consolidating into `AECF_EXECUTIVE_SUMMARY`. |
+| `aecf_data_governance_audit` | TIER1 | `DISCOVERY_FIRST` | `WORKING_CONTEXT` | `SKILL_FINAL` | — | No | Search-first governance audit that lands in `AECF_DATA_GOVERNANCE_AUDIT`. |
+| `aecf_document_context_ingestion` | TIER2 | `DISCOVERY_FIRST` | `SOURCE_CONTEXT` | `SKILL_FINAL` | — | No | First inventory and normalize external/documentary evidence before `AECF_DOCUMENT_CONTEXT_INGESTION`. |
+| `aecf_data_classification` | TIER1 | `DISCOVERY_FIRST` | `DATA_INVENTORY_SCOPE` | `SKILL_FINAL` | — | No | Must locate models, schemas, DTOs and stores before `AECF_DATA_CLASSIFICATION`. |
+| `aecf_ai_risk_assessment` | TIER1 | `RESOLVE_TO_FINAL` | `RISK_SCOPE` | `SKILL_FINAL` | — | No | Prompt resolution can stay permissive, but final assessment lands in `AECF_AI_RISK_ASSESSMENT`. |
+| `aecf_model_governance_audit` | TIER1 | `RESOLVE_TO_FINAL` | `MODEL_SCOPE` | `SKILL_FINAL` | — | No | Resolve AI-related scope first, then audit in `AECF_MODEL_GOVERNANCE_AUDIT`. |
+| `aecf_define_impact_metrics` | TIER2 | `RESOLVE_TO_FINAL` | `METRICS_SCOPE` | `SKILL_FINAL` | — | No | Resolve scope and success intent first, then generate the metrics spec in `AECF_DEFINE_IMPACT_METRICS`. |
+| `aecf_application_lifecycle` | TIER2 | `INTAKE_FIRST` | `LIFECYCLE_SCOPE` | `SKILL_FINAL` | — | No | The methodology identifier is mandatory, so the skill must block in intake until one accepted lifecycle standard is confirmed and then map AECF skills phase by phase. |
+| `aecf_productivity` | TIER2 | `DISCOVERY_FIRST` | `PRODUCTIVITY_SCOPE` | `SKILL_FINAL` | — | No | Must discover `TOPICS_INVENTORY` and `CHANGELOG` evidence first, then calculate per-person and group productivity KPIs in `AECF_PRODUCTIVITY`. When `verbose=true`, also reads topic artifacts for narrative and builds Cuadro de Mando. |
+| `aecf_data_strategy` | TIER2 | `RESOLVE_TO_FINAL` | `STRATEGY_SCOPE` | `SKILL_FINAL` | — | No | Design-only skill; enriched prompt resolution is acceptable before `AECF_DATA_STRATEGY`. |
+| `aecf_project_context_generator` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | — | No | The skill is itself a governed discovery/bootstrap phase and lands in `AECF_PROJECT_CONTEXT_GENERATOR`. |
+| `aecf_codebase_intelligence` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | — | No | Phase-0 intelligence generator that lands in `AECF_CODEBASE_INTELLIGENCE`. |
+| `aecf_set_stack` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | — | No | Same as codebase intelligence, but with explicit stack input and terminal phase `AECF_SET_STACK`. |
+| `aecf_surface_discovery` | TIER2 | `DIRECT_FINAL` | `codebase_intelligence_artifacts_present` | `SKILL_FINAL` | — | No | Phase-0 surface discovery; requires `aecf_codebase_intelligence` artifacts (NO-GO if missing — artifacts are gitignored and must be regenerated locally); produces `AECF_SURFACE_DISCOVERY.md` + `surfaces_draft.md` for human validation; re-run enriches draft without replacing it. |
+| `aecf_bypass` | TIER2 | `DIRECT_FINAL` | `(none)` | `SKILL_FINAL` | — | No | Context-enriched direct prompt execution without AECF phases; produces `AECF_<NN>_BYPASS.md` with standard metadata. |
 Rule for new skills:
 
 - No new skill is complete until this matrix is updated with its canonical ingress mode, handoff artifact, and governed destination.
