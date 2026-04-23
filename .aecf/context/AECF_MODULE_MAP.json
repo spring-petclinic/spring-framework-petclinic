@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-04-17T00:00:00Z",
+  "project": "spring-framework-petclinic",
+  "modules": {
+    "bootstrap": [
+      "src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java"
+    ],
+    "model": [
+      "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Person.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Owner.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Pet.java",
+      "src/main/java/org/springframework/samples/petclinic/model/PetType.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Visit.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Vet.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Specialty.java",
+      "src/main/java/org/springframework/samples/petclinic/model/Vets.java",
+      "src/main/java/org/springframework/samples/petclinic/model/package-info.java"
+    ],
+    "service": [
+      "src/main/java/org/springframework/samples/petclinic/service/ClinicService.java",
+      "src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java"
+    ],
+    "repository_interfaces": [
+      "src/main/java/org/springframework/samples/petclinic/repository/OwnerRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/PetRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/VetRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/VisitRepository.java"
+    ],
+    "repository_jdbc": [
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVetRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPet.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRowMapper.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetVisitExtractor.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRowMapper.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jdbc/package-info.java"
+    ],
+    "repository_jpa": [
+      "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVetRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVisitRepositoryImpl.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/jpa/package-info.java"
+    ],
+    "repository_springdatajpa": [
+      "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataOwnerRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataPetRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataVetRepository.java",
+      "src/main/java/org/springframework/samples/petclinic/repository/springdatajpa/SpringDataVisitRepository.java"
+    ],
+    "controllers": [
+      "src/main/java/org/springframework/samples/petclinic/web/OwnerController.java",
+      "src/main/java/org/springframework/samples/petclinic/web/PetController.java",
+      "src/main/java/org/springframework/samples/petclinic/web/VisitController.java",
+      "src/main/java/org/springframework/samples/petclinic/web/VetController.java",
+      "src/main/java/org/springframework/samples/petclinic/web/CrashController.java"
+    ],
+    "formatters_validators": [
+      "src/main/java/org/springframework/samples/petclinic/web/PetTypeFormatter.java",
+      "src/main/java/org/springframework/samples/petclinic/web/PetValidator.java",
+      "src/main/java/org/springframework/samples/petclinic/web/package-info.java"
+    ],
+    "utilities": [
+      "src/main/java/org/springframework/samples/petclinic/util/CallMonitoringAspect.java",
+      "src/main/java/org/springframework/samples/petclinic/util/EntityUtils.java"
+    ],
+    "views_jsp": [
+      "src/main/webapp/WEB-INF/jsp/exception.jsp",
+      "src/main/webapp/WEB-INF/jsp/owners/createOrUpdateOwnerForm.jsp",
+      "src/main/webapp/WEB-INF/jsp/owners/findOwners.jsp",
+      "src/main/webapp/WEB-INF/jsp/owners/ownerDetails.jsp",
+      "src/main/webapp/WEB-INF/jsp/owners/ownersList.jsp",
+      "src/main/webapp/WEB-INF/jsp/pets/createOrUpdatePetForm.jsp",
+      "src/main/webapp/WEB-INF/jsp/pets/createOrUpdateVisitForm.jsp",
+      "src/main/webapp/WEB-INF/jsp/vets/vetList.jsp",
+      "src/main/webapp/WEB-INF/jsp/welcome.jsp"
+    ],
+    "views_tags": [
+      "src/main/webapp/WEB-INF/tags/bodyHeader.tag",
+      "src/main/webapp/WEB-INF/tags/footer.tag",
+      "src/main/webapp/WEB-INF/tags/htmlHeader.tag",
+      "src/main/webapp/WEB-INF/tags/inputField.tag",
+      "src/main/webapp/WEB-INF/tags/layout.tag",
+      "src/main/webapp/WEB-INF/tags/localDate.tag",
+      "src/main/webapp/WEB-INF/tags/menu.tag",
+      "src/main/webapp/WEB-INF/tags/menuItem.tag",
+      "src/main/webapp/WEB-INF/tags/pivotal.tag"
+    ],
+    "spring_config": [
+      "src/main/resources/spring/business-config.xml",
+      "src/main/resources/spring/datasource-config.xml",
+      "src/main/resources/spring/mvc-core-config.xml",
+      "src/main/resources/spring/mvc-view-config.xml",
+      "src/main/resources/spring/tools-config.xml",
+      "src/main/resources/spring/data-access.properties"
+    ],
+    "database_scripts": [
+      "src/main/resources/db/h2/schema.sql",
+      "src/main/resources/db/h2/data.sql",
+      "src/main/resources/db/hsqldb/schema.sql",
+      "src/main/resources/db/hsqldb/data.sql",
+      "src/main/resources/db/mysql/schema.sql",
+      "src/main/resources/db/mysql/data.sql",
+      "src/main/resources/db/postgresql/schema.sql",
+      "src/main/resources/db/postgresql/data.sql"
+    ],
+    "i18n": [
+      "src/main/resources/messages/messages.properties",
+      "src/main/resources/messages/messages_de.properties",
+      "src/main/resources/messages/messages_en.properties",
+      "src/main/resources/messages/messages_es.properties"
+    ],
+    "tests_model": [
+      "src/test/java/org/springframework/samples/petclinic/model/OwnerTests.java",
+      "src/test/java/org/springframework/samples/petclinic/model/PetTests.java",
+      "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "src/test/java/org/springframework/samples/petclinic/model/VetTests.java"
+    ],
+    "tests_service": [
+      "src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java",
+      "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJdbcTests.java",
+      "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJpaTests.java",
+      "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceSpringDataJpaTests.java"
+    ],
+    "tests_web": [
+      "src/test/java/org/springframework/samples/petclinic/web/CrashControllerTests.java",
+      "src/test/java/org/springframework/samples/petclinic/web/OwnerControllerTests.java",
+      "src/test/java/org/springframework/samples/petclinic/web/PetControllerTests.java",
+      "src/test/java/org/springframework/samples/petclinic/web/PetTypeFormatterTests.java",
+      "src/test/java/org/springframework/samples/petclinic/web/VetControllerTests.java",
+      "src/test/java/org/springframework/samples/petclinic/web/VisitControllerTests.java"
+    ],
+    "tests_load": [
+      "src/test/jmeter/petclinic_test_plan.jmx"
+    ],
+    "build_ci": [
+      "pom.xml",
+      "mvnw",
+      "mvnw.cmd",
+      ".mvn/wrapper/maven-wrapper.properties",
+      ".github/workflows/maven-build-main.yml",
+      ".github/workflows/maven-build-pull-request.yml"
+    ]
+  }
+}

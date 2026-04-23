@@ -1,0 +1,29 @@
+# AECF Federation Local Path Resolution — Example
+#
+# THIS FILE IS DEVELOPER-SPECIFIC AND MUST BE GITIGNORED.
+#
+# Each developer creates their own version at:
+#   .aecf/local/federation_paths.yaml
+#
+# This example shows two developer setups for the same federation.
+
+# --- Developer A (Windows, repos in different drives) ---
+# repos:
+#   api_robot: "C:\\SEACHAD\\API_ROBOT"
+#   flask_dashboards: "D:\\projects\\Flask_Dashboards"
+#   parser: "C:\\SEACHAD\\parser"
+#   powerbi: "C:\\SEACHAD\\PowerBI"
+
+# --- Developer B (Linux, repos under home) ---
+# repos:
+#   api_robot: "/home/dev/repos/api_robot"
+#   flask_dashboards: "/home/dev/repos/flask_dashboards"
+#   parser: "/home/dev/repos/parser"
+#   powerbi: "/home/dev/repos/powerbi"
+
+# --- Developer C (macOS, only two repos cloned locally) ---
+# repos:
+#   api_robot: "/Users/dev/code/api_robot"
+#   flask_dashboards: "/Users/dev/code/flask_dashboards"
+#   # parser: not cloned — AECF will use contract docs only
+#   # powerbi: not cloned — AECF will use contract docs only

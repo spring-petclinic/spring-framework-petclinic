@@ -1,0 +1,1457 @@
+{
+  "version": "1.0.0",
+  "always_include": [
+    "security"
+  ],
+  "nodes": [
+    {
+      "id": "python",
+      "title": "Python",
+      "type": "language",
+      "aliases": ["py"],
+      "domain_file": "domains/python/pack.md",
+      "children": ["flask", "django", "fastapi", "python-ai-stack"],
+      "source_ids": ["python-docs", "pytest-docs", "packaging-guide"],
+      "match": {
+        "languages": ["python"],
+        "frameworks": ["flask", "django", "fastapi", "pytest"],
+        "extensions": [".py"],
+        "manifests": ["pyproject.toml", "requirements.txt", "setup.py"],
+        "keywords": ["python", "flask", "django", "fastapi", "pytest", "pydantic"],
+        "path_fragments": ["src/", "tests/"]
+      }
+    },
+    {
+      "id": "flask",
+      "title": "Flask",
+      "type": "framework",
+      "parents": ["python"],
+      "activates": ["sqlalchemy", "redis", "celery", "microservices", "observability", "clean-architecture"],
+      "guidance": {
+        "rules": [
+          "Prefer an app factory and explicit extension wiring.",
+          "Keep HTTP transport thin; move business logic to services/use cases."
+        ],
+        "patterns": [
+          "Repository pattern around persistence.",
+          "Background jobs for slow or retriable work via Celery."
+        ],
+        "security_checks": [
+          "Validate input at the boundary and keep secrets out of config modules.",
+          "Require authn/authz before mutating endpoints."
+        ],
+        "refactor_rules": [
+          "Split blueprint routes from application services.",
+          "Do not hide side effects inside request handlers."
+        ]
+      },
+      "match": {
+        "frameworks": ["flask"],
+        "keywords": ["flask", "jinja", "blueprint"],
+        "path_fragments": ["flask", "wsgi.py"]
+      }
+    },
+    {
+      "id": "django",
+      "title": "Django",
+      "type": "framework",
+      "parents": ["python"],
+      "activates": ["postgresql", "clean-architecture", "observability"],
+      "guidance": {
+        "rules": [
+          "Keep settings modular and environment-specific.",
+          "Use service/use-case boundaries for non-trivial domain logic."
+        ],
+        "patterns": [
+          "Repository-like adapters around ORM-heavy areas.",
+          "Separate read/write concerns for admin-heavy modules when useful."
+        ],
+        "security_checks": [
+          "Keep CSRF/auth/session protections enabled by default."
+        ],
+        "refactor_rules": [
+          "Extract cross-app workflows from views and models into services."
+        ]
+      },
+      "match": {
+        "frameworks": ["django"],
+        "keywords": ["django", "manage.py", "wsgi", "asgi"],
+        "path_fragments": ["manage.py"]
+      }
+    },
+    {
+      "id": "fastapi",
+      "title": "FastAPI",
+      "type": "framework",
+      "parents": ["python"],
+      "activates": ["event-driven", "observability", "clean-architecture"],
+      "guidance": {
+        "rules": [
+          "Type annotate handlers and services consistently.",
+          "Keep async boundaries explicit and non-blocking."
+        ],
+        "patterns": [
+          "Dependency injection for infrastructure adapters.",
+          "Background tasks only for small non-critical follow-ups; use a queue for durable jobs."
+        ],
+        "security_checks": [
+          "Enforce auth scopes and validate request models."
+        ],
+        "refactor_rules": [
+          "Move orchestration out of routers into use-case modules."
+        ]
+      },
+      "match": {
+        "frameworks": ["fastapi"],
+        "keywords": ["fastapi", "pydantic", "uvicorn"],
+        "path_fragments": ["main.py", "api/"]
+      }
+    },
+    {
+      "id": "python-ai-stack",
+      "title": "Python AI stack",
+      "type": "framework",
+      "parents": ["python"],
+      "activates": ["rag", "vector-databases", "observability"],
+      "guidance": {
+        "rules": [
+          "Keep model code, retrieval code, and serving code in separate modules.",
+          "Version prompts, datasets, and evaluation criteria."
+        ],
+        "patterns": [
+          "RAG pipelines with explicit chunking, embedding, retrieval, and grounding steps."
+        ],
+        "security_checks": [
+          "Treat prompts, retrieved documents, and tool outputs as untrusted input."
+        ],
+        "refactor_rules": [
+          "Isolate embedding providers and vector stores behind adapters."
+        ]
+      },
+      "match": {
+        "keywords": ["langchain", "llamaindex", "rag", "embeddings", "vector database"]
+      }
+    },
+    {
+      "id": "java",
+      "title": "Java / JVM",
+      "type": "language",
+      "domain_file": "domains/java/pack.md",
+      "children": ["spring", "zkoss", "maven", "lombok", "lts_compatibility", "modernization"],
+      "source_ids": ["java-docs", "maven-docs", "gradle-docs"],
+      "match": {
+        "languages": ["java"],
+        "frameworks": ["spring", "maven", "gradle", "junit", "zkoss"],
+        "extensions": [".java", ".zul"],
+        "manifests": ["pom.xml", "build.gradle", "build.gradle.kts"],
+        "keywords": ["java", "spring", "maven", "gradle", "junit", "zkoss", "zul"],
+        "path_fragments": ["src/main/java", "src/test/java", "web-inf/zk.xml", ".zul"]
+      }
+    },
+    {
+      "id": "spring",
+      "title": "Spring",
+      "type": "framework",
+      "parents": ["java"],
+      "activates": ["jpa", "kafka", "microservices", "ddd", "clean-architecture", "observability"],
+      "guidance": {
+        "rules": [
+          "Keep configuration, controllers, and domain services separated.",
+          "Prefer constructor injection and clear transactional boundaries."
+        ],
+        "patterns": [
+          "DDD aggregates with repositories only at aggregate roots.",
+          "Kafka-driven integration for decoupled workflows."
+        ],
+        "security_checks": [
+          "Make security filters and role constraints explicit."
+        ],
+        "refactor_rules": [
+          "Split overly broad services by bounded context."
+        ]
+      },
+      "match": {
+        "frameworks": ["spring", "springboot"],
+        "keywords": ["spring", "spring boot", "@springbootapplication", "@restcontroller"],
+        "path_fragments": ["src/main/java"]
+      }
+    },
+    {
+      "id": "zkoss",
+      "title": "ZKoss",
+      "type": "framework",
+      "parents": ["java"],
+      "activates": ["clean-architecture"],
+      "guidance": {
+        "rules": [
+          "Keep ZUL views thin and route business use cases through application services.",
+          "Make session, desktop, and execution scoped state explicit and bounded."
+        ],
+        "patterns": [
+          "MVVM with binder-backed view models for complex forms.",
+          "Selector composers only when event wiring is clearer than binder commands."
+        ],
+        "security_checks": [
+          "Validate client-originated events and uploaded data on the server side.",
+          "Do not trust hidden fields or binder state as authorization proof."
+        ],
+        "refactor_rules": [
+          "Move business rules out of composers, view models, and ZUL expressions into application services."
+        ]
+      },
+      "match": {
+        "frameworks": ["zkoss"],
+        "keywords": ["zkoss", "zul", "selectorcomposer", "genericforwardcomposer", "@wire", "executions.createcomponents"],
+        "path_fragments": [".zul", "web-inf/zk.xml", "zul/"]
+      }
+    },
+    {
+      "id": "lombok",
+      "title": "Lombok",
+      "type": "tool",
+      "parents": ["java"],
+      "guidance": {
+        "rules": [
+          "Treat Lombok as boilerplate reduction, not as a replacement for explicit domain contracts.",
+          "Review generated equality, mutability, and constructor semantics intentionally."
+        ],
+        "patterns": [
+          "Prefer targeted annotations over broad bundles when intent matters."
+        ],
+        "security_checks": [
+          "Ensure generated toString or setters do not expose or weaken sensitive state."
+        ],
+        "refactor_rules": [
+          "Replace handwritten boilerplate with Lombok only when tests preserve object semantics."
+        ]
+      },
+      "match": {
+        "keywords": ["lombok", "@data", "@builder", "@getter", "@setter", "@requiredargsconstructor"]
+      }
+    },
+    {
+      "id": "maven",
+      "title": "Maven",
+      "type": "tool",
+      "parents": ["java"],
+      "guidance": {
+        "rules": [
+          "Keep Maven plugin ownership, dependency convergence, and compiler settings explicit across modules.",
+          "Preserve current parent or reactor structure unless the task explicitly changes build organization."
+        ],
+        "patterns": [
+          "Use dependency management or BOMs intentionally and separate unit versus integration test lifecycles clearly."
+        ],
+        "security_checks": [
+          "Review repository, plugin, and build-extension additions as supply-chain changes."
+        ],
+        "refactor_rules": [
+          "Separate build-lifecycle changes from business changes and prove compatibility with targeted tests."
+        ]
+      },
+      "match": {
+        "manifests": ["pom.xml"],
+        "keywords": ["maven", "maven-compiler-plugin", "maven-surefire-plugin", "maven-failsafe-plugin", "dependencymanagement"]
+      }
+    },
+    {
+      "id": "lts_compatibility",
+      "title": "Java LTS Compatibility",
+      "type": "architecture",
+      "parents": ["java"],
+      "guidance": {
+        "rules": [
+          "Make the minimum supported Java baseline explicit before using newer APIs or dependencies.",
+          "Keep compiler target, release, and toolchain settings aligned with the runtime support matrix."
+        ],
+        "patterns": [
+          "Use adapter seams when newer modules must coexist with older runtime consumers."
+        ],
+        "security_checks": [
+          "Review dependency and crypto support differences across the declared LTS baselines."
+        ],
+        "refactor_rules": [
+          "Separate compatibility hardening from business changes."
+        ]
+      },
+      "match": {
+        "keywords": ["java 8", "java 11", "java 21", "maven.compiler.source", "maven.compiler.release", "sourcecompatibility", "targetcompatibility"]
+      }
+    },
+    {
+      "id": "modernization",
+      "title": "Java Modernization",
+      "type": "architecture",
+      "parents": ["java"],
+      "guidance": {
+        "rules": [
+          "Prefer phased modernization behind stable seams instead of wide rewrites.",
+          "Keep backward-compatible contracts explicit while extracting APIs or modules."
+        ],
+        "patterns": [
+          "Use strangler-style extraction and anti-corruption layers around legacy components."
+        ],
+        "security_checks": [
+          "Re-evaluate auth, session, and exposure assumptions when moving legacy flows behind APIs."
+        ],
+        "refactor_rules": [
+          "Separate modernization work from feature work and prove parity with targeted tests."
+        ]
+      },
+      "match": {
+        "keywords": ["modernization", "migration", "incremental migration", "strangler", "api first", "api-first"]
+      }
+    },
+    {
+      "id": "angular",
+      "title": "Angular",
+      "type": "framework",
+      "domain_file": "domains/angular/pack.md",
+      "children": ["standalone_components", "ngrx_state_management"],
+      "activates": ["observability", "ci-cd"],
+      "source_ids": ["angular-docs", "rxjs-docs", "ngrx-docs"],
+      "match": {
+        "languages": ["typescript", "angular"],
+        "frameworks": ["angular", "rxjs", "ngrx", "angular material"],
+        "extensions": [".ts", ".html", ".scss"],
+        "manifests": ["angular.json", "package.json", "tsconfig.app.json"],
+        "keywords": ["angular", "@angular/core", "bootstrapapplication", "standalone: true", "@ngrx/store", "rxjs"],
+        "path_fragments": ["angular.json", "src/main.ts", "src/app/"]
+      }
+    },
+    {
+      "id": "standalone_components",
+      "title": "Angular Standalone Components",
+      "type": "architecture",
+      "parents": ["angular"],
+      "guidance": {
+        "rules": [
+          "Keep bootstrap, routing, and provider scope explicit in standalone Angular applications.",
+          "Use feature-local composition instead of rebuilding hidden module-style coupling."
+        ],
+        "patterns": [
+          "Standalone feature entry components paired with route configuration and focused providers."
+        ],
+        "security_checks": [
+          "Review guards, resolvers, and client-stored auth state as trust boundaries."
+        ],
+        "refactor_rules": [
+          "Separate standalone wiring changes from business behavior changes and verify route/provider parity."
+        ]
+      },
+      "match": {
+        "keywords": ["bootstrapapplication", "standalone: true", "providerouter", "providehttpclient", "environmentproviders"]
+      }
+    },
+    {
+      "id": "ngrx_state_management",
+      "title": "Angular NgRx State Management",
+      "type": "architecture",
+      "parents": ["angular"],
+      "guidance": {
+        "rules": [
+          "Keep NgRx focused on durable application state and preserve clear reducer, selector, and effect boundaries.",
+          "Avoid using the store as a default home for transient UI flags or form-only state."
+        ],
+        "patterns": [
+          "Selectors as read contracts and effects as async side-effect boundaries."
+        ],
+        "security_checks": [
+          "Review API-calling effects and replayable client state for token or sensitive-data exposure."
+        ],
+        "refactor_rules": [
+          "Separate state-model changes from unrelated component work and prove behavior through reducer/effect tests."
+        ]
+      },
+      "match": {
+        "keywords": ["@ngrx/store", "createreducer", "createeffect", "providestate", "provideeffects", "storemodule"]
+      }
+    },
+    {
+      "id": "csharp",
+      "title": "C#",
+      "type": "language",
+      "aliases": ["c#"],
+      "domain_file": "domains/csharp/pack.md",
+      "children": ["aspnetcore", "efcore"],
+      "activates": ["dotnet", "clean-architecture", "ci-cd"],
+      "source_ids": ["csharp-docs", "dotnet-docs"],
+      "match": {
+        "languages": ["c#", "csharp"],
+        "extensions": [".cs"],
+        "manifests": [".csproj", ".sln"],
+        "keywords": ["c#", "csharp", "async await", "linq", "nullable reference types", "record", "class library"],
+        "path_fragments": [".cs", ".csproj"]
+      }
+    },
+    {
+      "id": "aspnetcore",
+      "title": "ASP.NET Core Web API",
+      "type": "framework",
+      "parents": ["csharp"],
+      "activates": ["dotnet", "clean-architecture", "observability"],
+      "guidance": {
+        "rules": [
+          "Use composition root for DI; keep controllers thin.",
+          "Separate transport concerns from domain logic."
+        ],
+        "patterns": [
+          "Mediator or service injection for command/query handling.",
+          "Options pattern for typed configuration."
+        ],
+        "security_checks": [
+          "Apply [Authorize] explicitly; validate inputs at boundary."
+        ],
+        "refactor_rules": [
+          "Move business logic from controllers to service classes."
+        ]
+      },
+      "match": {
+        "frameworks": ["asp.net core", "aspnetcore"],
+        "keywords": ["asp.net core", "webapi", "minimal api", "controller"],
+        "path_fragments": ["Program.cs", "Controllers/"]
+      }
+    },
+    {
+      "id": "efcore",
+      "title": "Entity Framework Core",
+      "type": "framework",
+      "parents": ["csharp"],
+      "activates": ["dotnet"],
+      "guidance": {
+        "rules": [
+          "Keep DbContext scoped; use IEntityTypeConfiguration for entity config.",
+          "Separate read-optimized queries from write paths."
+        ],
+        "patterns": [
+          "Repository pattern or thin data-access layer around DbContext.",
+          "No-tracking queries for read-only operations."
+        ],
+        "security_checks": [
+          "Use parameterized queries; never concatenate user input into raw SQL."
+        ],
+        "refactor_rules": [
+          "Extract EF-specific code behind data-access abstractions."
+        ]
+      },
+      "match": {
+        "frameworks": ["entity framework", "efcore"],
+        "keywords": ["dbcontext", "entity framework core", "efcore", "migration", "DbSet"]
+      }
+    },
+    {
+      "id": "dotnet",
+      "title": ".NET",
+      "type": "language",
+      "domain_file": "domains/dotnet/pack.md",
+      "activates": ["clean-architecture", "ci-cd", "observability"],
+      "source_ids": ["dotnet-docs", "aspnet-docs"],
+      "match": {
+        "languages": ["c#", "f#", "vb.net", ".net", "dotnet"],
+        "manifests": [".csproj", ".sln"],
+        "keywords": ["dotnet", ".net", "asp.net core", "entity framework", "csharp"],
+        "path_fragments": ["program.cs", "startup.cs", ".csproj"]
+      }
+    },
+    {
+      "id": "businesscentral",
+      "title": "Business Central / AL",
+      "type": "framework",
+      "domain_file": "domains/businesscentral/pack.md",
+      "activates": ["security", "ci-cd"],
+      "source_ids": ["bc-al-docs", "bc-app-json", "bc-testing"],
+      "match": {
+        "languages": ["al"],
+        "frameworks": ["businesscentral", "business central"],
+        "extensions": [".al"],
+        "manifests": ["app.json"],
+        "keywords": ["business central", "businesscentral", "dynamics 365 business central", "al language", "al extension"],
+        "path_fragments": ["app.json", ".al"]
+      }
+    },
+    {
+      "id": "d365fo",
+      "title": "Dynamics 365 Finance and Operations / X++",
+      "type": "framework",
+      "domain_file": "domains/d365fo/pack.md",
+      "activates": ["security", "ci-cd", "azure"],
+      "source_ids": ["d365fo-docs", "d365fo-xpp-docs"],
+      "match": {
+        "languages": ["xpp", "x++"],
+        "frameworks": ["d365fo", "finance and operations"],
+        "extensions": [".xpp"],
+        "manifests": ["AxModelInfo.xml"],
+        "keywords": ["dynamics 365 finance", "dynamics 365 operations", "finance and operations", "d365fo", "x++", "xpp"],
+        "path_fragments": ["AxClass", "AxTable", "AxForm", "AxModelInfo.xml"]
+      }
+    },
+    {
+      "id": "d365ce",
+      "title": "Dynamics 365 Customer Engagement / CRM",
+      "type": "framework",
+      "domain_file": "domains/d365ce/pack.md",
+      "children": ["d365ce-plugin", "d365ce-webresource"],
+      "activates": ["dotnet", "security", "ci-cd"],
+      "source_ids": ["d365ce-docs", "d365ce-plugin-docs", "d365ce-webapi-docs"],
+      "match": {
+        "languages": ["c#", "javascript"],
+        "frameworks": ["d365ce", "customer engagement", "dataverse"],
+        "extensions": [".cs"],
+        "keywords": ["dynamics crm", "customer engagement", "d365ce", "dataverse", "dynamics 365 sales", "dynamics 365 service", "xrm sdk", "plugin"],
+        "path_fragments": ["Plugins/", "WebResources/"]
+      }
+    },
+    {
+      "id": "d365ce-plugin",
+      "title": "D365 CE C# Plugin",
+      "type": "framework",
+      "parents": ["d365ce"],
+      "activates": ["dotnet"],
+      "guidance": {
+        "rules": [
+          "One plugin class per logical operation; delegate to service/handler classes.",
+          "Use early-bound entity classes; avoid stringly-typed attribute access."
+        ],
+        "patterns": [
+          "Service locator via IServiceProvider for tracing and organization service.",
+          "Custom API and Custom Action patterns for reusable server-side operations."
+        ],
+        "security_checks": [
+          "Validate calling user context and execution depth to prevent recursion."
+        ],
+        "refactor_rules": [
+          "Extract business logic from Execute method into dedicated service classes."
+        ]
+      },
+      "match": {
+        "keywords": ["plugin", "IPlugin", "IOrganizationService", "dataverse plugin"]
+      }
+    },
+    {
+      "id": "d365ce-webresource",
+      "title": "D365 CE JavaScript Web Resource",
+      "type": "framework",
+      "parents": ["d365ce"],
+      "guidance": {
+        "rules": [
+          "Namespace-isolate all functions; use formContext from executionContext.",
+          "Use only supported Xrm SDK methods; avoid deprecated Xrm.Page."
+        ],
+        "patterns": [
+          "Module pattern for encapsulation and namespace isolation.",
+          "Thin event handlers delegating to business logic functions."
+        ],
+        "security_checks": [
+          "Do not expose secrets in client-side scripts; validate user roles before privileged actions."
+        ],
+        "refactor_rules": [
+          "Separate Xrm SDK calls from pure business logic for testability."
+        ]
+      },
+      "match": {
+        "keywords": ["web resource", "xrm sdk", "formContext", "Xrm.WebApi"]
+      }
+    },
+    {
+      "id": "d365marketing",
+      "title": "Dynamics 365 Marketing / Power Platform",
+      "type": "framework",
+      "domain_file": "domains/d365marketing/pack.md",
+      "children": ["d365marketing-pcf", "d365marketing-automate"],
+      "activates": ["d365ce", "security", "ci-cd"],
+      "source_ids": ["d365marketing-docs", "powerplatform-docs", "pcf-docs"],
+      "match": {
+        "languages": ["javascript", "typescript"],
+        "frameworks": ["d365marketing", "power platform", "pcf"],
+        "extensions": [".ts", ".js"],
+        "keywords": ["dynamics 365 marketing", "d365marketing", "real-time marketing", "power platform", "pcf", "power automate", "custom connector"],
+        "path_fragments": ["pcf/", "controls/", "ControlManifest."]
+      }
+    },
+    {
+      "id": "d365marketing-pcf",
+      "title": "D365 Marketing PCF Control",
+      "type": "framework",
+      "parents": ["d365marketing"],
+      "guidance": {
+        "rules": [
+          "Use TypeScript for PCF controls; keep ControlFramework lifecycle methods focused.",
+          "Keep controls single-responsibility and decoupled from specific entity schemas."
+        ],
+        "patterns": [
+          "ControlFramework init/updateView/destroy lifecycle.",
+          "Input/output property manifest for data binding."
+        ],
+        "security_checks": [
+          "Do not expose sensitive configuration in control manifest or client properties."
+        ],
+        "refactor_rules": [
+          "Extract rendering logic from lifecycle methods into composable functions."
+        ]
+      },
+      "match": {
+        "keywords": ["pcf", "PowerApps component framework", "ControlManifest"]
+      }
+    },
+    {
+      "id": "d365marketing-automate",
+      "title": "D365 Marketing Power Automate",
+      "type": "tool",
+      "parents": ["d365marketing"],
+      "guidance": {
+        "rules": [
+          "Use child flows for reusable automation fragments.",
+          "Use environment variables instead of hardcoded URLs or keys."
+        ],
+        "patterns": [
+          "Trigger-action-condition flows with explicit error handling.",
+          "Custom connector with OpenAPI definition for external integrations."
+        ],
+        "security_checks": [
+          "Review flow run-as context and connection ownership."
+        ],
+        "refactor_rules": [
+          "Break monolithic flows into composable child flows."
+        ]
+      },
+      "match": {
+        "keywords": ["power automate", "flow", "custom connector"]
+      }
+    },
+    {
+      "id": "react",
+      "title": "React",
+      "type": "framework",
+      "aliases": ["reactjs"],
+      "domain_file": "domains/react/pack.md",
+      "activates": ["observability", "ci-cd"],
+      "source_ids": ["react-docs", "vite-docs"],
+      "match": {
+        "languages": ["react"],
+        "frameworks": ["react", "vite", "next", "nextjs", "remix"],
+        "extensions": [".jsx", ".tsx"],
+        "keywords": ["react", "jsx", "tsx", "vite", "next.js", "nextjs"],
+        "path_fragments": ["src/components", "src/app", "app/"]
+      }
+    },
+    {
+      "id": "go",
+      "title": "Go",
+      "type": "language",
+      "aliases": ["golang"],
+      "domain_file": "domains/go/pack.md",
+      "activates": ["microservices", "event-driven", "observability", "ci-cd"],
+      "source_ids": ["go-docs"],
+      "match": {
+        "languages": ["go", "golang"],
+        "frameworks": ["gin", "echo", "fiber", "chi"],
+        "extensions": [".go"],
+        "manifests": ["go.mod"],
+        "keywords": ["golang", "go mod", "gin", "echo", "fiber", "chi", "gorilla/mux"],
+        "path_fragments": ["cmd/", "internal/", "go.mod"]
+      }
+    },
+    {
+      "id": "rust",
+      "title": "Rust",
+      "type": "language",
+      "aliases": ["rs"],
+      "domain_file": "domains/rust/pack.md",
+      "activates": ["clean-architecture", "ci-cd", "observability"],
+      "source_ids": ["rust-docs", "cargo-docs"],
+      "match": {
+        "languages": ["rust"],
+        "frameworks": ["cargo", "tokio", "axum", "actix", "rocket"],
+        "extensions": [".rs"],
+        "manifests": ["cargo.toml"],
+        "keywords": ["rust", "cargo", "tokio", "axum", "actix", "rocket"],
+        "path_fragments": ["src/main.rs", "src/lib.rs", "cargo.toml"]
+      }
+    },
+    {
+      "id": "node",
+      "title": "Node.js",
+      "type": "language",
+      "aliases": ["nodejs"],
+      "domain_file": "domains/node/pack.md",
+      "activates": ["event-driven", "observability", "ci-cd"],
+      "source_ids": ["node-docs", "npm-docs"],
+      "match": {
+        "languages": ["node", "nodejs"],
+        "frameworks": ["express", "fastify", "nestjs", "koa"],
+        "extensions": [".js", ".cjs", ".mjs"],
+        "keywords": ["node.js", "nodejs", "express", "fastify", "nestjs", "koa"],
+        "path_fragments": ["server.js", "src/server", "src/routes", "api/"]
+      }
+    },
+    {
+      "id": "cobol",
+      "title": "COBOL (legacy)",
+      "type": "language",
+      "domain_file": "domains/cobol/pack.md",
+      "children": ["ibm-zos"],
+      "activates": ["secure-coding", "ci-cd"],
+      "source_ids": ["cobol-docs", "ibm-zos-docs"],
+      "match": {
+        "languages": ["cobol"],
+        "extensions": [".cbl", ".cob", ".cpy"],
+        "keywords": ["cobol", "copybook", "cics", "jcl", "db2"],
+        "path_fragments": ["copybook", ".cbl", ".cpy"]
+      }
+    },
+    {
+      "id": "ibm-zos",
+      "title": "IBM z/OS",
+      "type": "legacy_platform",
+      "parents": ["cobol"],
+      "guidance": {
+        "rules": [
+          "Preserve batch/job orchestration assumptions and dataset naming contracts.",
+          "Treat copybooks and JCL as contract artefacts, not incidental files."
+        ],
+        "patterns": [
+          "Strangler integrations around stable batch or transaction boundaries."
+        ],
+        "security_checks": [
+          "Trace RACF/ACF2/TSS dependencies before changing operational flows."
+        ],
+        "refactor_rules": [
+          "Prefer wrapper/adaptor approaches over broad in-place rewrites."
+        ]
+      },
+      "match": {
+        "keywords": ["zos", "z/os", "jcl", "ims", "cics"]
+      }
+    },
+    {
+      "id": "clean-architecture",
+      "title": "Clean Architecture",
+      "type": "architecture",
+      "aliases": ["cleanarchitecture"],
+      "activates": ["repository-pattern"],
+      "guidance": {
+        "rules": [
+          "Keep domain and use cases independent from framework code.",
+          "Inbound and outbound adapters must depend inward only."
+        ],
+        "patterns": [
+          "Use ports/adapters for persistence, messaging, and external APIs."
+        ],
+        "security_checks": [
+          "Enforce authorization in use cases, not only in transport adapters."
+        ],
+        "refactor_rules": [
+          "Move framework imports away from the core domain."
+        ]
+      },
+      "match": {
+        "keywords": ["clean architecture", "ports and adapters", "hexagonal"]
+      }
+    },
+    {
+      "id": "microservices",
+      "title": "Microservices",
+      "type": "architecture",
+      "activates": ["observability", "docker", "ci-cd"],
+      "guidance": {
+        "rules": [
+          "Split services by bounded context and ownership, not by tables.",
+          "Make sync and async contracts explicit."
+        ],
+        "patterns": [
+          "Event-driven integration for cross-service workflows where eventual consistency is acceptable."
+        ],
+        "security_checks": [
+          "Authenticate service-to-service calls and track secret distribution."
+        ],
+        "refactor_rules": [
+          "Avoid distributed monolith patterns created by shared persistence."
+        ]
+      },
+      "match": {
+        "keywords": ["microservice", "microservices", "service mesh"]
+      }
+    },
+    {
+      "id": "ddd",
+      "title": "DDD",
+      "type": "architecture",
+      "aliases": ["domain-driven-design"],
+      "activates": ["repository-pattern", "event-driven"],
+      "guidance": {
+        "rules": [
+          "Align modules with bounded contexts and ubiquitous language.",
+          "Protect aggregate invariants inside the domain layer."
+        ],
+        "patterns": [
+          "Application services orchestrate aggregates, repositories, and domain events."
+        ],
+        "security_checks": [
+          "Do not leak authorization rules into persistence-only layers."
+        ],
+        "refactor_rules": [
+          "Rename technical modules to domain concepts when boundaries are clear."
+        ]
+      },
+      "match": {
+        "keywords": ["ddd", "domain driven design", "bounded context", "aggregate"]
+      }
+    },
+    {
+      "id": "event-driven",
+      "title": "Event-driven",
+      "type": "architecture",
+      "aliases": ["eventdriven"],
+      "activates": ["observability"],
+      "guidance": {
+        "rules": [
+          "Define event contracts, ownership, and delivery guarantees explicitly.",
+          "Separate command and event paths when retries differ."
+        ],
+        "patterns": [
+          "Outbox/inbox or idempotency patterns for reliable publication and consumption."
+        ],
+        "security_checks": [
+          "Validate producer identity and protect sensitive payloads."
+        ],
+        "refactor_rules": [
+          "Replace hidden side effects with explicit domain or integration events."
+        ]
+      },
+      "match": {
+        "keywords": ["event driven", "event-driven", "pubsub", "message bus"]
+      }
+    },
+    {
+      "id": "azure",
+      "title": "Azure",
+      "type": "platform",
+      "activates": ["ci-cd", "terraform", "observability"],
+      "source_ids": ["azure-docs"],
+      "guidance": {
+        "rules": [
+          "Keep resource naming, identity, and environment separation explicit.",
+          "Prefer managed identities over embedded secrets."
+        ],
+        "patterns": [
+          "IaC-driven provisioning with Terraform or Bicep and CI validation."
+        ],
+        "security_checks": [
+          "Review Key Vault, RBAC, network exposure, and tenant boundaries."
+        ],
+        "refactor_rules": [
+          "Isolate cloud SDK code behind adapters to keep domain logic portable."
+        ]
+      },
+      "match": {
+        "keywords": ["azure", "aks", "app service", "azure functions"]
+      }
+    },
+    {
+      "id": "aws",
+      "title": "AWS",
+      "type": "platform",
+      "activates": ["ci-cd", "terraform", "observability"],
+      "source_ids": ["aws-docs"],
+      "guidance": {
+        "rules": [
+          "Keep account/environment boundaries and IAM ownership explicit.",
+          "Prefer managed identities/roles instead of long-lived keys."
+        ],
+        "patterns": [
+          "Immutable infrastructure and repeatable deployments."
+        ],
+        "security_checks": [
+          "Review IAM least privilege, secrets, and public exposure."
+        ],
+        "refactor_rules": [
+          "Wrap AWS-specific integrations behind service adapters."
+        ]
+      },
+      "match": {
+        "keywords": ["aws", "lambda", "ecs", "eks", "sqs", "sns"]
+      }
+    },
+    {
+      "id": "kubernetes",
+      "title": "Kubernetes",
+      "type": "platform",
+      "aliases": ["k8s"],
+      "activates": ["docker", "observability", "security"],
+      "source_ids": ["kubernetes-docs"],
+      "guidance": {
+        "rules": [
+          "Keep manifests/chart values environment-aware and reproducible.",
+          "Design readiness, liveness, and resource limits intentionally."
+        ],
+        "patterns": [
+          "Twelve-factor configuration and explicit rollout/rollback strategy."
+        ],
+        "security_checks": [
+          "Review RBAC, pod security, secret mounts, and network policies."
+        ],
+        "refactor_rules": [
+          "Separate deployment topology concerns from application boot logic."
+        ]
+      },
+      "match": {
+        "keywords": ["kubernetes", "k8s", "helm", "deployment.yaml"]
+      }
+    },
+    {
+      "id": "vector-databases",
+      "title": "Vector databases",
+      "type": "data_ai",
+      "aliases": ["vectordb", "vector-db"],
+      "activates": ["rag", "observability"],
+      "guidance": {
+        "rules": [
+          "Separate indexing, retrieval, and reranking responsibilities.",
+          "Version embedding models and index rebuild procedures."
+        ],
+        "patterns": [
+          "Hybrid retrieval and metadata filtering for grounded answers."
+        ],
+        "security_checks": [
+          "Review document access filtering and tenant isolation."
+        ],
+        "refactor_rules": [
+          "Abstract vector store operations behind a repository/adapter."
+        ]
+      },
+      "match": {
+        "keywords": ["vector db", "vector database", "pinecone", "qdrant", "weaviate", "milvus"]
+      }
+    },
+    {
+      "id": "rag",
+      "title": "RAG",
+      "type": "data_ai",
+      "guidance": {
+        "rules": [
+          "Make retrieval, context assembly, and generation steps observable and testable.",
+          "Cite or ground outputs against retrieved evidence."
+        ],
+        "patterns": [
+          "Offline evaluation sets and online guardrails for retrieval quality."
+        ],
+        "security_checks": [
+          "Treat retrieved content and tool outputs as untrusted."
+        ],
+        "refactor_rules": [
+          "Keep prompt templates and retrieval policies versioned separately from app code."
+        ]
+      },
+      "match": {
+        "keywords": ["rag", "retrieval augmented generation"]
+      }
+    },
+    {
+      "id": "docker",
+      "title": "Docker",
+      "type": "devops",
+      "source_ids": ["docker-docs"],
+      "guidance": {
+        "rules": [
+          "Use deterministic base images and explicit build stages.",
+          "Keep runtime images minimal and non-root where feasible."
+        ],
+        "patterns": [
+          "Multi-stage builds with isolated dependency restore layers."
+        ],
+        "security_checks": [
+          "Review secrets leakage in layers and image privilege settings."
+        ],
+        "refactor_rules": [
+          "Move environment-specific values out of Dockerfiles into deployment config."
+        ]
+      },
+      "match": {
+        "manifests": ["docker-compose.yml", "docker-compose.yaml"],
+        "keywords": ["docker", "dockerfile", "compose"]
+      }
+    },
+    {
+      "id": "ci-cd",
+      "title": "CI/CD",
+      "type": "devops",
+      "aliases": ["cicd"],
+      "source_ids": ["github-actions-docs", "azure-devops-docs"],
+      "guidance": {
+        "rules": [
+          "Keep build, test, security, and deploy stages explicit and reproducible.",
+          "Fail fast on validation and security gates."
+        ],
+        "patterns": [
+          "Promotion pipelines with immutable artifacts and environment approvals."
+        ],
+        "security_checks": [
+          "Review secret scoping, runner trust, and supply-chain controls."
+        ],
+        "refactor_rules": [
+          "Extract reusable pipeline logic into shared templates/actions."
+        ]
+      },
+      "match": {
+        "keywords": ["ci/cd", "github actions", "azure pipelines", "gitlab ci"]
+      }
+    },
+    {
+      "id": "terraform",
+      "title": "Terraform",
+      "type": "devops",
+      "source_ids": ["terraform-docs"],
+      "guidance": {
+        "rules": [
+          "Keep modules small, composable, and environment-aware.",
+          "Pin providers and validate plans in CI."
+        ],
+        "patterns": [
+          "Remote state with locking and workspace/account separation."
+        ],
+        "security_checks": [
+          "Review secrets in variables, state exposure, and IAM grants."
+        ],
+        "refactor_rules": [
+          "Move repeated resource sets into versioned modules."
+        ]
+      },
+      "match": {
+        "keywords": ["terraform", "tfvars", "hcl"]
+      }
+    },
+    {
+      "id": "owasp",
+      "title": "OWASP",
+      "type": "security",
+      "source_ids": ["owasp-top10"],
+      "guidance": {
+        "rules": [
+          "Map code and architecture changes against the relevant OWASP risk classes.",
+          "Prefer concrete mitigations over generic security statements."
+        ],
+        "patterns": [
+          "Threat-model input validation, auth, secrets, and dependency risk in every change."
+        ],
+        "security_checks": [
+          "Review injection, authz, secrets, SSRF, unsafe deserialization, and supply-chain surfaces."
+        ],
+        "refactor_rules": [
+          "Extract reusable security controls into shared middleware/services."
+        ]
+      },
+      "match": {
+        "keywords": ["owasp", "top 10", "secure by design"]
+      }
+    },
+    {
+      "id": "secure-coding",
+      "title": "Secure coding",
+      "type": "security",
+      "aliases": ["securecoding"],
+      "guidance": {
+        "rules": [
+          "Treat all external input and generated output as untrusted.",
+          "Keep secret handling, authorization, and auditability explicit."
+        ],
+        "patterns": [
+          "Centralized validation, least privilege, and safe defaults."
+        ],
+        "security_checks": [
+          "Check authz, secrets, logging, error disclosure, and dependency provenance."
+        ],
+        "refactor_rules": [
+          "Remove duplicated security decisions from edge handlers and centralize them."
+        ]
+      },
+      "match": {
+        "keywords": ["secure coding", "security review", "threat model"]
+      }
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "type": "security",
+      "domain_file": "domains/security/pack.md",
+      "activates": ["owasp", "secure-coding"],
+      "guidance": {
+        "rules": [
+          "Security is a cross-cutting default, not an optional post-step.",
+          "Every generated change should include auth, secrets, validation, and logging considerations."
+        ],
+        "patterns": [
+          "Default to least privilege, explicit validation, and observable failure modes."
+        ],
+        "security_checks": [
+          "Review authn/authz, secret exposure, input validation, and dangerous deserialization."
+        ],
+        "refactor_rules": [
+          "Consolidate scattered security checks into shared, testable controls."
+        ]
+      },
+      "match": {
+        "keywords": ["security", "secure coding", "owasp", "auth", "authorization"]
+      }
+    },
+    {
+      "id": "observability",
+      "title": "Observability",
+      "type": "industry_pattern",
+      "guidance": {
+        "rules": [
+          "Emit logs, metrics, and traces aligned with service boundaries and critical paths.",
+          "Make failure, retry, and saturation visible."
+        ],
+        "patterns": [
+          "Correlation IDs, structured logs, SLO-aware dashboards, and alerting."
+        ],
+        "security_checks": [
+          "Do not leak secrets or sensitive payloads in telemetry."
+        ],
+        "refactor_rules": [
+          "Replace ad-hoc prints with structured telemetry abstractions."
+        ]
+      },
+      "match": {
+        "keywords": ["observability", "tracing", "metrics", "telemetry"]
+      }
+    },
+    {
+      "id": "repository-pattern",
+      "title": "Repository pattern",
+      "type": "industry_pattern",
+      "guidance": {
+        "rules": [
+          "Keep repository interfaces owned by the application/domain layer.",
+          "Hide persistence implementation details behind adapters."
+        ],
+        "patterns": [
+          "Separate query models from aggregate mutation paths when complexity warrants it."
+        ],
+        "security_checks": [
+          "Prevent authorization leakage by keeping data access guards explicit."
+        ],
+        "refactor_rules": [
+          "Move ORM-specific code out of business services."
+        ]
+      }
+    },
+    {
+      "id": "sqlalchemy",
+      "title": "SQLAlchemy",
+      "type": "library",
+      "guidance": {
+        "rules": [
+          "Keep session lifecycle explicit and scoped to use cases/requests."
+        ],
+        "patterns": [
+          "Repository/adaptor around ORM operations."
+        ],
+        "security_checks": [
+          "Parameterize queries and protect migration credentials."
+        ],
+        "refactor_rules": [
+          "Move model-to-domain translation out of handlers."
+        ]
+      },
+      "match": {
+        "keywords": ["sqlalchemy", "alembic"]
+      }
+    },
+    {
+      "id": "redis",
+      "title": "Redis",
+      "type": "library",
+      "guidance": {
+        "rules": [
+          "Make cache, queue, and lock usage explicit; do not mix roles blindly."
+        ],
+        "patterns": [
+          "Use TTLs, idempotency keys, and namespaced keys deliberately."
+        ],
+        "security_checks": [
+          "Review auth, network exposure, and sensitive payload storage."
+        ],
+        "refactor_rules": [
+          "Wrap direct client calls behind focused infrastructure services."
+        ]
+      },
+      "match": {
+        "keywords": ["redis"]
+      }
+    },
+    {
+      "id": "celery",
+      "title": "Celery",
+      "type": "tool",
+      "guidance": {
+        "rules": [
+          "Keep task payloads minimal and idempotent.",
+          "Separate orchestration tasks from domain logic."
+        ],
+        "patterns": [
+          "Retry policies and dead-letter handling for unstable integrations."
+        ],
+        "security_checks": [
+          "Review broker credentials and sensitive task payload handling."
+        ],
+        "refactor_rules": [
+          "Move long-running work out of HTTP request paths."
+        ]
+      },
+      "match": {
+        "keywords": ["celery"]
+      }
+    },
+    {
+      "id": "jpa",
+      "title": "JPA",
+      "type": "library",
+      "guidance": {
+        "rules": [
+          "Make transactional boundaries and fetch strategies explicit."
+        ],
+        "patterns": [
+          "Repository interfaces at aggregate/application boundaries."
+        ],
+        "security_checks": [
+          "Avoid unsafe dynamic query composition."
+        ],
+        "refactor_rules": [
+          "Keep entity mapping details out of service orchestration code."
+        ]
+      },
+      "match": {
+        "keywords": ["jpa", "hibernate"]
+      }
+    },
+    {
+      "id": "kafka",
+      "title": "Kafka",
+      "type": "tool",
+      "guidance": {
+        "rules": [
+          "Define topic ownership, schema evolution, and retry semantics."
+        ],
+        "patterns": [
+          "Outbox pattern and consumer idempotency."
+        ],
+        "security_checks": [
+          "Review ACLs, credentials, and PII in events."
+        ],
+        "refactor_rules": [
+          "Hide producer/consumer client specifics behind ports."
+        ]
+      },
+      "match": {
+        "keywords": ["kafka"]
+      }
+    },
+    {
+      "id": "postgresql",
+      "title": "PostgreSQL",
+      "type": "library",
+      "guidance": {
+        "rules": [
+          "Make schema ownership, migrations, and connection handling explicit."
+        ],
+        "patterns": [
+          "Migrations in CI and adapter-based access boundaries."
+        ],
+        "security_checks": [
+          "Review credential handling, TLS, and least-privilege roles."
+        ],
+        "refactor_rules": [
+          "Move ad-hoc SQL scattered across handlers into persistence adapters."
+        ]
+      },
+      "match": {
+        "keywords": ["postgres", "postgresql", "psql"]
+      }
+    },
+    {
+      "id": "c",
+      "title": "C",
+      "type": "language",
+      "domain_file": "domains/c/pack.md",
+      "children": ["c-embedded", "c-systems"],
+      "activates": ["security", "ci-cd"],
+      "source_ids": ["c-docs", "cmake-docs"],
+      "match": {
+        "languages": ["c"],
+        "extensions": [".c", ".h"],
+        "manifests": ["CMakeLists.txt", "Makefile"],
+        "keywords": ["c language", "posix", "embedded c", "systems programming"],
+        "path_fragments": ["src/", "include/", ".c", ".h"]
+      }
+    },
+    {
+      "id": "c-embedded",
+      "title": "C Embedded Systems",
+      "type": "framework",
+      "parents": ["c"],
+      "activates": ["secure-coding"],
+      "guidance": {
+        "rules": [
+          "Separate HAL from application logic; keep ISRs minimal.",
+          "Design for deterministic memory usage; prefer static allocation."
+        ],
+        "patterns": [
+          "HAL with register abstraction and driver interfaces.",
+          "State machines for protocol and device control logic."
+        ],
+        "security_checks": [
+          "Validate all external input from serial, network, and sensors."
+        ],
+        "refactor_rules": [
+          "Extract hardware register access behind abstraction layers."
+        ]
+      },
+      "match": {
+        "keywords": ["embedded", "firmware", "microcontroller", "rtos", "bare metal"]
+      }
+    },
+    {
+      "id": "c-systems",
+      "title": "C Systems Programming",
+      "type": "framework",
+      "parents": ["c"],
+      "activates": ["secure-coding"],
+      "guidance": {
+        "rules": [
+          "Always check return values of system calls and handle errors explicitly.",
+          "Pair every resource acquisition with a documented release path."
+        ],
+        "patterns": [
+          "Callback-based event loops for I/O multiplexing.",
+          "Opaque pointer pattern for encapsulation in C."
+        ],
+        "security_checks": [
+          "Drop unnecessary privileges early; validate all external input."
+        ],
+        "refactor_rules": [
+          "Separate system-level operations from application logic through abstractions."
+        ]
+      },
+      "match": {
+        "keywords": ["posix", "linux kernel", "unix", "system call", "daemon"]
+      }
+    },
+    {
+      "id": "cpp",
+      "title": "C++",
+      "type": "language",
+      "domain_file": "domains/cpp/pack.md",
+      "children": ["cpp-modern", "cpp-embedded", "cpp-qt", "cpp-game"],
+      "activates": ["security", "ci-cd"],
+      "source_ids": ["cpp-docs", "cmake-docs", "cpp-core-guidelines"],
+      "match": {
+        "languages": ["c++", "cpp"],
+        "extensions": [".cpp", ".hpp", ".cc", ".hh", ".cxx"],
+        "manifests": ["CMakeLists.txt", "Makefile", "meson.build"],
+        "keywords": ["c++", "cpp", "modern c++", "c++17", "c++20", "c++23", "raii"],
+        "path_fragments": ["src/", "include/", ".cpp", ".hpp"]
+      }
+    },
+    {
+      "id": "cpp-modern",
+      "title": "Modern C++ Application",
+      "type": "framework",
+      "parents": ["cpp"],
+      "activates": ["clean-architecture"],
+      "guidance": {
+        "rules": [
+          "Use RAII exclusively for resource management; no raw new/delete.",
+          "Prefer smart pointers; use unique_ptr for exclusive, shared_ptr only when genuinely shared."
+        ],
+        "patterns": [
+          "Type-safe variants and optionals for nullable or polymorphic values.",
+          "Value semantics with move support for efficient data transfer."
+        ],
+        "security_checks": [
+          "Use bounded containers; validate external input with strong typing."
+        ],
+        "refactor_rules": [
+          "Replace raw pointers with smart pointers; replace C-style casts with named casts."
+        ]
+      },
+      "match": {
+        "keywords": ["modern c++", "c++17", "c++20", "raii", "smart pointer"]
+      }
+    },
+    {
+      "id": "cpp-embedded",
+      "title": "C++ Embedded / Real-Time",
+      "type": "framework",
+      "parents": ["cpp"],
+      "activates": ["secure-coding"],
+      "guidance": {
+        "rules": [
+          "Use RAII with static or pool-based allocation; avoid heap in real-time paths.",
+          "Restrict or disable exceptions and RTTI on constrained platforms."
+        ],
+        "patterns": [
+          "CRTP for zero-cost polymorphism; static memory pools for bounded allocation."
+        ],
+        "security_checks": [
+          "Validate sensor and communication input at system boundaries."
+        ],
+        "refactor_rules": [
+          "Extract hardware register access behind type-safe abstractions."
+        ]
+      },
+      "match": {
+        "keywords": ["embedded c++", "rtos", "real-time", "bare metal c++", "constrained c++"]
+      }
+    },
+    {
+      "id": "cpp-qt",
+      "title": "C++ Qt",
+      "type": "framework",
+      "parents": ["cpp"],
+      "guidance": {
+        "rules": [
+          "Separate business logic from UI; use Model-View patterns.",
+          "Keep QObject ownership hierarchy explicit; parent-child manages lifetime."
+        ],
+        "patterns": [
+          "Signals and slots for decoupled communication.",
+          "Q_PROPERTY with NOTIFY signal for QML data binding."
+        ],
+        "security_checks": [
+          "Validate user input from forms; sanitize QML loaded from external sources."
+        ],
+        "refactor_rules": [
+          "Extract business logic from slots into testable service classes."
+        ]
+      },
+      "match": {
+        "keywords": ["qt", "qml", "qwidget", "qobject"]
+      }
+    },
+    {
+      "id": "cpp-game",
+      "title": "C++ Game / Graphics Engine",
+      "type": "framework",
+      "parents": ["cpp"],
+      "guidance": {
+        "rules": [
+          "Separate engine systems from game logic; design for frame-budget awareness.",
+          "Keep hot-path code cache-friendly with data-oriented design."
+        ],
+        "patterns": [
+          "ECS for composable game objects; custom allocators for predictable allocation."
+        ],
+        "security_checks": [
+          "Validate asset loading and deserialization from external files."
+        ],
+        "refactor_rules": [
+          "Decouple rendering API specifics from game logic."
+        ]
+      },
+      "match": {
+        "keywords": ["game engine", "unreal", "vulkan", "opengl", "directx", "ecs"]
+      }
+    }
+  ]
+}

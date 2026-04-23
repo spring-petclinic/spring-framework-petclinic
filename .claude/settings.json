@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__aecf__aecf_check_mcp",
+      "mcp__aecf__aecf_find_skills",
+      "mcp__aecf__aecf_list_skills",
+      "mcp__aecf__aecf_list_commands",
+      "mcp__aecf__aecf_list_topics",
+      "mcp__aecf__aecf_list_prompts",
+      "mcp__aecf__aecf_show_commands",
+      "mcp__aecf__aecf_show_prompt",
+      "mcp__aecf__aecf_show_guide",
+      "mcp__aecf__aecf_status",
+      "mcp__aecf__aecf_settings_show",
+      "mcp__aecf__aecf_context_examine",
+      "mcp__aecf__aecf_memory_list",
+      "mcp__aecf__aecf_memory_search",
+      "mcp__aecf__aecf_validate_metadata",
+      "mcp__aecf__aecf_dispatch_skill",
+      "mcp__aecf__aecf_register_output",
+      "mcp__aecf__aecf_phase_gate",
+      "mcp__aecf__aecf_topic_transition",
+      "mcp__aecf__aecf_score_audit"
+    ]
+  }
+}

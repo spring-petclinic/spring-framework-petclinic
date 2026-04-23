@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AECF Commands Explorer</title>
+  <meta name="description" content="AECF prompt-only commands explorer with status filters, MCP mapping, and quick-copy detail.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06060e;
+      --bg-soft: #0a0c1a;
+      --surface: rgba(10, 12, 28, 0.90);
+      --surface-strong: rgba(14, 16, 36, 0.96);
+      --surface-ink: #e0e8f0;
+      --text: #e0e8f0;
+      --muted: #7a8ba0;
+      --line: rgba(0, 224, 255, 0.12);
+      --shadow: 0 24px 60px rgba(0, 180, 255, 0.08);
+      --brand: #00e0ff;
+      --brand-2: #ff2d7b;
+      --brand-3: #7b2fff;
+      --ok: #00ff66;
+      --partial: #ffaa00;
+      --blocked: #ff4444;
+      --font-sans: "Segoe UI", "Aptos", "Trebuchet MS", sans-serif;
+      --font-display: "Georgia", "Palatino Linotype", serif;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 999px;
+      --max-width: 1480px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0, 224, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(123, 47, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #06060e 0%, #0a0c1a 38%, #0e1020 100%);
+      min-height: 100vh;
+    }
+    a { color: inherit; }
+    button, input, textarea { font: inherit; }
+    .page { max-width: var(--max-width); margin: 0 auto; padding: 28px 20px 56px; }
+    .hero, .panel, .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+    .hero {
+      border-radius: 32px;
+      padding: 30px;
+      display: grid;
+      gap: 18px;
+      background: linear-gradient(135deg, rgba(10, 12, 28, 0.95), rgba(8, 10, 24, 0.92));
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 224, 255, 0.12);
+      color: var(--brand);
+      width: fit-content;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 3.5vw, 4.1rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      max-width: 12ch;
+      text-shadow: 0 0 20px rgba(0, 224, 255, 0.40), 0 0 40px rgba(123, 47, 255, 0.20);
+    }
+    .hero p { margin: 0; max-width: 82ch; color: var(--muted); line-height: 1.6; }
+    .hero-actions, .chips, .command-metadata, .detail-badges { display: flex; flex-wrap: wrap; gap: 10px; }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .stat {
+      background: rgba(0, 224, 255, 0.06);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 20px;
+      padding: 16px 18px;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.8rem;
+      font-family: var(--font-display);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .toolbar {
+      margin-top: 24px;
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+    .toolbar-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) auto;
+      gap: 12px;
+    }
+    .search, .toggle, .composer-output {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search, .toggle { min-height: 52px; padding: 0 16px; }
+    .composer-output { min-height: 110px; padding: 14px 16px; resize: vertical; line-height: 1.55; }
+    .search:focus, .toggle:focus, .composer-output:focus { outline: none; border-color: rgba(0, 224, 255, 0.4); box-shadow: 0 0 0 4px rgba(0, 224, 255, 0.12); }
+    .filter-group { display: grid; gap: 10px; }
+    .filter-group header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .filter-group h2, .panel-header h2, .panel-header h3 { margin: 0; font-size: 1rem; }
+    .filter-group p, .panel-header p, .helper, .markdown p, .markdown li, .markdown blockquote { margin: 0; color: var(--muted); line-height: 1.6; }
+    .chip, .button, .button-link, .status-badge, .detail-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+    }
+    .chip.is-active { background: rgba(0, 224, 255, 0.14); border-color: rgba(0, 224, 255, 0.3); }
+    .chip-count { min-width: 1.8em; height: 1.8em; border-radius: var(--radius-sm); background: rgba(0, 224, 255, 0.06); display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; padding: 0 6px; }
+    .button { border: none; background: linear-gradient(135deg, var(--brand), #ff2d7b); color: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 10px 24px rgba(0, 224, 255, 0.15), 0 0 20px rgba(0, 224, 255, 0.20); }
+    .button-link { background: rgba(14, 16, 36, 0.9); }
+    .help-panel {
+      margin-top: 18px;
+      display: none;
+      gap: 10px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .help-panel.is-open { display: grid; }
+    .help-panel h2 { margin: 0; font-size: 1.05rem; }
+    .help-panel ul { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.65; }
+    .top-link { position: fixed; right: 20px; bottom: 20px; z-index: 12; background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: #fff; border: none; box-shadow: 0 16px 28px rgba(255, 45, 123, 0.20), 0 0 20px rgba(123, 47, 255, 0.15); }
+    .results-layout { margin-top: 24px; display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .panel { border-radius: var(--radius-xl); overflow: hidden; }
+    .panel-header { padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .command-list { max-height: calc(100vh - 260px); overflow: auto; padding: 14px; display: grid; gap: 12px; }
+    .command-card {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      border-radius: 18px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .command-card:hover, .command-card:focus-visible { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(0, 224, 255, 0.10); border-color: rgba(0, 224, 255, 0.32); outline: none; }
+    .command-card.is-selected { border-color: rgba(0, 224, 255, 0.42); box-shadow: inset 0 0 0 1px rgba(0, 224, 255, 0.18), 0 14px 28px rgba(0, 224, 255, 0.10); }
+    .command-card h3 { margin: 0 0 10px; font-size: 1rem; }
+    .command-code, .detail-code, .markdown code {
+      font-family: Consolas, "Courier New", monospace;
+      background: rgba(0, 224, 255, 0.06);
+      color: var(--brand);
+      border-radius: 10px;
+      padding: 4px 8px;
+      word-break: break-word;
+    }
+    .status-badge[data-status="Soportado"] { background: rgba(0, 255, 102, 0.12); color: var(--ok); }
+    .status-badge[data-status="Parcial"] { background: rgba(255, 170, 0, 0.12); color: var(--partial); }
+    .status-badge[data-status="No soportado"] { background: rgba(255, 68, 68, 0.12); color: var(--blocked); }
+    .detail { padding: 24px; display: grid; gap: 22px; }
+    .detail-top h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1.8rem, 2.8vw, 3rem); line-height: 1.05; }
+    .detail-top p, .detail-section p, .detail-section li { color: var(--muted); line-height: 1.6; }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .meta-box, .source-box, .catalog-render {
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      border-radius: 18px;
+      background: rgba(14, 16, 36, 0.80);
+      padding: 18px;
+      overflow: auto;
+    }
+    .meta-box strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 8px; }
+    .detail-section { display: grid; gap: 12px; }
+    .detail-section ul { margin: 0; padding-left: 20px; }
+    .markdown > :first-child { margin-top: 0; }
+    .markdown h1, .markdown h2 { font-family: var(--font-display); }
+    .markdown h1 { font-size: 2rem; }
+    .markdown h2 { font-size: 1.5rem; }
+    .markdown h3 { font-size: 1.12rem; }
+    .markdown pre { background: #0c0e18; color: #e0e8f0; border-radius: 16px; padding: 16px; overflow: auto; }
+    .markdown pre code { background: none; color: inherit; padding: 0; }
+    .markdown table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.4rem; font-size: 0.94rem; }
+    .markdown th, .markdown td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(0, 224, 255, 0.12); vertical-align: top; }
+    .markdown th { background: rgba(0, 224, 255, 0.06); color: var(--text); }
+    .markdown hr { border: none; height: 1px; background: rgba(0, 224, 255, 0.12); margin: 1.4rem 0; }
+    .empty-state { padding: 22px; color: var(--muted); }
+    .catalog-section { margin-top: 28px; }
+    @media (max-width: 1180px) { .results-layout { grid-template-columns: 1fr; } .command-list { max-height: 420px; } }
+    @media (max-width: 880px) { .toolbar-top { grid-template-columns: 1fr; } .hero { padding: 24px; } .detail { padding: 20px; } }
+  </style>
+</head>
+<body id="top">
+  <div class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <span class="eyebrow">AECF Commands Explorer</span>
+      <h1 id="page-title">AECF prompt-only commands</h1>
+      <p>Consulta la equivalencia de comandos `@aecf`, su estado real en prompt-only, el tool MCP preferido cuando exista y la ruta manual exacta cuando no haya runtime.</p>
+      <div class="hero-actions">
+        <a class="button-link" href="../../index.html">AECF Knowledge Center</a>
+        <a class="button-link" href="./SKILL_CATALOG.html">Ir a skills</a>
+        <a class="button-link" href="./GUIDE_VIEWER.html?doc=AECF_GUIDES_MASTER.md">Ir a guias</a>
+        <button class="button" type="button" id="help-toggle-button" aria-expanded="false">Help</button>
+      </div>
+      <div class="hero-stats" id="hero-stats"></div>
+    </section>
+
+    <section class="help-panel" id="help-panel" aria-live="polite">
+      <h2>Ayuda hiperresumida</h2>
+      <ul>
+        <li>Busca el comando por nombre, estado o fallback operativo.</li>
+        <li>La guía sigue cargando internamente la fuente canónica, pero ya no expone un enlace descargable al markdown.</li>
+        <li>`Ir a guias` abre el visor HTML del resto de documentación publicada.</li>
+        <li>El botón flotante permite volver arriba en documentos largos.</li>
+      </ul>
+    </section>
+
+    <section class="toolbar" aria-label="Filtros de comandos">
+      <div class="toolbar-top">
+        <input id="search-input" class="search" type="search" placeholder="Buscar por comando, fallback, MCP tool o resolución..." aria-label="Buscar comandos">
+        <select id="status-select" class="toggle" aria-label="Filtrar por estado"></select>
+      </div>
+      <div class="filter-group">
+        <header>
+          <div>
+            <h2>Estado de soporte</h2>
+            <p>Filtra por disponibilidad real en prompt-only.</p>
+          </div>
+          <p id="results-count"></p>
+        </header>
+        <div id="status-chips" class="chips"></div>
+      </div>
+    </section>
+
+    <section class="results-layout">
+      <aside class="panel" aria-labelledby="commands-panel-title">
+        <div class="panel-header">
+          <div>
+            <h2 id="commands-panel-title">Comandos</h2>
+            <p>Selecciona un comando para abrir su ficha operativa.</p>
+          </div>
+        </div>
+        <div id="command-list" class="command-list"></div>
+      </aside>
+      <section class="panel" aria-labelledby="detail-title">
+        <div id="command-detail" class="detail"></div>
+      </section>
+    </section>
+
+    <section class="panel catalog-section" aria-labelledby="catalog-title">
+      <div class="panel-header">
+        <div>
+          <h3 id="catalog-title">Guía completa renderizada</h3>
+          <p id="catalog-source-status">La guía renderiza internamente `AECF_PROMPT_ONLY_COMMANDS.md` como fuente canónica y usa el contenido embebido solo como fallback.</p>
+        </div>
+      </div>
+      <div id="catalog-render" class="catalog-render markdown"></div>
+    </section>
+  </div>
+
+  <a class="button top-link" href="#top" aria-label="Volver arriba">Volver arriba</a>
+
+  <script id="commands-fallback-markdown" type="text/plain"># AECF Prompt-Only Command Equivalents
+
+LAST_REVIEW: 2026-04-10
+OWNER SEACHAD
+
+---
+
+## 1. Objetivo
+
+Esta guía permite emular, en la medida de lo posible, la UX de `@aecf` usando `aecf_prompts/` y, cuando exista, el MCP incluido para el host. Si el MCP no está disponible, el fallback sigue siendo solo `aecf_prompts/`, sin componente, sin engine y sin tocar `embedded/`.
+
+La idea no es ejecutar comandos reales, sino dar al LLM un contrato estable para resolver una entrada tipo `@aecf ...` hacia los assets manuales de `aecf_prompts/`.
+
+Esto la hace válida para cualquier LLM que pueda:
+
+1. Leer archivos del workspace, o
+2. Recibir pegados los archivos relevantes en el chat.
+
+---
+
+## 2. Principio de resolución
+
+Sin componente, `@aecf` deja de ser un comando ejecutable y pasa a ser una intención textual. Si el host dispone del MCP AECF y existe un tool equivalente para ese comando, la resolución preferida pasa a ser MCP-first con fallback manual.
+
+El LLM debe interpretarlo así:
+
+1. Normalizar la intención del usuario.
+2. Resolver qué skill, prompt, guía o artefacto de `aecf_prompts/` corresponde.
+3. Devolver la respuesta o el siguiente paso manual exacto.
+4. Declarar explícitamente cuando algo no puede emularse sin runtime, memoria persistente, GitHub API o ejecución de código.
+
+---
+
+## 3. Contrato base para cualquier LLM
+
+Si quieres conservar sintaxis tipo `@aecf`, carga esta guía como contexto por defecto y aplica estas reglas:
+
+1. Si el usuario escribe `@aecf ...`, no digas que el comando no existe: si hay tool MCP equivalente, úsalo primero; si no, resuélvelo contra `aecf_prompts/`.
+2. Usa `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md` si existe.
+3. Si existen `AECF_SURFACES_INDEX.md` o `AECF_SURFACES_INDEX.json`, úsalos para resolver qué `surface` o `surfaces` deben cargarse para el trabajo actual.
+4. Usa `aecf_prompts/skills/` como fuente para flujos y skill selection.
+5. Usa `aecf_prompts/prompts/` como fuente de fases ejecutables.
+6. Usa `aecf_prompts/templates/`, `checklists/` y `scoring/` cuando la respuesta implique una fase AECF.
+7. Si existe `.aecf/memories/project/AECF_MEMORY.md`, cárgalo siempre antes de resolver skills o comandos.
+8. Si existe `.aecf/memories/project/AECF_MEMORY_<user_id>.md` para el usuario activo, cárgalo además del general.
+9. La atribución activa debe resolverse con esta prioridad: `AECF_PROMPTS_USER_ID`, `AECF_PROMPTS_MODEL_ID` o `MODEL_ID`, y finalmente `AECF_PROMPTS_AGENT_ID` o `AGENT_ID`.
+10. Si faltan archivos previos o artefactos, pídelo explícitamente o indica el siguiente artefacto a crear.
+11. Si el comando original dependía de runtime, VS Code, GitHub o estado persistente, responde con una variante manual equivalente y marca la limitación.
+12. Si la entrada coincide con una gramática explícita `@aecf <command>`, aplica primero el router del comando y, si existe tool MCP equivalente, úsalo antes de leer archivos adicionales estrictamente necesarios para la ruta manual.
+13. Evita empezar por búsquedas recursivas amplias o por documentación no canónica cuando el comando ya define rutas de verdad operativas.
+14. Para `@aecf memory list`, la resolución mínima empieza por `.aecf/memories/project/AECF_MEMORY.md`, `.aecf/memories/project/AECF_MEMORY_<user_id>.md` y `.aecf/memories/project/events/`; si esas rutas no existen, la respuesta correcta es "0 entradas" o "store no inicializado".
+
+### 3.1 MCP-first when available
+
+Si el host ha registrado el MCP de AECF y expone tools nativos, usa esta prioridad:
+
+1. Intentar el tool MCP equivalente.
+2. Si el tool no existe, no está conectado o falla, declarar ese fallo y caer al flujo manual descrito en esta guía.
+3. No resolver `aecf_list_commands` ni `aecf_show_commands` como búsquedas de archivo: son nombres de tools MCP y deben ejecutarse como tales cuando estén disponibles.
+
+Mapeo MCP preferido:
+
+| Intento del usuario | Tool MCP preferido | Fallback manual |
+| --- | --- | --- |
+| `@aecf list commands` | `aecf_list_commands` | Tabla de esta guía |
+| `@aecf show commands` | `aecf_show_commands` | Tabla de esta guía |
+| `@aecf list skills` | `aecf_list_skills` | Leer `aecf_prompts/skills/` |
+| `@aecf list prompts` | `aecf_list_prompts` | Leer `aecf_prompts/prompts/` |
+| `@aecf list topics` | `aecf_list_topics` | Inventario prompt-only |
+| `@aecf show prompt=<name>` | `aecf_show_prompt` | Cargar el prompt manualmente |
+| `@aecf show guide=<name>` | `aecf_show_guide` | Cargar la guía localizada o devolver traducción derivada |
+| `@aecf context` / `@aecf context examine` | `aecf_context_examine` | Leer `AECF_PROJECT_CONTEXT.md` y surfaces |
+| `@aecf find skills prompt=...` | `aecf_find_skills` | Resolver skills por intención |
+| `@aecf status [topic=...]` | `aecf_status` | `status.py` o inferencia manual |
+| `@aecf memory list` | `aecf_memory_list` | Leer memoria prompt-only |
+| `@aecf memory add ...` | `aecf_memory_add` | Escritura manual asistida |
+
+---
+
+## 4. Equivalencias canónicas
+
+| Comando `@aecf` | Equivalente prompt-only | Estado | Resolución esperada |
+| --- | --- | --- | --- |
+| `@aecf` | `@aecf list commands` | Soportado | Mostrar esta tabla de equivalencias y cómo usar `aecf_prompts/` |
+| `@aecf help` | Ayuda general | Soportado | Explicar sintaxis prompt-only, skills disponibles y comandos equivalentes |
+| `@aecf <command> help` | Ayuda por comando | Soportado | Mostrar gramática emulada, límites y ejemplos manuales |
+| `@aecf run skill=<skill> TOPIC=<topic> prompt=...` | `use skill=<skill> TOPIC=<topic> prompt=...` | Soportado | Cargar el skill, listar flujo y decir qué prompt de fase ejecutar a continuación |
+| `@aecf list commands` | Índice prompt-only | Soportado | Mostrar comandos emulados, parciales y no soportados |
+| `@aecf list skills` | Leer `aecf_prompts/skills/` | Soportado | Listar skills publicados y su uso recomendado |
+| `@aecf list prompts` | Leer `aecf_prompts/prompts/` | Soportado | Listar prompts de fase disponibles |
+| `@aecf show prompt=<name>` | Mostrar/sintetizar prompt | Soportado | Cargar el prompt indicado y explicarlo o reproducirlo |
+| `@aecf show guide=<name>` | Mostrar guía localizada | Soportado | Preferir `aecf_show_guide`; si no existe, leer `aecf_prompts/guides/` y aplicar localización/traducción derivada |
+| `@aecf show commands` | Alias de `list commands` | Soportado | Igual que `list commands` |
+| `@aecf show workspace_statistics` | Estadísticas del workspace por helper o inspección manual | Soportado | Preferir `python aecf_prompts/scripts/workspace_statistics.py`; si el host no ejecuta herramientas, reproducir el contrato leyendo el workspace y las exclusiones CI |
+| `@aecf find skills prompt=...` | Resolver skill por intención | Soportado | Recomendar uno o varios skills con justificación breve |
+| `@aecf context` / `@aecf context examine` | Examinar `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md` y, si existen, `AECF_SURFACES_INDEX.*` | Soportado | Resumir contexto, huecos, surfaces activables y riesgos de contexto incompleto |
+| `@aecf continue [topic=...]` | Reanudar desde artefactos existentes | Parcial | Detectar la última fase completada y proponer la siguiente fase manual |
+| `@aecf status [topic=...]` | Inspección de artefactos existentes | Soportado | Preferir `python aecf_prompts/scripts/status.py --topic <topic>`; si no puede ejecutarse, inferir estado desde `AECF_RUN_CONTEXT.json` y artefactos del topic |
+| `@aecf show settings` | Estado efectivo prompt-only | Soportado | Preferir `python aecf_prompts/scripts/show_settings.py`; si no puede ejecutarse, reproducir los valores efectivos de bundle, atribución, `DOCS_ROOT` y user settings |
+| `@aecf settings show` | Alias de `show settings` | Soportado | Igual que `@aecf show settings` |
+| `@aecf settings set <key>=<value>` | Cambiar un setting de usuario | Soportado | Preferir `python aecf_prompts/scripts/settings.py set <key>=<value>`; si el valor no pertenece al conjunto cerrado, mostrar opciones y pedir al usuario que elija |
+| `@aecf list topics` | Inventario de topics | Soportado | Leer `.aecf/runtime/documentation/<user_id>/AECF_TOPICS_INVENTORY.json` o `.md`; si falta, bootstrap desde artefactos existentes |
+| `@aecf resolve_issue ...` | Resolver issue pegando su contenido | Parcial | Pedir el body del issue o URL accesible; luego recomendar skill y plan manual |
+| `@aecf implement_feature ...` | Implementar feature pegando su contenido | Parcial | Pedir el texto de la feature; luego resolver a `new_feature` u otro skill |
+| `@aecf init` | Preparación manual | Parcial | Explicar bootstrap de `.aecf/runtime/documentation/AECF_PROJECT_CONTEXT.md`; usar la atribución resuelta por entorno si ya existe y solo pedirla si no puede resolverse |
+| `@aecf send issue` / `@aecf send feature` | Publicar tickets GitHub desde prompt-only | Soportado | Si el host puede ejecutar herramientas, generar un payload JSON y llamar a `python aecf_prompts/scripts/publish_github_ticket.py create --payload-file <file>`; si falla la API, usar la `compose_url` devuelta |
+| `@aecf create ...` | Proponer scaffold manual | Parcial | Puede generar el contenido sugerido, pero no materializarlo automáticamente |
+| `@aecf prueba ...` | Demo de UI | No soportado | Depende de webview/chat participante del componente |
+| `@aecf test skills ...` | Revisión documental de skills | Parcial | Puede revisar coherencia del skill, pero no ejecutar la suite del engine |
+| `@aecf memory ...` | Memoria general y por usuario | Parcial | Puede operar sobre `.aecf/memories/project/AECF_MEMORY.md` y `AECF_MEMORY_<user_id>.md` si existen |
+| `@aecf command ...` | Ejecutar CLIs | No soportado | Requiere runtime/herramientas del componente |
+
+---
+
+## 5. Gramática recomendada en prompt-only
+
+Puedes mantener la sintaxis literal de `@aecf`, o usar una forma neutra para LLMs genéricos:
+
+```text
+use command=<command> [args...]
+```
+
+Equivalencias recomendadas:
+
+```text
+@aecf run skill=new_feature TOPIC=billing prompt="Add rate limiter"
+use skill=new_feature TOPIC=billing prompt="Add rate limiter"
+
+@aecf list skills
+use command=list skills
+
+@aecf show prompt=00_PLAN
+use command=show prompt=00_PLAN
+```
+</script>
+
+  <script>
+    const fallbackMarkdownSource = document.getElementById("commands-fallback-markdown").textContent.replace(/^\n+/, "");
+    let markdownSource = fallbackMarkdownSource;
+    let parsed = null;
+    let commandData = [];
+    let statuses = [];
+
+    const state = {
+      search: "",
+      status: "all",
+      selectedCommand: null,
+      commandDraft: ""
+    };
+
+    const elements = {
+      heroStats: document.getElementById("hero-stats"),
+      statusSelect: document.getElementById("status-select"),
+      statusChips: document.getElementById("status-chips"),
+      searchInput: document.getElementById("search-input"),
+      resultsCount: document.getElementById("results-count"),
+      commandList: document.getElementById("command-list"),
+      commandDetail: document.getElementById("command-detail"),
+      catalogRender: document.getElementById("catalog-render"),
+      catalogSourceStatus: document.getElementById("catalog-source-status")
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function slugify(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "section";
+    }
+
+    function splitTableRow(line) {
+      return line.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((cell) => cell.trim());
+    }
+
+    function renderInline(text) {
+      let html = escapeHtml(text);
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      return html;
+    }
+
+    function renderMarkdown(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      let html = "";
+      let index = 0;
+      let inCode = false;
+      let codeLang = "";
+      let codeLines = [];
+      let listMode = null;
+      let tableLines = [];
+      let paragraphLines = [];
+      let blockquoteLines = [];
+
+      function flushParagraph() {
+        if (!paragraphLines.length) {
+          return;
+        }
+        html += `<p>${renderInline(paragraphLines.join(" "))}</p>`;
+        paragraphLines = [];
+      }
+
+      function flushList() {
+        if (!listMode) {
+          return;
+        }
+        html += `</${listMode}>`;
+        listMode = null;
+      }
+
+      function flushBlockquote() {
+        if (!blockquoteLines.length) {
+          return;
+        }
+        html += `<blockquote>${blockquoteLines.map((line) => `<p>${renderInline(line)}</p>`).join("")}</blockquote>`;
+        blockquoteLines = [];
+      }
+
+      function flushTable() {
+        if (!tableLines.length) {
+          return;
+        }
+        const rows = tableLines.map(splitTableRow);
+        if (rows.length >= 2) {
+          const header = rows[0];
+          const body = rows.slice(2);
+          html += "<table><thead><tr>" + header.map((cell) => `<th>${renderInline(cell)}</th>`).join("") + "</tr></thead><tbody>";
+          html += body.map((row) => `<tr>${row.map((cell) => `<td>${renderInline(cell)}</td>`).join("")}</tr>`).join("");
+          html += "</tbody></table>";
+        }
+        tableLines = [];
+      }
+
+      function flushAll() {
+        flushParagraph();
+        flushBlockquote();
+        flushList();
+        flushTable();
+      }
+
+      while (index < lines.length) {
+        const line = lines[index];
+        if (inCode) {
+          if (line.startsWith("```")) {
+            html += `<pre><code class="language-${escapeHtml(codeLang || "text")}">${escapeHtml(codeLines.join("\n"))}</code></pre>`;
+            inCode = false;
+            codeLang = "";
+            codeLines = [];
+          } else {
+            codeLines.push(line);
+          }
+          index += 1;
+          continue;
+        }
+        if (line.startsWith("```")) {
+          flushAll();
+          inCode = true;
+          codeLang = line.slice(3).trim();
+          index += 1;
+          continue;
+        }
+        if (!line.trim()) {
+          flushAll();
+          index += 1;
+          continue;
+        }
+        if (line.startsWith("|")) {
+          flushParagraph();
+          flushBlockquote();
+          flushList();
+          tableLines.push(line);
+          index += 1;
+          continue;
+        }
+        if (tableLines.length) {
+          flushTable();
+        }
+        const headingMatch = line.match(/^(#{1,4})\s+(.*)$/);
+        if (headingMatch) {
+          flushAll();
+          const level = headingMatch[1].length;
+          const title = headingMatch[2].trim();
+          html += `<h${level} id="${slugify(title)}">${renderInline(title)}</h${level}>`;
+          index += 1;
+          continue;
+        }
+        if (/^---+$/.test(line.trim())) {
+          flushAll();
+          html += "<hr>";
+          index += 1;
+          continue;
+        }
+        if (line.startsWith(">")) {
+          flushParagraph();
+          flushList();
+          blockquoteLines.push(line.replace(/^>\s?/, ""));
+          index += 1;
+          continue;
+        }
+        const unorderedMatch = line.match(/^[-*]\s+(.*)$/);
+        if (unorderedMatch) {
+          flushParagraph();
+          flushBlockquote();
+          if (listMode !== "ul") {
+            flushList();
+            listMode = "ul";
+            html += "<ul>";
+          }
+          html += `<li>${renderInline(unorderedMatch[1])}</li>`;
+          index += 1;
+          continue;
+        }
+        const orderedMatch = line.match(/^\d+\.\s+(.*)$/);
+        if (orderedMatch) {
+          flushParagraph();
+          flushBlockquote();
+          if (listMode !== "ol") {
+            flushList();
+            listMode = "ol";
+            html += "<ol>";
+          }
+          html += `<li>${renderInline(orderedMatch[1])}</li>`;
+          index += 1;
+          continue;
+        }
+        flushBlockquote();
+        flushList();
+        paragraphLines.push(line.trim());
+        index += 1;
+      }
+      flushAll();
+      return html;
+    }
+
+    function parseCommands(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      const commands = [];
+      const mcpMap = new Map();
+      let inEquivalenceTable = false;
+      let inMcpTable = false;
+
+      for (let index = 0; index < lines.length; index += 1) {
+        const line = lines[index];
+        if (line.trim() === "| Comando `@aecf` | Equivalente prompt-only | Estado | Resolución esperada |") {
+          inEquivalenceTable = true;
+          inMcpTable = false;
+          index += 1;
+          continue;
+        }
+        if (line.trim() === "| Intento del usuario | Tool MCP preferido | Fallback manual |") {
+          inMcpTable = true;
+          inEquivalenceTable = false;
+          index += 1;
+          continue;
+        }
+        if (line.startsWith("|") && inEquivalenceTable) {
+          if (/^\|\s*---/.test(line)) {
+            continue;
+          }
+          const row = splitTableRow(line);
+          if (row.length >= 4) {
+            commands.push({
+              command: row[0],
+              equivalent: row[1],
+              status: row[2],
+              resolution: row[3]
+            });
+          }
+          continue;
+        }
+        if (line.startsWith("|") && inMcpTable) {
+          if (/^\|\s*---/.test(line)) {
+            continue;
+          }
+          const row = splitTableRow(line);
+          if (row.length >= 3) {
+            mcpMap.set(row[0], { tool: row[1], manualFallback: row[2] });
+          }
+          continue;
+        }
+        if (!line.startsWith("|")) {
+          inEquivalenceTable = false;
+          inMcpTable = false;
+        }
+      }
+
+      const enriched = commands.map((item) => ({
+        ...item,
+        id: item.command.replace(/`/g, "").trim(),
+        mcp: mcpMap.get(item.command) || mcpMap.get(item.command.replace(/\s*\|.*$/, "")) || null
+      }));
+
+      return { commands: enriched };
+    }
+
+    function rebuildState() {
+      parsed = parseCommands(markdownSource);
+      commandData = parsed.commands;
+      statuses = ["all", ...Array.from(new Set(commandData.map((command) => command.status))).sort()];
+      if (!commandData.some((command) => command.id === state.selectedCommand)) {
+        state.selectedCommand = commandData[0] ? commandData[0].id : null;
+        state.commandDraft = "";
+      }
+    }
+
+    function countBy(items, getter) {
+      return items.reduce((map, item) => {
+        const key = getter(item);
+        map.set(key, (map.get(key) || 0) + 1);
+        return map;
+      }, new Map());
+    }
+
+    function getFilteredCommands() {
+      const query = state.search.trim().toLowerCase();
+      return commandData.filter((command) => {
+        const matchesStatus = state.status === "all" || command.status === state.status;
+        if (!matchesStatus) {
+          return false;
+        }
+        if (!query) {
+          return true;
+        }
+        const haystack = [command.command, command.equivalent, command.status, command.resolution, command.mcp?.tool || "", command.mcp?.manualFallback || ""].join(" ").toLowerCase();
+        return haystack.includes(query);
+      });
+    }
+
+    function buildCommandDraft(command) {
+      return [
+        `Command: ${command.command.replace(/`/g, "")}`,
+        `Prompt-only equivalent: ${command.equivalent.replace(/`/g, "")}`,
+        `Status: ${command.status}`,
+        `Expected resolution: ${command.resolution.replace(/`/g, "")}`,
+        command.mcp ? `Preferred MCP tool: ${command.mcp.tool.replace(/`/g, "")}` : "Preferred MCP tool: N/A",
+        command.mcp ? `Manual fallback: ${command.mcp.manualFallback.replace(/`/g, "")}` : "Manual fallback: Use the guide section for manual resolution"
+      ].join("\n");
+    }
+
+    function renderHeroStats() {
+      const countMap = countBy(commandData, (command) => command.status);
+      const items = [
+        { value: commandData.length, label: "comandos indexados" },
+        { value: countMap.get("Soportado") || 0, label: "soportados" },
+        { value: countMap.get("Parcial") || 0, label: "parciales" },
+        { value: countMap.get("No soportado") || 0, label: "no soportados" }
+      ];
+      elements.heroStats.innerHTML = items.map((item) => `<div class="stat"><strong>${item.value}</strong><span>${escapeHtml(item.label)}</span></div>`).join("");
+    }
+
+    function renderSelect() {
+      elements.statusSelect.innerHTML = statuses.map((status) => `<option value="${escapeHtml(status)}"${status === state.status ? " selected" : ""}>${escapeHtml(status === "all" ? "Todos los estados" : status)}</option>`).join("");
+    }
+
+    function renderStatusChips(filtered) {
+      const countMap = countBy(commandData, (command) => command.status);
+      elements.statusChips.innerHTML = statuses.map((status) => `<button type="button" class="chip${status === state.status ? " is-active" : ""}" data-status="${escapeHtml(status)}"><span>${escapeHtml(status === "all" ? "Todos" : status)}</span><span class="chip-count">${status === "all" ? commandData.length : (countMap.get(status) || 0)}</span></button>`).join("");
+      elements.statusChips.querySelectorAll(".chip").forEach((chip) => chip.addEventListener("click", () => {
+        state.status = chip.dataset.status;
+        renderApp();
+      }));
+      elements.resultsCount.textContent = `${filtered.length} resultado${filtered.length === 1 ? "" : "s"}`;
+    }
+
+    function ensureSelection(filtered) {
+      if (!filtered.length) {
+        state.selectedCommand = null;
+        state.commandDraft = "";
+        return;
+      }
+      if (!filtered.some((command) => command.id === state.selectedCommand)) {
+        state.selectedCommand = filtered[0].id;
+        state.commandDraft = "";
+      }
+    }
+
+    function renderCommandList(filtered) {
+      if (!filtered.length) {
+        elements.commandList.innerHTML = '<div class="empty-state">No hay comandos que cumplan los filtros actuales.</div>';
+        return;
+      }
+      elements.commandList.innerHTML = filtered.map((command) => `
+        <button type="button" class="command-card${command.id === state.selectedCommand ? " is-selected" : ""}" data-command-id="${escapeHtml(command.id)}">
+          <div class="command-metadata">
+            <span class="status-badge" data-status="${escapeHtml(command.status)}">${escapeHtml(command.status)}</span>
+          </div>
+          <h3>${renderInline(command.command)}</h3>
+          <p>${renderInline(command.equivalent)}</p>
+        </button>`).join("");
+      elements.commandList.querySelectorAll(".command-card").forEach((card) => card.addEventListener("click", () => {
+        state.selectedCommand = card.dataset.commandId;
+        state.commandDraft = "";
+        renderApp();
+      }));
+    }
+
+    function renderCommandDetail(filtered) {
+      const command = filtered.find((item) => item.id === state.selectedCommand);
+      if (!command) {
+        elements.commandDetail.innerHTML = '<div class="empty-state">Selecciona un comando para ver el detalle.</div>';
+        return;
+      }
+      const draft = state.commandDraft || buildCommandDraft(command);
+      elements.commandDetail.innerHTML = `
+        <div class="detail-top">
+          <div class="detail-badges">
+            <span class="status-badge" data-status="${escapeHtml(command.status)}">${escapeHtml(command.status)}</span>
+          </div>
+          <h2 id="detail-title">${renderInline(command.command)}</h2>
+          <p>${renderInline(command.resolution)}</p>
+        </div>
+        <div class="detail-grid">
+          <div class="meta-box"><strong>Equivalente prompt-only</strong><div class="detail-code">${renderInline(command.equivalent)}</div></div>
+          <div class="meta-box"><strong>Tool MCP preferido</strong><div class="detail-code">${command.mcp ? renderInline(command.mcp.tool) : "N/A"}</div></div>
+          <div class="meta-box"><strong>Fallback manual</strong><div>${command.mcp ? renderInline(command.mcp.manualFallback) : "Consultar la guía completa renderizada."}</div></div>
+        </div>
+        <section class="detail-section">
+          <h3>Bloque copiable</h3>
+          <textarea id="command-output" class="composer-output">${escapeHtml(draft)}</textarea>
+          <div class="hero-actions">
+            <button type="button" class="button" id="copy-command-button">Copiar bloque</button>
+            <a class="button-link" href="./SKILL_CATALOG.html">Ver skills relacionadas</a>
+          </div>
+          <p class="helper">Este bloque resume el contrato operativo del comando para pegarlo en otro chat o LLM.</p>
+        </section>
+      `;
+      const commandOutput = document.getElementById("command-output");
+      commandOutput.addEventListener("input", () => {
+        state.commandDraft = commandOutput.value;
+      });
+      document.getElementById("copy-command-button").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(commandOutput.value);
+      });
+    }
+
+    async function loadCanonicalMarkdown() {
+      try {
+        const response = await fetch("./AECF_PROMPT_ONLY_COMMANDS.md", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const canonicalMarkdown = (await response.text()).replace(/^\uFEFF/, "").replace(/^\n+/, "");
+        if (canonicalMarkdown.trim()) {
+          markdownSource = canonicalMarkdown;
+          rebuildState();
+          renderApp();
+          elements.catalogSourceStatus.textContent = "La guía está renderizando `AECF_PROMPT_ONLY_COMMANDS.md` como fuente canónica del mismo directorio.";
+          return;
+        }
+        throw new Error("Empty markdown payload");
+      } catch (error) {
+        markdownSource = fallbackMarkdownSource;
+        rebuildState();
+        renderApp();
+        elements.catalogSourceStatus.textContent = "No se pudo leer `AECF_PROMPT_ONLY_COMMANDS.md`; se está usando el fallback embebido del HTML.";
+      }
+    }
+
+    function renderApp() {
+      renderHeroStats();
+      renderSelect();
+      const filtered = getFilteredCommands();
+      ensureSelection(filtered);
+      renderStatusChips(filtered);
+      renderCommandList(filtered);
+      renderCommandDetail(filtered);
+      elements.catalogRender.innerHTML = renderMarkdown(markdownSource);
+    }
+
+    rebuildState();
+    elements.searchInput.addEventListener("input", () => {
+      state.search = elements.searchInput.value;
+      renderApp();
+    });
+    elements.statusSelect.addEventListener("change", () => {
+      state.status = elements.statusSelect.value;
+      renderApp();
+    });
+    const helpToggleButton = document.getElementById("help-toggle-button");
+    const helpPanel = document.getElementById("help-panel");
+    if (helpToggleButton && helpPanel) {
+      helpToggleButton.addEventListener("click", () => {
+        const open = helpPanel.classList.toggle("is-open");
+        helpToggleButton.setAttribute("aria-expanded", String(open));
+      });
+    }
+
+    renderApp();
+    void loadCanonicalMarkdown();
+  </script>
+</body>
+</html>

@@ -20,9 +20,39 @@
         - POJOs labeled with the @Controller and @Service annotations are auto-detected.
     -->
     <context:component-scan
-        base-package="org.springframework.samples.petclinic.web"/>
+        base-package="org.springframework.samples.petclinic.web,org.springdoc"/>
 
     <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <!--
+        - CookieLocaleResolver: stores the user-selected locale in a session cookie.
+        - Bean id MUST be exactly "localeResolver" — Spring MVC looks it up by this name.
+        - defaultLocale=en: falls back to English when no cookie is present.
+        - cookieMaxAge=-1: session cookie (cleared when the browser closes).
+        - AECF_META: skill=aecf_new_feature topic=i18n_locale_selector run_time=2026-04-18T00:00:00Z
+        -            generated_at=2026-04-18T00:00:00Z generated_by=lvillara touch_count=1
+    -->
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+        <property name="cookieName" value="PETCLINIC_LOCALE"/>
+        <property name="cookieMaxAge" value="-1"/>
+    </bean>
+
+    <!--
+        - LocaleChangeInterceptor: intercepts any request carrying ?lang=XX and
+        - delegates to localeResolver.setLocale() to persist the new locale.
+        - AECF_META: skill=aecf_new_feature topic=i18n_locale_selector run_time=2026-04-18T00:00:00Z
+        -            generated_at=2026-04-18T00:00:00Z generated_by=lvillara touch_count=1
+    -->
+    <bean id="localeChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+
+    <mvc:interceptors>
+        <ref bean="localeChangeInterceptor"/>
+    </mvc:interceptors>
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be refered to inside JSP files
         (see htmlHeader.jsp for more details) -->

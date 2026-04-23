@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AECF Guide Viewer</title>
+  <meta name="description" content="Visor HTML de las guias de aecf_prompts con whitelist, Mermaid, menu de navegacion y vuelta al indice raiz.">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06060e;
+      --bg-soft: #0a0c1a;
+      --surface: rgba(10, 12, 28, 0.90);
+      --surface-strong: rgba(14, 16, 36, 0.96);
+      --surface-ink: #e0e8f0;
+      --text: #e0e8f0;
+      --muted: #7a8ba0;
+      --line: rgba(0, 224, 255, 0.12);
+      --shadow: 0 24px 60px rgba(0, 180, 255, 0.08);
+      --brand: #00e0ff;
+      --brand-2: #ff2d7b;
+      --brand-3: #7b2fff;
+      --font-sans: "Segoe UI", "Aptos", "Trebuchet MS", sans-serif;
+      --font-display: "Georgia", "Palatino Linotype", serif;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 999px;
+      --max-width: 1420px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0, 224, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(123, 47, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #06060e 0%, #0a0c1a 38%, #0e1020 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 24px 20px 64px;
+    }
+
+    .shell,
+    .hero,
+    .toolbar,
+    .sidebar,
+    .content,
+    .help-panel,
+    .notice {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    .shell {
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: 22px;
+      margin-bottom: 20px;
+    }
+
+    .menu,
+    .hero-actions,
+    .toolbar-row,
+    .content-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .menu-link,
+    .button,
+    .button-secondary,
+    .top-link,
+    .blocked-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+    }
+
+    .button {
+      background: linear-gradient(135deg, var(--brand), #ff2d7b);
+      color: #fff;
+      border: none;
+      box-shadow: 0 10px 24px rgba(0, 224, 255, 0.15), 0 0 20px rgba(0, 224, 255, 0.20);
+      cursor: pointer;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+    }
+
+    .lang-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lang-link.is-active {
+      color: var(--text);
+      background: rgba(0, 224, 255, 0.12);
+    }
+
+    .button-secondary {
+      cursor: pointer;
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 28px;
+      display: grid;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(10, 12, 28, 0.95), rgba(8, 10, 24, 0.92));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 224, 255, 0.12);
+      color: var(--brand);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero h1,
+    .content h2,
+    .content h3,
+    .sidebar h2,
+    .help-panel h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 3.4vw, 4rem);
+      max-width: 12ch;
+      text-shadow: 0 0 20px rgba(0, 224, 255, 0.40), 0 0 40px rgba(123, 47, 255, 0.20);
+    }
+
+    .hero p,
+    .sidebar p,
+    .notice p,
+    .help-panel p,
+    .help-panel li,
+    .content p,
+    .content li,
+    .content blockquote {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .help-panel {
+      margin-top: 16px;
+      border-radius: 24px;
+      padding: 20px 22px;
+      display: none;
+      gap: 10px;
+    }
+
+    .help-panel.is-open {
+      display: grid;
+    }
+
+    .help-panel ul,
+    .content ul,
+    .content ol,
+    .sidebar ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .toolbar {
+      margin-top: 20px;
+      border-radius: 26px;
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .guide-current-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .guide-current-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .guide-current-header strong {
+      font-size: 1rem;
+    }
+
+    .guide-current-header span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .related-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .related-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .related-chip:hover,
+    .related-chip:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(0, 224, 255, 0.32);
+      background: rgba(0, 224, 255, 0.08);
+      outline: none;
+    }
+
+    .related-chip-label {
+      font-weight: 700;
+    }
+
+    .related-chip-summary {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .guide-select {
+      min-height: 52px;
+      min-width: min(100%, 420px);
+      padding: 0 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 224, 255, 0.12);
+      background: rgba(14, 16, 36, 0.80);
+      color: var(--text);
+    }
+
+    .layout {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .sidebar,
+    .content {
+      border-radius: 26px;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      padding: 20px;
+      display: grid;
+      gap: 18px;
+      position: sticky;
+      top: 112px;
+    }
+
+    .content {
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .content code,
+    .content pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .content code {
+      background: rgba(0, 224, 255, 0.06);
+      color: var(--brand);
+      border-radius: 8px;
+      padding: 0.12em 0.38em;
+    }
+
+    .content pre {
+      margin: 0;
+      background: #201d1a;
+      color: #f8f0de;
+      border-radius: 16px;
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .content pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.4rem 0 1.2rem;
+      font-size: 0.96rem;
+    }
+
+    .content th,
+    .content td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0, 224, 255, 0.12);
+      vertical-align: top;
+    }
+
+    .content th {
+      background: rgba(0, 224, 255, 0.06);
+    }
+
+    .content blockquote {
+      padding: 14px 16px;
+      border-left: 4px solid rgba(0, 224, 255, 0.28);
+      background: rgba(14, 16, 36, 0.72);
+      border-radius: 0 14px 14px 0;
+    }
+
+    .content hr {
+      width: 100%;
+      border: none;
+      height: 1px;
+      background: rgba(0, 224, 255, 0.12);
+      margin: 0.5rem 0;
+    }
+
+    .notice {
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: rgba(14, 16, 36, 0.78);
+    }
+
+    .mermaid-shell {
+      overflow: auto;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(14, 16, 36, 0.72);
+      border: 1px solid rgba(0, 224, 255, 0.12);
+    }
+
+    .mermaid svg {
+      height: auto;
+      max-width: 100%;
+    }
+
+    .blocked-link {
+      cursor: not-allowed;
+      color: var(--muted);
+    }
+
+    .top-link {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+      color: #fff;
+      border: none;
+      box-shadow: 0 16px 28px rgba(255, 45, 123, 0.20), 0 0 20px rgba(123, 47, 255, 0.15);
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+
+    @media (max-width: 760px) {
+      .shell,
+      .hero,
+      .toolbar,
+      .sidebar,
+      .content {
+        padding: 20px;
+      }
+
+      .top-link {
+        right: 14px;
+        bottom: 14px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="page">
+    <header class="shell" aria-label="Menu de documentacion">
+      <nav class="menu" aria-label="Navegacion principal">
+        <a class="menu-link" id="home-link" href="../../index.html">AECF Knowledge Center</a>
+        <a class="menu-link" id="nav-skills" href="./SKILL_CATALOG.html">Skills</a>
+        <a class="menu-link" id="nav-commands" href="./AECF_COMMANDS.html">Commands</a>
+        <div class="lang-switch" aria-label="Language switch">
+          <a class="lang-link" id="lang-es" href="?lang=es">ES</a>
+          <a class="lang-link" id="lang-en" href="?lang=en">EN</a>
+        </div>
+      </nav>
+      <div class="menu">
+        <button class="button" id="help-button-label" type="button" data-help-toggle="page-help" aria-expanded="false">Help</button>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="page-title">
+      <span class="eyebrow">Guide Viewer</span>
+      <h1 id="page-title">Guias AECF en HTML navegable</h1>
+      <p id="hero-copy">El visor publica solo la whitelist de `aecf_prompts/guides/`. Las referencias internas a otras guias se convierten a rutas HTML seguras y cualquier enlace fuera de esta superficie queda bloqueado como contenido no publicado en Pages.</p>
+      <div class="hero-actions">
+        <a class="button-secondary" id="hero-home-link" href="../../index.html">AECF Knowledge Center</a>
+        <a class="button-secondary" id="hero-skills-link" href="./SKILL_CATALOG.html">Ir a skills</a>
+        <a class="button-secondary" id="hero-commands-link" href="./AECF_COMMANDS.html">Ir a commands</a>
+      </div>
+    </section>
+
+    <section class="help-panel" id="page-help" aria-live="polite">
+      <h2 id="help-title">Ayuda hiperresumida</h2>
+      <ul>
+        <li id="help-item-1">Usa el selector para saltar de guia en guia sin volver atras.</li>
+        <li id="help-item-2">Los enlaces markdown entre guias se resuelven dentro de este mismo visor.</li>
+        <li id="help-item-3">Los enlaces fuera de la whitelist documental se muestran como no publicados para no exponer assets internos del repo.</li>
+        <li id="help-item-4">El boton flotante devuelve siempre arriba en documentos largos.</li>
+      </ul>
+    </section>
+
+    <section class="toolbar" aria-label="Selector de guias">
+      <div class="toolbar-row">
+        <label for="guide-select"><strong id="guide-select-label">Guia actual</strong></label>
+        <select class="guide-select" id="guide-select"></select>
+      </div>
+      <div class="notice guide-current-card">
+        <div class="guide-current-header">
+          <strong id="summary-title">Resumen y relacionadas</strong>
+          <span id="related-category-label">Cargando categoria...</span>
+        </div>
+        <p id="guide-summary">Cargando resumen de la guia...</p>
+        <div class="related-chip-list" id="related-guides"></div>
+      </div>
+    </section>
+
+    <section class="layout" aria-label="Contenido de la guia">
+      <article class="content" id="guide-content">
+        <p>Cargando contenido...</p>
+      </article>
+    </section>
+  </div>
+
+  <a class="top-link" id="top-link-label" href="#top" aria-label="Volver arriba">Volver arriba</a>
+
+  <script>
+    const GUIDE_CATALOG = [
+      { file: "START_HERE.md", title: "START_HERE", category: "Core Entry Guides", summaryEs: "Orientacion inicial para usuarios nuevos de aecf_prompts.", summaryEn: "Initial orientation for new aecf_prompts users." },
+      { file: "QUICK_START.md", title: "QUICK_START", category: "Core Entry Guides", summaryEs: "Punto operativo principal para ejecutar prompt-only.", summaryEn: "Primary operational starting point for prompt-only execution." },
+      { file: "AECF_APPLICATION_LIFECYCLE_GUIDE.md", title: "AECF_APPLICATION_LIFECYCLE_GUIDE", category: "Core Entry Guides", summaryEs: "Relaciona metodologias de lifecycle con skills AECF.", summaryEn: "Maps lifecycle methodologies to AECF skills." },
+      { file: "AECF_GUIDES_MASTER.md", title: "AECF_GUIDES_MASTER", category: "Core Entry Guides", summaryEs: "Indice maestro de las guias markdown publicadas.", summaryEn: "Master index of the published markdown guides." },
+      { file: "AECF_ASSET_VERSIONS.md", title: "AECF_ASSET_VERSIONS", category: "Core Entry Guides", summaryEs: "Stamps deterministas de prompts y skills.", summaryEn: "Deterministic stamps for prompts and skills." },
+      { file: "AECF_PROJECT_CONTEXT_BOOTSTRAP.md", title: "AECF_PROJECT_CONTEXT_BOOTSTRAP", category: "Context And Bootstrap", summaryEs: "Como construir o reforzar el project context.", summaryEn: "How to build or reinforce the project context." },
+      { file: "AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT.md", title: "AECF_STATIC_CONTEXT_SYNTHESIS_PROMPT", category: "Context And Bootstrap", summaryEs: "Patron para sintetizar contexto reutilizable y ahorrar tokens.", summaryEn: "Pattern for synthesizing reusable context and saving tokens." },
+      { file: "AECF_MEMORY_MODEL.md", title: "AECF_MEMORY_MODEL", category: "Context And Bootstrap", summaryEs: "Modelo de memoria en prompt-only.", summaryEn: "Memory model in prompt-only." },
+      { file: "AECF_RUN_CONTEXT_CONTRACT.md", title: "AECF_RUN_CONTEXT_CONTRACT", category: "Context And Bootstrap", summaryEs: "Contrato del run context congelado por topic.", summaryEn: "Frozen run-context contract per topic." },
+      { file: "AECF_SURFACE_CONTEXT_MODEL.md", title: "AECF_SURFACE_CONTEXT_MODEL", category: "Surface And Scope", summaryEs: "Particion del trabajo por business y technical surfaces.", summaryEn: "Work partitioning by business and technical surfaces." },
+      { file: "AECF_SURFACE_SELECTION_INTAKE.md", title: "AECF_SURFACE_SELECTION_INTAKE", category: "Surface And Scope", summaryEs: "Intake para decidir surfaces y su alcance.", summaryEn: "Intake to decide surfaces and scope." },
+      { file: "AECF_SKILL_SURFACE_CONTRACT.md", title: "AECF_SKILL_SURFACE_CONTRACT", category: "Surface And Scope", summaryEs: "Contrato comun para skills que consumen surfaces.", summaryEn: "Shared contract for skills that consume surfaces." },
+      { file: "AECF_PROMPT_ONLY_COMMANDS.md", title: "AECF_PROMPT_ONLY_COMMANDS", category: "Prompt-Only Operation", summaryEs: "Equivalencias prompt-only de la UX @aecf.", summaryEn: "Prompt-only equivalents of the @aecf UX." },
+      { file: "AECF_PROMPT_ONLY_INSTRUCTIONS_BLOCK.md", title: "AECF_PROMPT_ONLY_INSTRUCTIONS_BLOCK", category: "Prompt-Only Operation", summaryEs: "Bloque canonico de instrucciones prompt-only.", summaryEn: "Canonical prompt-only instruction block." },
+      { file: "AECF_PROMPT_ONLY_TICKET_PUBLISHER.md", title: "AECF_PROMPT_ONLY_TICKET_PUBLISHER", category: "Prompt-Only Operation", summaryEs: "Publicacion manual de tickets en prompt-only.", summaryEn: "Manual ticket publication in prompt-only." },
+      { file: "AECF_PROMPTS_CLAUDE_CLI.md", title: "AECF_PROMPTS_CLAUDE_CLI", category: "Prompt-Only Operation", summaryEs: "Quick start para Claude CLI.", summaryEn: "Quick start for Claude CLI." },
+      { file: "AECF_PROMPTS_CODEX_CLI.md", title: "AECF_PROMPTS_CODEX_CLI", category: "Prompt-Only Operation", summaryEs: "Quick start para Codex CLI.", summaryEn: "Quick start for Codex CLI." },
+      { file: "LLM_INSTRUCTIONS_SETUP.md", title: "LLM_INSTRUCTIONS_SETUP", category: "Prompt-Only Operation", summaryEs: "Como asegurar la carga correcta de instrucciones.", summaryEn: "How to enforce correct instruction loading." },
+      { file: "AECF_EXTERNAL_SKILLS.md", title: "AECF_EXTERNAL_SKILLS", category: "Extension And Advanced Usage", summaryEs: "Extender AECF con skills locales del proyecto.", summaryEn: "Extend AECF with project-local skills." },
+      { file: "CONSULTING_PLAYBOOK.md", title: "CONSULTING_PLAYBOOK", category: "Extension And Advanced Usage", summaryEs: "Patrones de uso orientados a consultoria.", summaryEn: "Usage patterns tailored to consulting work." }
+    ];
+
+    const fileIndex = new Map(GUIDE_CATALOG.map((guide) => [guide.file, guide]));
+    const currentLang = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "es";
+    const isPublicMirror = window.location.pathname.replace(/\\/g, "/").includes("/guias/");
+    const docsRoot = isPublicMirror ? "../aecf_prompts/guides/" : "./";
+    const homeHref = isPublicMirror ? "../index.html" : "../../index.html";
+    const params = new URLSearchParams(window.location.search);
+    const requestedGuide = params.get("doc") || "START_HERE.md";
+
+    const homeLink = document.getElementById("home-link");
+    const heroHomeLink = document.getElementById("hero-home-link");
+    const helpButton = document.querySelector('[data-help-toggle="page-help"]');
+    const helpPanel = document.getElementById("page-help");
+    const guideSelect = document.getElementById("guide-select");
+    const guideSummary = document.getElementById("guide-summary");
+    const guideContent = document.getElementById("guide-content");
+    const relatedGuides = document.getElementById("related-guides");
+    const relatedCategoryLabel = document.getElementById("related-category-label");
+
+    function t(spanish, english) {
+      return currentLang === "en" ? english : spanish;
+    }
+
+    function withLang(href, lang = currentLang) {
+      if (!href || href.startsWith("#") || /^(https?:|mailto:)/i.test(href)) {
+        return href;
+      }
+      const url = new URL(href, window.location.href);
+      url.searchParams.set("lang", lang);
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function getGuideSummary(guide) {
+      return currentLang === "en" ? guide.summaryEn : guide.summaryEs;
+    }
+
+    function splitGuideFileName(fileName) {
+      const match = /^(.*?)(?:_(EN|ES))?(\.[^.]+)$/i.exec(fileName || "");
+      if (match) {
+        return { base: match[1], suffix: (match[2] || "").toUpperCase(), extension: match[3] };
+      }
+      return { base: fileName || "", suffix: "", extension: "" };
+    }
+
+    function buildGuideVariant(fileName, suffix) {
+      const parts = splitGuideFileName(fileName);
+      return `${parts.base}_${suffix}${parts.extension}`;
+    }
+
+    function localizeGuideFile(fileName, lang = currentLang) {
+      if (!fileName) {
+        return fileName;
+      }
+      const targetSuffix = lang === "en" ? "EN" : "ES";
+      const parts = splitGuideFileName(fileName);
+      if (parts.suffix === targetSuffix && fileIndex.has(fileName)) {
+        return fileName;
+      }
+      const variant = buildGuideVariant(fileName, targetSuffix);
+      if (fileIndex.has(variant)) {
+        return variant;
+      }
+      const canonical = `${parts.base}${parts.extension}`;
+      if (fileIndex.has(canonical)) {
+        return canonical;
+      }
+      return fileIndex.has(fileName) ? fileName : variant;
+    }
+
+    function resolveCurrentGuide() {
+      return fileIndex.get(localizeGuideFile(requestedGuide, currentLang)) || fileIndex.get(requestedGuide) || fileIndex.get("START_HERE.md");
+    }
+
+    function setLanguageSwitcher() {
+      const langEs = document.getElementById("lang-es");
+      const langEn = document.getElementById("lang-en");
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set("lang", "es");
+      currentUrl.searchParams.set("doc", localizeGuideFile(requestedGuide, "es"));
+      langEs.href = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
+      currentUrl.searchParams.set("lang", "en");
+      currentUrl.searchParams.set("doc", localizeGuideFile(requestedGuide, "en"));
+      langEn.href = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
+      langEs.classList.toggle("is-active", currentLang === "es");
+      langEn.classList.toggle("is-active", currentLang === "en");
+    }
+
+    homeLink.href = withLang(homeHref);
+    heroHomeLink.href = withLang(homeHref);
+
+    function localizeStaticUi() {
+      document.documentElement.lang = currentLang;
+      document.getElementById("page-title").textContent = t("Guias AECF en HTML navegable", "AECF guides in navigable HTML");
+      document.getElementById("hero-copy").textContent = t(
+        "El visor publica solo la whitelist de `aecf_prompts/guides/`. Las referencias internas a otras guias se convierten a rutas HTML seguras y cualquier enlace fuera de esta superficie queda bloqueado como contenido no publicado en Pages.",
+        "The viewer only publishes the `aecf_prompts/guides/` whitelist. Internal guide references are converted into safe HTML routes and links outside this surface stay blocked as unpublished Pages content."
+      );
+      document.getElementById("hero-skills-link").textContent = currentLang === "en" ? "Go to skills" : "Ir a skills";
+      document.getElementById("hero-commands-link").textContent = currentLang === "en" ? "Go to commands" : "Ir a commands";
+      document.getElementById("help-title").textContent = currentLang === "en" ? "Quick help" : "Ayuda hiperresumida";
+      document.getElementById("help-item-1").textContent = t("Usa el selector para saltar de guia en guia sin volver atras.", "Use the selector to jump from guide to guide without going back.");
+      document.getElementById("help-item-2").textContent = t("Los enlaces markdown entre guias se resuelven dentro de este mismo visor.", "Markdown links between guides resolve inside this same viewer.");
+      document.getElementById("help-item-3").textContent = t("Los enlaces fuera de la whitelist documental se muestran como no publicados para no exponer assets internos del repo.", "Links outside the documentation whitelist are shown as unpublished so internal repo assets are not exposed.");
+      document.getElementById("help-item-4").textContent = t("El boton flotante devuelve siempre arriba en documentos largos.", "The floating button always takes you back to the top in long documents.");
+      document.getElementById("guide-select-label").textContent = t("Guia actual", "Current guide");
+      document.getElementById("summary-title").textContent = t("Resumen y relacionadas", "Summary and related");
+      relatedCategoryLabel.textContent = t("Cargando categoria...", "Loading category...");
+      guideSummary.textContent = t("Cargando resumen de la guia...", "Loading guide summary...");
+      document.getElementById("top-link-label").textContent = t("Volver arriba", "Back to top");
+      document.getElementById("top-link-label").setAttribute("aria-label", t("Volver arriba", "Back to top"));
+      document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href || link.id === 'lang-es' || link.id === 'lang-en') {
+          return;
+        }
+        const localizedHref = withLang(href);
+        if (localizedHref !== href) {
+          link.setAttribute('href', localizedHref);
+        }
+      });
+      setLanguageSwitcher();
+    }
+
+    if (helpButton && helpPanel) {
+      helpButton.addEventListener("click", () => {
+        const open = helpPanel.classList.toggle("is-open");
+        helpButton.setAttribute("aria-expanded", String(open));
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderInline(text) {
+      let html = escapeHtml(text);
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => resolveLink(label, href));
+      return html;
+    }
+
+    function normalizeGuideHref(href) {
+      const cleaned = href.split("#")[0].trim();
+      if (!cleaned) {
+        return null;
+      }
+      const fileName = cleaned.split("/").pop();
+      return fileIndex.get(fileName) ? fileName : null;
+    }
+
+    function resolveLink(label, href) {
+      const trimmedHref = String(href || "").trim();
+      const normalizedGuide = normalizeGuideHref(trimmedHref);
+      if (normalizedGuide) {
+        const localizedGuide = localizeGuideFile(normalizedGuide, currentLang);
+        return `<a href="?doc=${encodeURIComponent(localizedGuide)}&lang=${encodeURIComponent(currentLang)}">${escapeHtml(label)}</a>`;
+      }
+      if (/SKILL_CATALOG\.md$/i.test(trimmedHref)) {
+        return `<a href="./SKILL_CATALOG.html">${escapeHtml(label)}</a>`;
+      }
+      if (/AECF_PROMPT_ONLY_COMMANDS\.md$/i.test(trimmedHref)) {
+        return `<a href="./AECF_COMMANDS.html">${escapeHtml(label)}</a>`;
+      }
+      if (/^https?:\/\//i.test(trimmedHref) || /^mailto:/i.test(trimmedHref)) {
+        return `<a href="${escapeHtml(trimmedHref)}" target="_blank" rel="noreferrer noopener">${escapeHtml(label)}</a>`;
+      }
+      return `<span class="blocked-link" title="No publicado en Pages">${escapeHtml(label)}</span>`;
+    }
+
+    function parseTable(lines, startIndex) {
+      const rows = [];
+      let index = startIndex;
+      while (index < lines.length && /^\|.*\|\s*$/.test(lines[index])) {
+        rows.push(lines[index]);
+        index += 1;
+      }
+      if (rows.length < 2 || !/^\|?\s*:?-{2,}/.test(rows[1].replace(/\|/g, ""))) {
+        return null;
+      }
+      const headers = rows[0].split("|").slice(1, -1).map((cell) => renderInline(cell.trim()));
+      const bodyRows = rows.slice(2).map((row) => row.split("|").slice(1, -1).map((cell) => renderInline(cell.trim())));
+      let html = "<table><thead><tr>";
+      headers.forEach((cell) => {
+        html += `<th>${cell}</th>`;
+      });
+      html += "</tr></thead><tbody>";
+      bodyRows.forEach((row) => {
+        html += "<tr>";
+        row.forEach((cell) => {
+          html += `<td>${cell}</td>`;
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table>";
+      return { html, nextIndex: index };
+    }
+
+    function markdownToHtml(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      let html = "";
+      let paragraph = [];
+      let inCodeBlock = false;
+      let codeLanguage = "";
+      let codeLines = [];
+      let listType = null;
+
+      function flushParagraph() {
+        if (!paragraph.length) {
+          return;
+        }
+        html += `<p>${renderInline(paragraph.join(" "))}</p>`;
+        paragraph = [];
+      }
+
+      function closeList() {
+        if (!listType) {
+          return;
+        }
+        html += listType === "ol" ? "</ol>" : "</ul>";
+        listType = null;
+      }
+
+      function flushCodeBlock() {
+        const code = escapeHtml(codeLines.join("\n"));
+        if ((codeLanguage || "").toLowerCase() === "mermaid") {
+          html += `<div class="mermaid-shell"><div class="mermaid">${code}</div></div>`;
+        } else {
+          html += `<pre><code>${code}</code></pre>`;
+        }
+        codeLines = [];
+        codeLanguage = "";
+      }
+
+      for (let index = 0; index < lines.length; index += 1) {
+        const line = lines[index];
+        const trimmed = line.trim();
+
+        if (inCodeBlock) {
+          if (trimmed.startsWith("```")) {
+            inCodeBlock = false;
+            flushCodeBlock();
+          } else {
+            codeLines.push(line);
+          }
+          continue;
+        }
+
+        if (trimmed.startsWith("```")) {
+          flushParagraph();
+          closeList();
+          inCodeBlock = true;
+          codeLanguage = trimmed.slice(3).trim();
+          continue;
+        }
+
+        const table = parseTable(lines, index);
+        if (table) {
+          flushParagraph();
+          closeList();
+          html += table.html;
+          index = table.nextIndex - 1;
+          continue;
+        }
+
+        if (!trimmed) {
+          flushParagraph();
+          closeList();
+          continue;
+        }
+
+        if (/^---+$/.test(trimmed)) {
+          flushParagraph();
+          closeList();
+          html += "<hr>";
+          continue;
+        }
+
+        const headingMatch = /^(#{1,6})\s+(.*)$/.exec(trimmed);
+        if (headingMatch) {
+          flushParagraph();
+          closeList();
+          const level = headingMatch[1].length;
+          html += `<h${level}>${renderInline(headingMatch[2])}</h${level}>`;
+          continue;
+        }
+
+        if (trimmed.startsWith(">")) {
+          flushParagraph();
+          closeList();
+          html += `<blockquote>${renderInline(trimmed.replace(/^>\s?/, ""))}</blockquote>`;
+          continue;
+        }
+
+        const unorderedMatch = /^[-*]\s+(.*)$/.exec(trimmed);
+        if (unorderedMatch) {
+          flushParagraph();
+          if (listType && listType !== "ul") {
+            closeList();
+          }
+          if (!listType) {
+            listType = "ul";
+            html += "<ul>";
+          }
+          html += `<li>${renderInline(unorderedMatch[1])}</li>`;
+          continue;
+        }
+
+        const orderedMatch = /^\d+\.\s+(.*)$/.exec(trimmed);
+        if (orderedMatch) {
+          flushParagraph();
+          if (listType && listType !== "ol") {
+            closeList();
+          }
+          if (!listType) {
+            listType = "ol";
+            html += "<ol>";
+          }
+          html += `<li>${renderInline(orderedMatch[1])}</li>`;
+          continue;
+        }
+
+        closeList();
+        paragraph.push(trimmed);
+      }
+
+      flushParagraph();
+      closeList();
+      if (inCodeBlock) {
+        flushCodeBlock();
+      }
+      return html;
+    }
+
+    async function enhanceMermaid(root) {
+      if (!window.mermaid) {
+        return;
+      }
+      if (!window.__aecfGuideViewerMermaidInitialized) {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "loose",
+          theme: "base",
+          themeVariables: {
+            fontFamily: 'Segoe UI, Aptos, Trebuchet MS, sans-serif',
+            primaryColor: '#e7f1ef',
+            primaryTextColor: '#231f1a',
+            primaryBorderColor: '#1a6b68',
+            lineColor: '#645b52',
+            secondaryColor: '#fff3e1',
+            tertiaryColor: '#fffdf8'
+          }
+        });
+        window.__aecfGuideViewerMermaidInitialized = true;
+      }
+      const nodes = Array.from((root || document).querySelectorAll('.mermaid')).filter((node) => !node.dataset.processed);
+      nodes.forEach((node) => {
+        node.dataset.processed = 'true';
+      });
+      if (nodes.length) {
+        await window.mermaid.run({ nodes });
+      }
+    }
+
+    function updateRelatedGuides(currentGuide) {
+      const sameCategory = GUIDE_CATALOG.filter((guide) => guide.category === currentGuide.category && guide.file !== currentGuide.file);
+      relatedCategoryLabel.textContent = currentGuide.category;
+      relatedGuides.innerHTML = sameCategory.map((guide) => `
+        <a class="related-chip" href="?doc=${encodeURIComponent(localizeGuideFile(guide.file, currentLang))}&lang=${encodeURIComponent(currentLang)}">
+          <span class="related-chip-label">${escapeHtml(guide.title)}</span>
+          <span class="related-chip-summary">${escapeHtml(getGuideSummary(guide))}</span>
+        </a>
+      `).join("");
+      if (!sameCategory.length) {
+        relatedGuides.innerHTML = `<span class="related-chip-summary">${escapeHtml(t("No hay mas guias en esta categoria.", "There are no more guides in this category."))}</span>`;
+      }
+    }
+
+    function populateSelect(currentGuide) {
+      guideSelect.innerHTML = GUIDE_CATALOG.map((guide) => {
+        const selected = guide.file === currentGuide.file ? ' selected' : '';
+        return `<option value="${escapeHtml(guide.file)}"${selected}>${escapeHtml(guide.category + ' - ' + guide.title)}</option>`;
+      }).join("");
+      guideSelect.addEventListener("change", () => {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("doc", localizeGuideFile(guideSelect.value, currentLang));
+        window.location.href = nextUrl.toString();
+      });
+    }
+
+    async function loadGuide() {
+      const currentGuide = resolveCurrentGuide();
+      populateSelect(currentGuide);
+      guideSummary.textContent = getGuideSummary(currentGuide);
+      updateRelatedGuides(currentGuide);
+      document.title = `${currentGuide.title} | AECF Guide Viewer`;
+      try {
+        const response = await fetch(`${docsRoot}${currentGuide.file}`, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const markdown = await response.text();
+        guideContent.innerHTML = `
+          <div class="content-actions">
+            <a class="button-secondary" href="${homeHref}">AECF Knowledge Center</a>
+            <a class="button-secondary" href="./SKILL_CATALOG.html">Skills</a>
+            <a class="button-secondary" href="./AECF_COMMANDS.html">Commands</a>
+          </div>
+          ${markdownToHtml(markdown)}
+        `;
+        guideContent.querySelectorAll('a[href]').forEach((link) => {
+          const href = link.getAttribute('href');
+          const localizedHref = withLang(href);
+          if (localizedHref !== href) {
+            link.setAttribute('href', localizedHref);
+          }
+        });
+        await enhanceMermaid(guideContent);
+      } catch (error) {
+        guideContent.innerHTML = `
+          <div class="notice">
+            <p>${escapeHtml(t("No se pudo cargar la guia solicitada. Abre el indice y vuelve a intentarlo.", "The requested guide could not be loaded. Open the index and try again."))}</p>
+          </div>
+        `;
+      }
+    }
+
+    localizeStaticUi();
+    void loadGuide();
+  </script>
+</body>
+</html>

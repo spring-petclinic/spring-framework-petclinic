@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
-    <version>7.0.3</version>
+    <version>7.1.0</version>
 
     <name>Spring Framework Petclinic</name>
     <packaging>war</packaging>
@@ -14,7 +14,7 @@
     <properties>
 
         <!-- Generic properties -->
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -71,6 +71,12 @@
         <!-- Others -->
         <jackson.version>3.1.1</jackson.version>
         <aspectj.version>1.9.25.1</aspectj.version>
+
+        <!-- OpenAPI / SpringDoc -->
+        <!-- AECF_META: skill=aecf_new_feature topic=vet_rest_api run_time=2026-04-18T00:00:00Z -->
+        <!-- Verify compatibility with Spring Framework 7.0.x before upgrading. -->
+        <!-- If SpringDoc 3.x targeting Spring 7 + Jackson 3.x is released, prefer it. -->
+        <springdoc.version>2.8.0</springdoc.version>
 
         <!-- Maven plugins -->
         <jetty-maven-plugin.version>11.0.26</jetty-maven-plugin.version>
@@ -201,6 +207,13 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
+        </dependency>
+
+        <!-- OpenAPI documentation via SpringDoc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- Database connection pool
@@ -475,7 +488,7 @@
                 <!-- See https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin -->
                 <configuration>
                     <from>
-                        <image>jetty:11.0-jdk17</image>
+                        <image>jetty:11.0-jdk21</image>
                     </from>
                     <container>
                         <entrypoint>java,-jar,/usr/local/jetty/start.jar</entrypoint>

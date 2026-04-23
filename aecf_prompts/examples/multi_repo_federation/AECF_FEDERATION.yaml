@@ -1,0 +1,104 @@
+# AECF Federation Manifest — SEACHAD Analytics Ecosystem
+#
+# This manifest indexes four collaborating repositories
+# and their shared contract boundaries.
+#
+# Location in each repo: .aecf/runtime/federation/AECF_FEDERATION.yaml
+
+federation: "seachad-analytics"
+version: "1.0"
+generated_at: "2026-04-17T00:00:00Z"
+owner: "SEACHAD"
+status: "active"
+
+# --- Repositories ---
+repos:
+  api_robot:
+    canonical_url: "https://github.com/Seachad-TEAM/API_ROBOT"
+    role: provider
+    description: >
+      Integration library for fetching external data and generating
+      automated processes. Owns the REDIS entity cache and exposes
+      REST APIs consumed by parser and Flask_Dashboards.
+    contract_branch: "main"
+
+  flask_dashboards:
+    canonical_url: "https://github.com/Seachad-TEAM/Flask_Dashboards"
+    role: consumer
+    description: >
+      Flask web application for mounting analysis dashboards.
+      Consumes REDIS entity cache from API_ROBOT and preprocessed
+      data files from parser.
+    contract_branch: "main"
+
+  parser:
+    canonical_url: "https://github.com/Seachad-TEAM/parser"
+    role: transformer
+    description: >
+      Monolithic Python repository for data preprocessing.
+      Fetches raw data via API_ROBOT's REST API and produces
+      normalized datasets for Flask_Dashboards and PowerBI.
+    contract_branch: "main"
+
+  powerbi:
+    canonical_url: "https://github.com/Seachad-TEAM/PowerBI"
+    role: consumer
+    description: >
+      PowerBI analytics project. Consumes preprocessed data
+      produced by parser from information retrieved by API_ROBOT.
+    contract_branch: "main"
+
+# --- Contract Boundaries ---
+contracts:
+  redis_entity_cache:
+    provider: "api_robot"
+    consumers:
+      - "flask_dashboards"
+    contract_type: "shared_state"
+    description: >
+      REDIS-based entity cache. API_ROBOT writes entity data
+      to REDIS; Flask_Dashboards reads it for dashboard rendering.
+    change_policy: "expand_contract"
+    invariants:
+      - "Keys follow pattern robot:{entity_type}:{entity_id}"
+      - "Values are JSON-serialized dicts with 'data' and 'updated_at' keys"
+      - "TTL is managed exclusively by API_ROBOT (default: 3600s)"
+      - "Flask_Dashboards MUST treat cache misses gracefully (fallback to API)"
+    contract_doc: "AECF_CONTRACT_redis_entity_cache.md"
+
+  preprocessed_data:
+    provider: "parser"
+    consumers:
+      - "flask_dashboards"
+      - "powerbi"
+    contract_type: "data_pipeline"
+    description: >
+      Preprocessed data files produced by parser. CSV/Parquet format
+      with versioned schema headers. Consumed by Flask_Dashboards
+      for real-time dashboards and by PowerBI for analytical reports.
+    change_policy: "versioned_schema"
+    invariants:
+      - "Output files include a schema_version header row"
+      - "Column renames require a new schema_version"
+      - "Deprecated columns are kept for 2 schema versions before removal"
+    contract_doc: "AECF_CONTRACT_preprocessed_data.md"
+
+  api_robot_rest:
+    provider: "api_robot"
+    consumers:
+      - "parser"
+    contract_type: "api"
+    description: >
+      REST API exposed by API_ROBOT for data retrieval.
+      Parser calls these endpoints to fetch raw data for preprocessing.
+    change_policy: "backward_compatible_only"
+    invariants:
+      - "Endpoints follow /api/v{N}/{resource} pattern"
+      - "New fields may be added to responses without version bump"
+      - "Removing or renaming response fields requires a new API version"
+    contract_doc: null  # not yet documented as a full contract boundary
+
+# --- Cross-Repo Coordination Defaults ---
+coordination_defaults:
+  default_strategy: "sequential"
+  execution_order_policy: "provider_first"

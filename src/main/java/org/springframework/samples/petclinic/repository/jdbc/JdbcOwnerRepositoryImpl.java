@@ -103,6 +103,49 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         return owner;
     }
 
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Returns a page of owners by last name prefix using SQL LIMIT/OFFSET (H2/MySQL/PostgreSQL compatible).
+     */
+    @Override
+    public Collection<Owner> findByLastName(String lastName, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<Owner> owners = this.jdbcClient.sql("""
+                SELECT id, first_name, last_name, address, city, telephone
+                FROM owners
+                WHERE last_name LIKE :lastName
+                ORDER BY last_name, id
+                LIMIT :limit OFFSET :offset
+                """)
+            .param("lastName", lastName + "%")
+            .param("limit", pageSize)
+            .param("offset", offset)
+            .query(BeanPropertyRowMapper.newInstance(Owner.class))
+            .list();
+        loadOwnersPetsAndVisits(owners);
+        return owners;
+    }
+
+    /**
+     * AECF_META: skill=aecf_new_feature topic=owner_pagination run_time=2026-04-17T00:00:00Z
+     * generated_at=2026-04-17T00:00:00Z generated_by=lvillara touch_count=1
+     * last_modified_skill=aecf_new_feature last_modified_at=2026-04-17T00:00:00Z last_modified_by=lvillara
+     *
+     * Counts owners whose last name starts with the given prefix.
+     */
+    @Override
+    public int countByLastName(String lastName) {
+        return this.jdbcClient.sql("""
+                SELECT COUNT(*) FROM owners WHERE last_name LIKE :lastName
+                """)
+            .param("lastName", lastName + "%")
+            .query(Integer.class)
+            .single();
+    }
+
     public void loadPetsAndVisits(final Owner owner) {
         final List<JdbcPet> pets = this.jdbcClient.sql("""
             SELECT pets.id, name, birth_date, type_id, owner_id, visits.id as visit_id, visit_date, description, pet_id

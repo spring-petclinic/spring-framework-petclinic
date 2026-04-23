@@ -1,0 +1,262 @@
+{
+  "sources": [
+    {
+      "id": "python-docs",
+      "label": "Python documentation",
+      "url": "https://docs.python.org/3/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "pytest-docs",
+      "label": "pytest documentation",
+      "url": "https://docs.pytest.org/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "packaging-guide",
+      "label": "Python Packaging User Guide",
+      "url": "https://packaging.python.org/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "java-docs",
+      "label": "Java documentation",
+      "url": "https://docs.oracle.com/en/java/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "maven-docs",
+      "label": "Apache Maven documentation",
+      "url": "https://maven.apache.org/guides/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "gradle-docs",
+      "label": "Gradle documentation",
+      "url": "https://docs.gradle.org/current/userguide/userguide.html",
+      "kind": "official-docs"
+    },
+    {
+      "id": "dotnet-docs",
+      "label": ".NET documentation",
+      "url": "https://learn.microsoft.com/dotnet/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "aspnet-docs",
+      "label": "ASP.NET Core documentation",
+      "url": "https://learn.microsoft.com/aspnet/core/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "cobol-docs",
+      "label": "IBM Enterprise COBOL docs",
+      "url": "https://www.ibm.com/docs/en/cobol-zos",
+      "kind": "official-docs"
+    },
+    {
+      "id": "ibm-zos-docs",
+      "label": "IBM z/OS docs",
+      "url": "https://www.ibm.com/docs/en/zos",
+      "kind": "official-docs"
+    },
+    {
+      "id": "azure-docs",
+      "label": "Microsoft Azure documentation",
+      "url": "https://learn.microsoft.com/azure/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "aws-docs",
+      "label": "AWS documentation",
+      "url": "https://docs.aws.amazon.com/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "kubernetes-docs",
+      "label": "Kubernetes documentation",
+      "url": "https://kubernetes.io/docs/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "docker-docs",
+      "label": "Docker documentation",
+      "url": "https://docs.docker.com/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "terraform-docs",
+      "label": "Terraform documentation",
+      "url": "https://developer.hashicorp.com/terraform/docs",
+      "kind": "official-docs"
+    },
+    {
+      "id": "github-actions-docs",
+      "label": "GitHub Actions documentation",
+      "url": "https://docs.github.com/actions",
+      "kind": "official-docs"
+    },
+    {
+      "id": "azure-devops-docs",
+      "label": "Azure DevOps documentation",
+      "url": "https://learn.microsoft.com/azure/devops/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "owasp-top10",
+      "label": "OWASP Top 10",
+      "url": "https://owasp.org/www-project-top-ten/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "bc-al-docs",
+      "label": "Business Central AL docs",
+      "url": "https://learn.microsoft.com/dynamics365/business-central/dev-itpro/developer/devenv-dev-overview",
+      "kind": "official-docs"
+    },
+    {
+      "id": "bc-app-json",
+      "label": "Business Central app.json reference",
+      "url": "https://learn.microsoft.com/dynamics365/business-central/dev-itpro/developer/devenv-json-files",
+      "kind": "official-docs"
+    },
+    {
+      "id": "bc-testing",
+      "label": "Business Central test automation",
+      "url": "https://learn.microsoft.com/dynamics365/business-central/dev-itpro/developer/devenv-testing-application",
+      "kind": "official-docs"
+    },
+    {
+      "id": "rust-docs",
+      "label": "Rust documentation",
+      "url": "https://doc.rust-lang.org/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "cargo-docs",
+      "label": "Cargo documentation",
+      "url": "https://doc.rust-lang.org/cargo/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "go-docs",
+      "label": "Go documentation",
+      "url": "https://go.dev/doc/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "node-docs",
+      "label": "Node.js documentation",
+      "url": "https://nodejs.org/docs/latest/api/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "npm-docs",
+      "label": "npm documentation",
+      "url": "https://docs.npmjs.com/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "react-docs",
+      "label": "React documentation",
+      "url": "https://react.dev/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "angular-docs",
+      "label": "Angular documentation",
+      "url": "https://angular.dev/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "rxjs-docs",
+      "label": "RxJS documentation",
+      "url": "https://rxjs.dev/guide/overview",
+      "kind": "official-docs"
+    },
+    {
+      "id": "ngrx-docs",
+      "label": "NgRx documentation",
+      "url": "https://ngrx.io/docs",
+      "kind": "official-docs"
+    },
+    {
+      "id": "vite-docs",
+      "label": "Vite documentation",
+      "url": "https://vite.dev/guide/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365fo-docs",
+      "label": "Dynamics 365 Finance and Operations documentation",
+      "url": "https://learn.microsoft.com/dynamics365/fin-ops-core/dev-itpro/dev-tools/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365fo-xpp-docs",
+      "label": "X++ language reference",
+      "url": "https://learn.microsoft.com/dynamics365/fin-ops-core/dev-itpro/dev-ref/xpp-language-reference",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365ce-docs",
+      "label": "Dynamics 365 Customer Engagement documentation",
+      "url": "https://learn.microsoft.com/power-apps/developer/data-platform/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365ce-plugin-docs",
+      "label": "Dataverse plug-in development",
+      "url": "https://learn.microsoft.com/power-apps/developer/data-platform/plug-ins",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365ce-webapi-docs",
+      "label": "Dataverse Web API reference",
+      "url": "https://learn.microsoft.com/power-apps/developer/data-platform/webapi/overview",
+      "kind": "official-docs"
+    },
+    {
+      "id": "d365marketing-docs",
+      "label": "Dynamics 365 Marketing documentation",
+      "url": "https://learn.microsoft.com/dynamics365/marketing/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "powerplatform-docs",
+      "label": "Power Platform documentation",
+      "url": "https://learn.microsoft.com/power-platform/",
+      "kind": "official-docs"
+    },
+    {
+      "id": "pcf-docs",
+      "label": "PowerApps component framework documentation",
+      "url": "https://learn.microsoft.com/power-apps/developer/component-framework/overview",
+      "kind": "official-docs"
+    },
+    {
+      "id": "c-docs",
+      "label": "C reference (cppreference)",
+      "url": "https://en.cppreference.com/w/c",
+      "kind": "official-docs"
+    },
+    {
+      "id": "cpp-docs",
+      "label": "C++ reference (cppreference)",
+      "url": "https://en.cppreference.com/w/cpp",
+      "kind": "official-docs"
+    },
+    {
+      "id": "cpp-core-guidelines",
+      "label": "C++ Core Guidelines",
+      "url": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines",
+      "kind": "official-docs"
+    },
+    {
+      "id": "cmake-docs",
+      "label": "CMake documentation",
+      "url": "https://cmake.org/cmake/help/latest/",
+      "kind": "official-docs"
+    }
+  ]
+}
