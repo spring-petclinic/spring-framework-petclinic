@@ -16,3 +16,4 @@ target/
 
 # OS
 .DS_Store
+.aider*
