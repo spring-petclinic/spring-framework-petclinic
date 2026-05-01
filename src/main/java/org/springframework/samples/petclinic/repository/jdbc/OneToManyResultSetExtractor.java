@@ -112,6 +112,11 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 			}
 			results.add(root);
 		}
+		validateResults(results);
+		return results;
+	}
+
+	private void validateResults(List<R> results) throws SQLException {
 		if ((expectedResults == ExpectedResults.ONE_AND_ONLY_ONE || expectedResults == ExpectedResults.ONE_OR_NONE) &&
 				results.size() > 1) {
 			throw new IncorrectResultSizeDataAccessException(1, results.size());
@@ -120,7 +125,6 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 				results.isEmpty()) {
 			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
-		return results;
 	}
 
 	/**
