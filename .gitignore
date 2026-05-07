@@ -16,3 +16,17 @@ target/
 
 # OS
 .DS_Store
+
+
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+
+# Automatization
+automatizacion/
+.opencode/
+.specify/

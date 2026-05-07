@@ -56,4 +56,12 @@ public interface PetRepository {
      */
     void save(Pet pet);
 
+    /**
+     * Find a <code>Pet</code> by its microchip ID.
+     *
+     * @param microchipId the microchip ID to search for
+     * @return the <code>Pet</code> if found, or null
+     */
+    Pet findByMicrochipId(String microchipId);
+
 }

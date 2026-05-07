@@ -105,7 +105,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 
     public void loadPetsAndVisits(final Owner owner) {
         final List<JdbcPet> pets = this.jdbcClient.sql("""
-            SELECT pets.id, name, birth_date, type_id, owner_id, visits.id as visit_id, visit_date, description, pet_id
+            SELECT pets.id, name, birth_date, type_id, owner_id, microchip_id, visits.id as visit_id, visit_date, description, pet_id
             FROM pets LEFT OUTER JOIN visits ON pets.id = pet_id
             WHERE owner_id=:id ORDER BY pet_id
             """)

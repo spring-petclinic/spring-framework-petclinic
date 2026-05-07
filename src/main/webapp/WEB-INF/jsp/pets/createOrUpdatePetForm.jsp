@@ -31,6 +31,7 @@
                 <div class="control-group">
                     <petclinic:selectField name="type" label="Type " names="${types}" size="5"/>
                 </div>
+                <petclinic:inputField label="Microchip ID" name="microchipId"/>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
