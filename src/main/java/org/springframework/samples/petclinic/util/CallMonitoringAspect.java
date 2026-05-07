@@ -38,35 +38,35 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class CallMonitoringAspect {
 
-    private boolean enabled = true;
+    private volatile boolean enabled = true;
 
     private int callCount = 0;
 
     private long accumulatedCallTime = 0;
 
     @ManagedAttribute
-    public boolean isEnabled() {
+    public synchronized boolean isEnabled() {
         return enabled;
     }
 
     @ManagedAttribute
-    public void setEnabled(boolean enabled) {
+    public synchronized void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     @ManagedOperation
-    public void reset() {
+    public synchronized void reset() {
         this.callCount = 0;
         this.accumulatedCallTime = 0;
     }
 
     @ManagedAttribute
-    public int getCallCount() {
+    public synchronized int getCallCount() {
         return callCount;
     }
 
     @ManagedAttribute
-    public long getCallTime() {
+    public synchronized long getCallTime() {
         if (this.callCount > 0)
             return this.accumulatedCallTime / this.callCount;
         else
