@@ -54,6 +54,10 @@
                         <dd><petclinic:localDate date="${pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
                         <dt>Type</dt>
                         <dd><c:out value="${pet.type.name}"/></dd>
+                        <c:if test="${not empty pet.photoUrl}">
+                        <dt>Photo</dt>
+                        <dd><img src="${pet.photoUrl}" alt="Pet photo" style="max-width:200px;"/></dd>
+                        </c:if>
                     </dl>
                 </th>
                 <td>

@@ -49,6 +49,9 @@ public class Pet extends NamedEntity {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
 
+    @Column(name = "photo_url")
+    private String photoUrl;
+
     @ManyToOne
     @JoinColumn(name = "type_id")
     private PetType type;
@@ -67,6 +70,14 @@ public class Pet extends NamedEntity {
 
     public LocalDate getBirthDate() {
         return this.birthDate;
+    }
+
+    public String getPhotoUrl() {
+        return this.photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public PetType getType() {

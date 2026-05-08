@@ -16,3 +16,12 @@ target/
 
 # OS
 .DS_Store
+
+# Secrets
+automatizacion/config/.env
+automatizacion/config_inicial.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
