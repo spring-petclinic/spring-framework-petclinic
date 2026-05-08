@@ -31,8 +31,14 @@
                 <div class="control-group">
                     <petclinic:selectField name="type" label="Type " names="${types}" size="5"/>
                 </div>
-                <petclinic:inputField label="Microchip ID" name="microchipId"/>
-            </div>
+                 <petclinic:inputField label="Microchip ID" name="microchipId"/>
+                 <div class="form-group">
+                     <label class="col-sm-2 control-label">Photo</label>
+                     <div class="col-sm-10">
+                         <input type="file" name="photoUrl" accept="image/*" class="form-control"/>
+                     </div>
+                 </div>
+             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <c:choose>

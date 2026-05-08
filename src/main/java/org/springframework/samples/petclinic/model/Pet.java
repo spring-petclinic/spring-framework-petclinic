@@ -65,6 +65,9 @@ public class Pet extends NamedEntity {
     @Pattern(regexp = "^$|\\d{15}", message = "Microchip ID must be exactly 15 digits")
     private String microchipId;
 
+    @Column(name = "photo_url")
+    private String photoUrl;
+
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
@@ -120,4 +123,11 @@ public class Pet extends NamedEntity {
         this.microchipId = (microchipId != null && microchipId.isBlank()) ? null : microchipId;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

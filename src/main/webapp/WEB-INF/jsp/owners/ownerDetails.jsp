@@ -52,12 +52,16 @@
                         <dd><c:out value="${pet.name}"/></dd>
                         <dt>Birth Date</dt>
                         <dd><petclinic:localDate date="${pet.birthDate}" pattern="yyyy-MM-dd"/></dd>
-                        <dt>Type</dt>
-                        <dd><c:out value="${pet.type.name}"/></dd>
-                        <c:if test="${not empty pet.microchipId}">
-                            <dt>Microchip ID</dt>
-                            <dd><c:out value="${pet.microchipId}"/></dd>
-                        </c:if>
+                         <dt>Type</dt>
+                         <dd><c:out value="${pet.type.name}"/></dd>
+                         <c:if test="${not empty pet.microchipId}">
+                             <dt>Microchip ID</dt>
+                             <dd><c:out value="${pet.microchipId}"/></dd>
+                         </c:if>
+                         <c:if test="${not empty pet.photoUrl}">
+                             <dt>Photo</dt>
+                             <dd><img src="${pet.photoUrl}" alt="Pet photo" style="max-width:150px;"/></dd>
+                         </c:if>
                     </dl>
                 </th>
                 <td>
