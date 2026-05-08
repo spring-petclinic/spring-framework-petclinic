@@ -17,7 +17,8 @@
             <c:if test="${pet['new']}">New </c:if> Pet
         </h2>
         <form:form modelAttribute="pet"
-                   class="form-horizontal">
+                   class="form-horizontal"
+                   enctype="multipart/form-data">
             <input type="hidden" name="id" value="${pet.id}"/>
             <div class="form-group has-feedback">
                 <div class="form-group">
