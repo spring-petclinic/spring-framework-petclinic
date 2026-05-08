@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Set;
 
@@ -53,6 +54,62 @@ class ValidatorTests {
 
     private Validator createValidator() {
         return localValidatorFactoryBean.getValidator();
+    }
+
+    @Test
+    void shouldRejectMicrochipIdWithWrongLength() {
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+        Pet pet = new Pet();
+        pet.setName("TestPet");
+        PetType type = new PetType();
+        type.setName("cat");
+        pet.setType(type);
+        pet.setBirthDate(LocalDate.now());
+
+        // 14 digits — too short
+        pet.setMicrochipId("12345678901234");
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Pet>> violations = validator.validate(pet);
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("microchipId"));
+
+        // 16 digits — too long
+        pet.setMicrochipId("1234567890123456");
+        violations = validator.validate(pet);
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("microchipId"));
+    }
+
+    @Test
+    void shouldRejectMicrochipIdWithNonNumericCharacters() {
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+        Pet pet = new Pet();
+        pet.setName("TestPet");
+        PetType type = new PetType();
+        type.setName("cat");
+        pet.setType(type);
+        pet.setBirthDate(LocalDate.now());
+
+        // non-numeric
+        pet.setMicrochipId("ABCDE1234567890");
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Pet>> violations = validator.validate(pet);
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("microchipId"));
+    }
+
+    @Test
+    void shouldAcceptValidMicrochipId() {
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+        Pet pet = new Pet();
+        pet.setName("TestPet");
+        PetType type = new PetType();
+        type.setName("cat");
+        pet.setType(type);
+        pet.setBirthDate(LocalDate.now());
+
+        // exactly 15 digits — valid
+        pet.setMicrochipId("123456789012345");
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Pet>> violations = validator.validate(pet);
+        assertThat(violations).noneMatch(v -> v.getPropertyPath().toString().equals("microchipId"));
     }
 
 }

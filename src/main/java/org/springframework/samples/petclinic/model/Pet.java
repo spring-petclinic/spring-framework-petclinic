@@ -25,6 +25,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,6 +60,13 @@ public class Pet extends NamedEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
     private Set<Visit> visits;
+
+    @Column(name = "microchip_id", unique = true)
+    @Pattern(regexp = "^$|\\d{15}", message = "Microchip ID must be exactly 15 digits")
+    private String microchipId;
+
+    @Column(name = "photo_url")
+    private String photoUrl;
 
 
     public void setBirthDate(LocalDate birthDate) {
@@ -107,4 +115,19 @@ public class Pet extends NamedEntity {
         visit.setPet(this);
     }
 
+    public String getMicrochipId() {
+        return this.microchipId;
+    }
+
+    public void setMicrochipId(String microchipId) {
+        this.microchipId = (microchipId != null && microchipId.isBlank()) ? null : microchipId;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SpotBugs exclusion filter for Spring PetClinic.
+  Excludes false positives and design-inherent patterns in JPA/Spring code.
+-->
+<FindBugsFilter>
+
+    <!--
+      EI_EXPOSE_REP / EI_EXPOSE_REP2: JPA entities and Spring beans intentionally
+      expose mutable references. Defensive copying would break Hibernate proxies
+      and Spring's binding infrastructure.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        <Or>
+            <Class name="org.springframework.samples.petclinic.model.Pet"/>
+            <Class name="org.springframework.samples.petclinic.model.Visit"/>
+            <Class name="org.springframework.samples.petclinic.model.Vets"/>
+            <Class name="org.springframework.samples.petclinic.repository.jpa.JpaOwnerRepositoryImpl"/>
+            <Class name="org.springframework.samples.petclinic.repository.jpa.JpaPetRepositoryImpl"/>
+            <Class name="org.springframework.samples.petclinic.repository.jpa.JpaVetRepositoryImpl"/>
+            <Class name="org.springframework.samples.petclinic.repository.jpa.JpaVisitRepositoryImpl"/>
+        </Or>
+    </Match>
+
+</FindBugsFilter>

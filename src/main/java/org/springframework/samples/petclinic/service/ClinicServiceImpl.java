@@ -107,5 +107,13 @@ public class ClinicServiceImpl implements ClinicService {
 		return visitRepository.findByPetId(petId);
 	}
 
+    @Override
+    @Transactional(readOnly = true)
+    public Pet findPetByMicrochipId(String microchipId) {
+        if (microchipId == null || microchipId.isBlank()) {
+            return null;
+        }
+        return petRepository.findByMicrochipId(microchipId);
+    }
 
 }
