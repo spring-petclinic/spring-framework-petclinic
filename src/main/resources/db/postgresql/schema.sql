@@ -57,15 +57,16 @@ ALTER SEQUENCE owners_id_seq RESTART WITH 100;
 
 
 CREATE TABLE IF NOT EXISTS pets (
-  id SERIAL,
-  name VARCHAR(30),
-  birth_date DATE,
-  type_id INT NOT NULL,
-  owner_id INT NOT NULL,
-  photo_url VARCHAR(255) NULL,
-  FOREIGN KEY (owner_id) REFERENCES owners(id),
-  FOREIGN KEY (type_id) REFERENCES types(id),
-  CONSTRAINT pk_pets PRIMARY KEY (id)
+   id SERIAL,
+   name VARCHAR(30),
+   birth_date DATE,
+   type_id INT NOT NULL,
+   owner_id INT NOT NULL,
+   microchip_id VARCHAR(15) UNIQUE NULL,
+   photo_url VARCHAR(255) NULL,
+   FOREIGN KEY (owner_id) REFERENCES owners(id),
+   FOREIGN KEY (type_id) REFERENCES types(id),
+   CONSTRAINT pk_pets PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_pets_name ON pets (name);

@@ -55,7 +55,8 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 
         this.insertPet = new SimpleJdbcInsert(dataSource)
             .withTableName("pets")
-            .usingGeneratedKeyColumns("id");
+            .usingGeneratedKeyColumns("id")
+            .usingColumns("name", "birth_date", "type_id", "owner_id", "microchip_id", "photo_url");
 
         this.ownerRepository = ownerRepository;
     }
@@ -94,11 +95,29 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             this.jdbcClient
                 .sql("""
                     UPDATE pets
-                    SET name=:name, birth_date=:birth_date, type_id=:type_id, owner_id=:owner_id, photo_url=:photo_url
+                    SET name=:name, birth_date=:birth_date, type_id=:type_id, owner_id=:owner_id, microchip_id=:microchip_id, photo_url=:photo_url
                     WHERE id=:id
                     """)
                 .paramSource(createPetParameterSource(pet))
                 .update();
+        }
+    }
+
+    @Override
+    public Pet findByMicrochipId(String microchipId) {
+        try {
+            int ownerId = this.jdbcClient
+                .sql("SELECT owner_id FROM pets WHERE microchip_id=:microchipId")
+                .param("microchipId", microchipId)
+                .query(Integer.class)
+                .single();
+            Owner owner = this.ownerRepository.findById(ownerId);
+            return owner.getPets().stream()
+                .filter(p -> microchipId.equals(p.getMicrochipId()))
+                .findFirst()
+                .orElse(null);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
         }
     }
 
@@ -112,6 +131,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .addValue("birth_date", pet.getBirthDate())
             .addValue("type_id", pet.getType().getId())
             .addValue("owner_id", pet.getOwner().getId())
+            .addValue("microchip_id", pet.getMicrochipId())
             .addValue("photo_url", pet.getPhotoUrl());
     }
 

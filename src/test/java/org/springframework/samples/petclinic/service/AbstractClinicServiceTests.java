@@ -199,5 +199,30 @@ abstract class AbstractClinicServiceTests {
         assertThat(visitArr[0].getPet().getId()).isEqualTo(7);
     }
 
+    @Test
+    void shouldFindPetByMicrochipId() {
+        // Pet 7 has no microchip_id initially; use findPetByMicrochipId with a non-existent ID
+        Pet result = this.clinicService.findPetByMicrochipId("000000000000000");
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Transactional
+    public void shouldSaveAndFindPetByMicrochipId() {
+        Owner owner6 = this.clinicService.findOwnerById(6);
+        Collection<PetType> types = this.clinicService.findPetTypes();
+
+        Pet pet = new Pet();
+        pet.setName("MicroTest");
+        pet.setType(EntityUtils.getById(types, PetType.class, 1));
+        pet.setBirthDate(LocalDate.now());
+        pet.setMicrochipId("111222333444555");
+        owner6.addPet(pet);
+        this.clinicService.savePet(pet);
+
+        Pet found = this.clinicService.findPetByMicrochipId("111222333444555");
+        assertThat(found).isNotNull();
+        assertThat(found.getName()).isEqualTo("MicroTest");
+    }
 
 }

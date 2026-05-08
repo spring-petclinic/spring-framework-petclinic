@@ -79,6 +79,12 @@ public class PetController {
         if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null){
             result.rejectValue("name", "duplicate", "already exists");
         }
+        if (StringUtils.hasLength(pet.getMicrochipId())) {
+            Pet existing = this.clinicService.findPetByMicrochipId(pet.getMicrochipId());
+            if (existing != null) {
+                result.rejectValue("microchipId", "duplicate", "already registered to another pet");
+            }
+        }
         if (result.hasErrors()) {
             model.put("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
@@ -97,7 +103,14 @@ public class PetController {
     }
 
     @PostMapping(value = "/pets/{petId}/edit")
-    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
+    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model,
+                                    @PathVariable("petId") int petId) {
+        if (StringUtils.hasLength(pet.getMicrochipId())) {
+            Pet existing = this.clinicService.findPetByMicrochipId(pet.getMicrochipId());
+            if (existing != null && existing.getId() != petId) {
+                result.rejectValue("microchipId", "duplicate", "already registered to another pet");
+            }
+        }
         if (result.hasErrors()) {
             model.put("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;

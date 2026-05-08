@@ -83,6 +83,7 @@
         <jacoco-maven-plugin>0.8.14</jacoco-maven-plugin>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <libsass-maven-plugin.version>0.3.4</libsass-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
 
         <!-- Docker image -->
         <docker.jib-maven-plugin.version>3.5.1</docker.jib-maven-plugin.version>
@@ -490,9 +491,20 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <failOnError>true</failOnError>
+                    <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>

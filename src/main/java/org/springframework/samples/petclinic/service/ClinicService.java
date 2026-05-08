@@ -49,4 +49,6 @@ public interface ClinicService {
 
 	Collection<Visit> findVisitsByPetId(int petId);
 
+    Pet findPetByMicrochipId(String microchipId);
+
 }
