@@ -1,0 +1,78 @@
+[
+  {
+    "key": "107c22bd-dd12-42bf-92c3-349bf3c89fbc",
+    "rule": "java:S2259",
+    "severity": "MAJOR",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+    "project": "Pet-Clinic",
+    "line": 75,
+    "hash": "9884cb4d30ff00be6ab3b9c3f1b3f415",
+    "textRange": {
+      "startLine": 75,
+      "endLine": 79,
+      "startOffset": 22,
+      "endOffset": 25
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+            "textRange": {
+              "startLine": 75,
+              "endLine": 79,
+              "startOffset": 22,
+              "endOffset": 25
+            },
+            "msg": "'single' is dereferenced.",
+            "msgFormattings": []
+          },
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+            "textRange": {
+              "startLine": 75,
+              "endLine": 79,
+              "startOffset": 22,
+              "endOffset": 25
+            },
+            "msg": "'single()' can return null.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "A \"NullPointerException\" could be thrown; \"single\" is nullable here.",
+    "effort": "10min",
+    "debt": "10min",
+    "assignee": "qwen",
+    "author": "antoine.rey@free.fr",
+    "tags": [
+      "cwe",
+      "symbolic-execution",
+      "cert"
+    ],
+    "comments": [],
+    "creationDate": "2023-12-27T11:15:28+0000",
+    "updateDate": "2026-06-03T06:48:30+0000",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S2259"
+  }
+]
