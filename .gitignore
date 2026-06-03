@@ -16,3 +16,7 @@ target/
 
 # OS
 .DS_Store
+
+sonarqube-issues-raw.json
+.aider.tags.cache.v4/*
+.aider*
