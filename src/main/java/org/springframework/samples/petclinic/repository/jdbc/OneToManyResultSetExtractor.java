@@ -86,6 +86,19 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 	}
 
 	public List<R> extractData(ResultSet rs) throws SQLException {
+		List<R> results = processResultSet(rs);
+		validateResults(results);
+		return results;
+	}
+
+	/**
+	 * Processes the result set, mapping root entities and their associated children.
+	 *
+	 * @param rs the result set
+	 * @return a list of root entities
+	 * @throws SQLException if a database access error occurs
+	 */
+	private List<R> processResultSet(ResultSet rs) throws SQLException {
 		List<R> results = new ArrayList<>();
 		int row = 0;
 		boolean more = rs.next();
@@ -103,8 +116,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 						row++;
 					}
 				}
-			}
-			else {
+			} else {
 				more = rs.next();
 				if (more) {
 					row++;
@@ -112,6 +124,16 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 			}
 			results.add(root);
 		}
+		return results;
+	}
+
+	/**
+	 * Validates the extracted results based on the expected result type.
+	 *
+	 * @param results the list of results to validate
+	 * @throws IncorrectResultSizeDataAccessException if the size does not match expectations
+	 */
+	private void validateResults(List<R> results) throws IncorrectResultSizeDataAccessException {
 		if ((expectedResults == ExpectedResults.ONE_AND_ONLY_ONE || expectedResults == ExpectedResults.ONE_OR_NONE) &&
 				results.size() > 1) {
 			throw new IncorrectResultSizeDataAccessException(1, results.size());
@@ -120,7 +142,6 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 				results.isEmpty()) {
 			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
-		return results;
 	}
 
 	/**
