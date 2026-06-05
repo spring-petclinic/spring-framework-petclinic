@@ -190,7 +190,7 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
-    void shouldFindVisitsByPetId() throws Exception {
+    void shouldFindVisitsByPetId() {
         Collection<Visit> visits = this.clinicService.findVisitsByPetId(7);
         assertThat(visits).hasSize(2);
         Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
