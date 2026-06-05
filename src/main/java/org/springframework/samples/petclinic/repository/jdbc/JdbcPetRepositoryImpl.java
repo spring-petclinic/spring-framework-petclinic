@@ -72,11 +72,15 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     public Pet findById(int id) {
         int ownerId;
         try {
-            ownerId = this.jdbcClient
+            Integer result = this.jdbcClient
                 .sql("SELECT owner_id FROM pets WHERE id=:id")
                 .param("id", id)
                 .query(Integer.class)
                 .single();
+            if (result == null) {
+                throw new EmptyResultDataAccessException(1);
+            }
+            ownerId = result;
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Pet.class, id);
         }
