@@ -362,3 +362,383 @@
 +**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
 +
 +
+
+# 2026-06-05 13:31:20.475357
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 88-88. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java
++**Rule:** java:S3776 — java:S3776
++**Issue:** Refactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.
++**Target lines:** 88–88 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 88–88:**
++```javascript
++	public List<R> extractData(ResultSet rs) throws SQLException {
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++Reducing cognitive complexity can be challenging.
++ Here are a few suggestions:
++
++  
++-  **Extract complex conditions in a new function.**
++ Mixed operators in condition will increase complexity. Extracting the
++  condition in a new function with an appropriate name will reduce cognitive load. 
++  
++-  **Break down large functions.**
++ Large functions can be hard to understand and maintain. If a function is doing too many
++  things, consider breaking it down into smaller, more manageable functions. Each function should have a single responsibility. 
++  
++-  **Avoid deep nesting by returning early.**
++ To avoid the nesting of conditions, process exceptional cases first and return
++  early. 
++
++**Extraction of a complex condition in a new function.**
++
++#### Noncompliant code example
++
++The code is using a complex condition and has a cognitive cost of 3.
++
++```
++double calculateFinalPrice(User user, Cart cart) {
++  double total = calculateTotal(cart);
++  if (user.hasMembership()                            // +1 (if)
++    && user.ordersCount() > 10                        // +1 (more than one condition)
++    && user.isAccountActive()
++    && !user.hasDiscount()
++    || user.ordersCount() == 1) {                    // +1 (change of operator in condition)
++    total = applyDiscount(user, total);
++  }
++  return total;
++}
++```
++
++#### Compliant solution
++
++Even if the cognitive complexity of the whole program did not change, it is easier for a reader to understand the code of the
++`calculateFinalPrice` function, which now only has a cognitive cost of 1.
++
++```
++double calculateFinalPrice(User user, Cart cart) {
++  double total = calculateTotal(cart);
++  if (isEligibleForDiscount(user)) {                  // +1 (if)
++    total = applyDiscount(user, total);
++  }
++  return total;
++}
++
++boolean isEligibleForDiscount(User user) {
++  return user.hasMembership()
++    && user.ordersCount() > 10                        // +1 (more than one condition)
++    && user.isAccountActive()
++    && !user.hasDiscount()
++    || user.ordersCount() == 1;                       // +1 (change of operator in condition)
++}
++```
++
++**Break down large functions.**
++
++#### Noncompliant code example
++
++For example, consider a function that calculates the total price of a shopping cart, including sales tax and shipping.
++ *Note:* The code
++is simplified here, to illustrate the purpose. Please imagine there is more happening in the `for` loops.
++
++```
++double calculateTotal(Cart cart) {
++  double total = 0;
++  for (Item item : cart.items()) {       // +1 (for)
++    total += item.price;
++  }
++
++  // calculateSalesTax
++  for (Item item : cart.items()) {       // +1 (for)
++    total += 0.2 * item.price;
++  }
++
++  //calculateShipping
++  total += 5 * cart.items().size();
++
++  return total;
++}
++```
++
++This function could be refactored into smaller functions: The complexity is spread over multiple functions and the complex
++`calculateTotal` has now a complexity score of zero.
++
++#### Compliant solution
++
++```
++double calculateTotal(Cart cart) {
++  double total = 0;
++  total = calculateSubtotal(cart, total);
++  total += calculateSalesTax(cart, total);
++  total += calculateShipping(cart, total);
++
++  return total;
++}
++
++double calculateShipping(Cart cart, double total) {
++  total += 5 * cart.items().size();
++  return total;
++}
++
++double calculateSalesTax(Cart cart, double total) {
++  for (Item item : cart.items()) {       // +1 (for)
++    total += 0.2 * item.price;
++  }
++  return total;
++}
++
++double calculateSubtotal(Cart cart, double total) {
++  for (Item item : cart.items()) {       // +1 (for)
++    total += item.price;
++  }
++  return total;
++}
++```
++
++**Avoid deep nesting by returning early.**
++
++#### Noncompliant code example
++
++The below code has a cognitive complexity of 6.
++
++```
++double calculateDiscount(double price, User user) {
++  if (isEligibleForDiscount(user)) {      // +1 ( if )
++    if (user.hasMembership()) {           // +2 ( nested if )
++      return price * 0.9;
++    } else if (user.ordersCount() == 1) { // +1 ( else )
++      return price * 0.95;
++    } else {                              // +1 ( else )
++      return price;
++    }
++  } else {                                // +1 ( else )
++    return price;
++  }
++}
++```
++
++#### Compliant solution
++
++Checking for the edge case first flattens the `if` statements and reduces the cognitive complexity to 3.
++
++```
++double calculateDiscount(double price, User user) {
++  if (!isEligibleForDiscount(user)) {     // +1 ( if )
++    return price;
++  }
++  if (user.hasMembership()) {             // +1
++    return price * 0.9;
++  }
++  if (user.ordersCount() == 1) {          // +1 ( if )
++    return price * 0.95;
++  }
++  return price;
++}
++```
++
++### Pitfalls
++
++As this code is complex, ensure that you have unit tests that cover the code before refactoring.
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++
+
+# 2026-06-05 13:31:20.475602
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 88-88. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java
++**Rule:** java:S3776 — java:S3776
++**Issue:** Refactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.
++**Target lines:** 88–88 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 88–88:**
++```javascript
++	public List<R> extractData(ResultSet rs) throws SQLException {
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++Reducing cognitive complexity can be challenging.
++ Here are a few suggestions:
++
++  
++-  **Extract complex conditions in a new function.**
++ Mixed operators in condition will increase complexity. Extracting the
++  condition in a new function with an appropriate name will reduce cognitive load. 
++  
++-  **Break down large functions.**
++ Large functions can be hard to understand and maintain. If a function is doing too many
++  things, consider breaking it down into smaller, more manageable functions. Each function should have a single responsibility. 
++  
++-  **Avoid deep nesting by returning early.**
++ To avoid the nesting of conditions, process exceptional cases first and return
++  early. 
++
++**Extraction of a complex condition in a new function.**
++
++#### Noncompliant code example
++
++The code is using a complex condition and has a cognitive cost of 3.
++
++```
++double calculateFinalPrice(User user, Cart cart) {
++  double total = calculateTotal(cart);
++  if (user.hasMembership()                            // +1 (if)
++    && user.ordersCount() > 10                        // +1 (more than one condition)
++    && user.isAccountActive()
++    && !user.hasDiscount()
++    || user.ordersCount() == 1) {                    // +1 (change of operator in condition)
++    total = applyDiscount(user, total);
++  }
++  return total;
++}
++```
++
++#### Compliant solution
++
++Even if the cognitive complexity of the whole program did not change, it is easier for a reader to understand the code of the
++`calculateFinalPrice` function, which now only has a cognitive cost of 1.
++
++```
++double calculateFinalPrice(User user, Cart cart) {
++  double total = calculateTotal(cart);
++  if (isEligibleForDiscount(user)) {                  // +1 (if)
++    total = applyDiscount(user, total);
++  }
++  return total;
++}
++
++boolean isEligibleForDiscount(User user) {
++  return user.hasMembership()
++    && user.ordersCount() > 10                        // +1 (more than one condition)
++    && user.isAccountActive()
++    && !user.hasDiscount()
++    || user.ordersCount() == 1;                       // +1 (change of operator in condition)
++}
++```
++
++**Break down large functions.**
++
++#### Noncompliant code example
++
++For example, consider a function that calculates the total price of a shopping cart, including sales tax and shipping.
++ *Note:* The code
++is simplified here, to illustrate the purpose. Please imagine there is more happening in the `for` loops.
++
++```
++double calculateTotal(Cart cart) {
++  double total = 0;
++  for (Item item : cart.items()) {       // +1 (for)
++    total += item.price;
++  }
++
++  // calculateSalesTax
++  for (Item item : cart.items()) {       // +1 (for)
++    total += 0.2 * item.price;
++  }
++
++  //calculateShipping
++  total += 5 * cart.items().size();
++
++  return total;
++}
++```
++
++This function could be refactored into smaller functions: The complexity is spread over multiple functions and the complex
++`calculateTotal` has now a complexity score of zero.
++
++#### Compliant solution
++
++```
++double calculateTotal(Cart cart) {
++  double total = 0;
++  total = calculateSubtotal(cart, total);
++  total += calculateSalesTax(cart, total);
++  total += calculateShipping(cart, total);
++
++  return total;
++}
++
++double calculateShipping(Cart cart, double total) {
++  total += 5 * cart.items().size();
++  return total;
++}
++
++double calculateSalesTax(Cart cart, double total) {
++  for (Item item : cart.items()) {       // +1 (for)
++    total += 0.2 * item.price;
++  }
++  return total;
++}
++
++double calculateSubtotal(Cart cart, double total) {
++  for (Item item : cart.items()) {       // +1 (for)
++    total += item.price;
++  }
++  return total;
++}
++```
++
++**Avoid deep nesting by returning early.**
++
++#### Noncompliant code example
++
++The below code has a cognitive complexity of 6.
++
++```
++double calculateDiscount(double price, User user) {
++  if (isEligibleForDiscount(user)) {      // +1 ( if )
++    if (user.hasMembership()) {           // +2 ( nested if )
++      return price * 0.9;
++    } else if (user.ordersCount() == 1) { // +1 ( else )
++      return price * 0.95;
++    } else {                              // +1 ( else )
++      return price;
++    }
++  } else {                                // +1 ( else )
++    return price;
++  }
++}
++```
++
++#### Compliant solution
++
++Checking for the edge case first flattens the `if` statements and reduces the cognitive complexity to 3.
++
++```
++double calculateDiscount(double price, User user) {
++  if (!isEligibleForDiscount(user)) {     // +1 ( if )
++    return price;
++  }
++  if (user.hasMembership()) {             // +1
++    return price * 0.9;
++  }
++  if (user.ordersCount() == 1) {          // +1 ( if )
++    return price * 0.95;
++  }
++  return price;
++}
++```
++
++### Pitfalls
++
++As this code is complex, ensure that you have unit tests that cover the code before refactoring.
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++

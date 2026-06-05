@@ -96,13 +96,7 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 			R root = rootMapper.mapRow(rs, row);
 			K primaryKey = mapPrimaryKey(rs);
 			if (mapForeignKey(rs) != null) {
-				while (more && primaryKey.equals(mapForeignKey(rs))) {
-					addChild(root, childMapper.mapRow(rs, row));
-					more = rs.next();
-					if (more) {
-						row++;
-					}
-				}
+				more = processChildren(rs, root, primaryKey, row, more);
 			}
 			else {
 				more = rs.next();
@@ -121,6 +115,29 @@ public abstract class OneToManyResultSetExtractor<R, C, K> implements ResultSetE
 			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
 		return results;
+	}
+
+	/**
+	 * Processes all child rows associated with the given root object.
+	 * This method updates the ResultSet cursor and the row counter.
+	 *
+	 * @param rs the ResultSet
+	 * @param root the Root object
+	 * @param primaryKey the primary key of the root object
+	 * @param row the current row index
+	 * @param more the current state of the ResultSet cursor
+	 * @return the updated 'more' state of the ResultSet cursor
+	 * @throws SQLException
+	 */
+	private boolean processChildren(ResultSet rs, R root, K primaryKey, int row, boolean more) throws SQLException {
+		while (more && primaryKey.equals(mapForeignKey(rs))) {
+			addChild(root, childMapper.mapRow(rs, row));
+			more = rs.next();
+			if (more) {
+				row++;
+			}
+		}
+		return more;
 	}
 
 	/**
