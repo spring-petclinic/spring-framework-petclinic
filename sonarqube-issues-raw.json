@@ -1,0 +1,629 @@
+[
+  {
+    "key": "aeaf3e9e-558b-4d70-861e-a1b850783b3f",
+    "rule": "java:S2259",
+    "severity": "MAJOR",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+    "project": "Pet-Clinic",
+    "line": 75,
+    "hash": "9884cb4d30ff00be6ab3b9c3f1b3f415",
+    "textRange": {
+      "startLine": 75,
+      "endLine": 79,
+      "startOffset": 22,
+      "endOffset": 25
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+            "textRange": {
+              "startLine": 75,
+              "endLine": 79,
+              "startOffset": 22,
+              "endOffset": 25
+            },
+            "msg": "'single' is dereferenced.",
+            "msgFormattings": []
+          },
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java",
+            "textRange": {
+              "startLine": 75,
+              "endLine": 79,
+              "startOffset": 22,
+              "endOffset": 25
+            },
+            "msg": "'single()' can return null.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "A \"NullPointerException\" could be thrown; \"single\" is nullable here.",
+    "effort": "10min",
+    "debt": "10min",
+    "assignee": "qwen",
+    "author": "antoine.rey@free.fr",
+    "tags": [
+      "cwe",
+      "symbolic-execution",
+      "cert"
+    ],
+    "comments": [],
+    "creationDate": "2023-12-27T11:15:28+0000",
+    "updateDate": "2026-06-03T09:56:03+0000",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S2259"
+  },
+  {
+    "key": "50b7e4f7-9b05-4b49-9b3c-e679e0d13fe5",
+    "rule": "java:S3776",
+    "severity": "CRITICAL",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+    "project": "Pet-Clinic",
+    "line": 88,
+    "hash": "6c03574d1d6d4fce3a6551b436b4aa8f",
+    "textRange": {
+      "startLine": 88,
+      "endLine": 88,
+      "startOffset": 16,
+      "endOffset": 27
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 92,
+              "endLine": 92,
+              "startOffset": 2,
+              "endOffset": 4
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 95,
+              "endLine": 95,
+              "startOffset": 2,
+              "endOffset": 7
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 98,
+              "endLine": 98,
+              "startOffset": 3,
+              "endOffset": 5
+            },
+            "msg": "+2 (incl 1 for nesting)",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 99,
+              "endLine": 99,
+              "startOffset": 4,
+              "endOffset": 9
+            },
+            "msg": "+3 (incl 2 for nesting)",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 99,
+              "endLine": 99,
+              "startOffset": 16,
+              "endOffset": 18
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 102,
+              "endLine": 102,
+              "startOffset": 5,
+              "endOffset": 7
+            },
+            "msg": "+4 (incl 3 for nesting)",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 107,
+              "endLine": 107,
+              "startOffset": 3,
+              "endOffset": 7
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 109,
+              "endLine": 109,
+              "startOffset": 4,
+              "endOffset": 6
+            },
+            "msg": "+3 (incl 2 for nesting)",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 115,
+              "endLine": 115,
+              "startOffset": 2,
+              "endOffset": 4
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 115,
+              "endLine": 115,
+              "startOffset": 59,
+              "endOffset": 61
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 115,
+              "endLine": 115,
+              "startOffset": 110,
+              "endOffset": 112
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 119,
+              "endLine": 119,
+              "startOffset": 2,
+              "endOffset": 4
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 119,
+              "endLine": 119,
+              "startOffset": 59,
+              "endOffset": 61
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/repository/jdbc/OneToManyResultSetExtractor.java",
+            "textRange": {
+              "startLine": 119,
+              "endLine": 119,
+              "startOffset": 111,
+              "endOffset": 113
+            },
+            "msg": "+1",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Refactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.",
+    "effort": "12min",
+    "debt": "12min",
+    "assignee": "qwen",
+    "author": "antoine.rey@gmail.com",
+    "tags": [
+      "brain-overload"
+    ],
+    "comments": [],
+    "creationDate": "2020-04-26T08:24:54+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "CODE_SMELL",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "FOCUSED",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "impacts": [
+      {
+        "softwareQuality": "MAINTAINABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S3776"
+  },
+  {
+    "key": "21861a82-9a98-4a92-afe6-c7d3c1a29127",
+    "rule": "java:S112",
+    "severity": "MAJOR",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/web/CrashController.java",
+    "project": "Pet-Clinic",
+    "line": 34,
+    "hash": "58abc984bd778248b11d98a2d500bc60",
+    "textRange": {
+      "startLine": 34,
+      "endLine": 34,
+      "startOffset": 18,
+      "endOffset": 34
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+    "effort": "20min",
+    "debt": "20min",
+    "assignee": "qwen",
+    "author": "misvy@vmware.com",
+    "tags": [
+      "cwe",
+      "error-handling",
+      "cert"
+    ],
+    "comments": [],
+    "creationDate": "2013-02-12T01:12:51+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "CODE_SMELL",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "MAINTAINABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S112"
+  },
+  {
+    "key": "f3b1ff03-4a9a-4c5d-b741-520cf837da99",
+    "rule": "java:S6856",
+    "severity": "MAJOR",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/web/PetController.java",
+    "project": "Pet-Clinic",
+    "line": 99,
+    "hash": "aac24eded1c8559d3190798de55e9e90",
+    "textRange": {
+      "startLine": 99,
+      "endLine": 99,
+      "startOffset": 4,
+      "endOffset": 46
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Bind template variable \"petId\" to a method parameter.",
+    "effort": "5min",
+    "debt": "5min",
+    "assignee": "qwen",
+    "author": "antoine.rey@gmail.com",
+    "tags": [
+      "spring"
+    ],
+    "comments": [],
+    "creationDate": "2019-06-11T06:29:33+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S6856"
+  },
+  {
+    "key": "75ee7568-54db-4ae6-ad70-701fb9952895",
+    "rule": "java:S6856",
+    "severity": "MAJOR",
+    "component": "Pet-Clinic:src/main/java/org/springframework/samples/petclinic/web/VisitController.java",
+    "project": "Pet-Clinic",
+    "line": 75,
+    "hash": "582b853e69a17e141eb755aa3f10a4bd",
+    "textRange": {
+      "startLine": 75,
+      "endLine": 75,
+      "startOffset": 4,
+      "endOffset": 69
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Bind template variable \"ownerId\" to a method parameter.",
+    "effort": "5min",
+    "debt": "5min",
+    "assignee": "qwen",
+    "author": "antoine.rey@gmail.com",
+    "tags": [
+      "spring"
+    ],
+    "comments": [],
+    "creationDate": "2019-06-11T06:29:33+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S6856"
+  },
+  {
+    "key": "bbac3289-0ac5-422c-92b5-93e118089871",
+    "rule": "java:S1130",
+    "severity": "MINOR",
+    "component": "Pet-Clinic:src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java",
+    "project": "Pet-Clinic",
+    "line": 193,
+    "hash": "de73e4607b78db56f2dc87bc14b7a9a4",
+    "textRange": {
+      "startLine": 193,
+      "endLine": 193,
+      "startOffset": 42,
+      "endOffset": 51
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.",
+    "effort": "5min",
+    "debt": "5min",
+    "assignee": "qwen",
+    "author": "antoine.rey@gmail.com",
+    "tags": [
+      "error-handling",
+      "unused",
+      "redundant",
+      "clumsy"
+    ],
+    "comments": [],
+    "creationDate": "2019-10-22T16:15:51+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "CODE_SMELL",
+    "scope": "TEST",
+    "quickFixAvailable": true,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "MAINTAINABILITY",
+        "severity": "LOW"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S1130"
+  },
+  {
+    "key": "031b5ed4-2b2e-410d-bdbc-a57d47861ef3",
+    "rule": "java:S1130",
+    "severity": "MINOR",
+    "component": "Pet-Clinic:src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java",
+    "project": "Pet-Clinic",
+    "line": 153,
+    "hash": "be5ba1e33012d83de2aad44632db2b1a",
+    "textRange": {
+      "startLine": 153,
+      "endLine": 153,
+      "startOffset": 45,
+      "endOffset": 54
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.",
+    "effort": "5min",
+    "debt": "5min",
+    "assignee": "qwen",
+    "author": "martin.klose@klosebrothers.de",
+    "tags": [
+      "error-handling",
+      "unused",
+      "redundant",
+      "clumsy"
+    ],
+    "comments": [],
+    "creationDate": "2015-04-01T14:39:51+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "CODE_SMELL",
+    "scope": "TEST",
+    "quickFixAvailable": true,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "MAINTAINABILITY",
+        "severity": "LOW"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S1130"
+  },
+  {
+    "key": "b10eb96c-ffa6-44f8-bf28-5df4bf450220",
+    "rule": "java:S1130",
+    "severity": "MINOR",
+    "component": "Pet-Clinic:src/test/java/org/springframework/samples/petclinic/web/PetTypeFormatterTests.java",
+    "project": "Pet-Clinic",
+    "line": 54,
+    "hash": "8ae0bc3992e4280c6621b6a195c20632",
+    "textRange": {
+      "startLine": 54,
+      "endLine": 54,
+      "startOffset": 44,
+      "endOffset": 58
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Remove the declaration of thrown exception 'java.text.ParseException', as it cannot be thrown from method's body.",
+    "effort": "5min",
+    "debt": "5min",
+    "assignee": "qwen",
+    "author": "antoine.rey@gmail.com",
+    "tags": [
+      "error-handling",
+      "unused",
+      "redundant",
+      "clumsy"
+    ],
+    "comments": [],
+    "creationDate": "2019-10-22T16:15:51+0000",
+    "updateDate": "2026-06-03T09:56:08+0000",
+    "type": "CODE_SMELL",
+    "scope": "TEST",
+    "quickFixAvailable": true,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "MAINTAINABILITY",
+        "severity": "LOW"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED",
+    "ruleName": "java:S1130"
+  }
+]
