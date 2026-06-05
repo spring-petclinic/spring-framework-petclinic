@@ -1174,3 +1174,227 @@
 +**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
 +
 +
+
+# 2026-06-05 13:47:17.026858
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 123-123. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java
++**Rule:** java:S1130 — java:S1130
++**Issue:** Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
++**Target lines:** 123–123 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 123–123:**
++```javascript
++        assertThat(petType1.getName()).isEqualTo("cat");
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++Superfluous exceptions within `throws` clauses have negative effects on the readability and maintainability of the code. An exception in
++a `throws` clause is superfluous if it is:
++
++  
++-  listed multiple times 
++  
++-  a subclass of another listed exception 
++  
++-  not actually thrown by any execution path of the method 
++
++### Noncompliant code example
++
++```
++void foo() throws MyException, MyException {}  // Noncompliant; should be listed once
++void bar() throws Throwable, Exception {}  // Noncompliant; Exception is a subclass of Throwable
++void boo() throws IOException { // Noncompliant; IOException cannot be thrown
++  System.out.println("Hi!");
++}
++```
++
++### Compliant solution
++
++```
++void foo() throws MyException {}
++void bar() throws Throwable {}
++void boo() {
++  System.out.println("Hi!");
++}
++```
++
++### Exceptions
++
++The rule will not raise any issue for exceptions that cannot be thrown from the method body:
++
++  
++-  in interface `default` methods 
++  
++-  in overriding and implementating methods 
++  
++-  in non-private methods that only `throw`, have empty bodies, or a single return statement. 
++  
++-  in overridable methods (non-final, or not member of a final class, non-static, non-private), if the exception is documented with a proper
++  JavaDoc 
++
++```
++interface MyInterface {
++  default void defaultMethod() throws IOException {
++    System.out.println("Hi!");
++  }
++  void doSomething() throws IOException;
++}
++
++class A implements MyInterface {
++  @Override
++  void doSomething() throws IOException {
++    System.out.println("Hi!");
++  }
++
++  public void emptyBody() throws IOException {}
++
++  protected void singleThrowStatement() throws IOException {
++    throw new UnsupportedOperationException("This method should be implemented in subclasses");
++  }
++
++  Object singleReturnStatement() throws IOException {
++    return null;
++  }
++
++  /**
++   * @throws IOException Overriding classes may throw this exception if they print values into a file
++   */
++  protected void overridable() throws IOException { // no issue, method is overridable and the exception has proper javadoc
++    System.out.println("foo");
++  }
++}
++```
++
++Also, the rule will not raise issues on `RuntimeException`, or one of its sub-classes, because documenting runtime exceptions which
++could be thrown can ultimately help users of the method understand its behavior.
++
++```
++class B {
++  int possibleDivisionByZero(int a, int b) throws ArithmeticException {
++      return a / b;
++  }
++}
++```
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++
+
+# 2026-06-05 13:47:17.026997
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 123-123. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java
++**Rule:** java:S1130 — java:S1130
++**Issue:** Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
++**Target lines:** 123–123 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 123–123:**
++```javascript
++        assertThat(petType1.getName()).isEqualTo("cat");
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++Superfluous exceptions within `throws` clauses have negative effects on the readability and maintainability of the code. An exception in
++a `throws` clause is superfluous if it is:
++
++  
++-  listed multiple times 
++  
++-  a subclass of another listed exception 
++  
++-  not actually thrown by any execution path of the method 
++
++### Noncompliant code example
++
++```
++void foo() throws MyException, MyException {}  // Noncompliant; should be listed once
++void bar() throws Throwable, Exception {}  // Noncompliant; Exception is a subclass of Throwable
++void boo() throws IOException { // Noncompliant; IOException cannot be thrown
++  System.out.println("Hi!");
++}
++```
++
++### Compliant solution
++
++```
++void foo() throws MyException {}
++void bar() throws Throwable {}
++void boo() {
++  System.out.println("Hi!");
++}
++```
++
++### Exceptions
++
++The rule will not raise any issue for exceptions that cannot be thrown from the method body:
++
++  
++-  in interface `default` methods 
++  
++-  in overriding and implementating methods 
++  
++-  in non-private methods that only `throw`, have empty bodies, or a single return statement. 
++  
++-  in overridable methods (non-final, or not member of a final class, non-static, non-private), if the exception is documented with a proper
++  JavaDoc 
++
++```
++interface MyInterface {
++  default void defaultMethod() throws IOException {
++    System.out.println("Hi!");
++  }
++  void doSomething() throws IOException;
++}
++
++class A implements MyInterface {
++  @Override
++  void doSomething() throws IOException {
++    System.out.println("Hi!");
++  }
++
++  public void emptyBody() throws IOException {}
++
++  protected void singleThrowStatement() throws IOException {
++    throw new UnsupportedOperationException("This method should be implemented in subclasses");
++  }
++
++  Object singleReturnStatement() throws IOException {
++    return null;
++  }
++
++  /**
++   * @throws IOException Overriding classes may throw this exception if they print values into a file
++   */
++  protected void overridable() throws IOException { // no issue, method is overridable and the exception has proper javadoc
++    System.out.println("foo");
++  }
++}
++```
++
++Also, the rule will not raise issues on `RuntimeException`, or one of its sub-classes, because documenting runtime exceptions which
++could be thrown can ultimately help users of the method understand its behavior.
++
++```
++class B {
++  int possibleDivisionByZero(int a, int b) throws ArithmeticException {
++      return a / b;
++  }
++}
++```
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++

@@ -150,7 +150,7 @@ abstract class AbstractClinicServiceTests {
 
     @Test
     @Transactional
-    public void shouldUpdatePetName() throws Exception {
+    public void shouldUpdatePetName() {
         Pet pet7 = this.clinicService.findPetById(7);
         String oldName = pet7.getName();
 
