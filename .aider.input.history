@@ -742,3 +742,107 @@
 +**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
 +
 +
+
+# 2026-06-05 13:32:39.717743
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 34-34. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/web/CrashController.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/web/CrashController.java
++**Rule:** java:S112 — java:S112
++**Issue:** Replace generic exceptions with specific library exceptions or a custom exception.
++**Target lines:** 34–34 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 34–34:**
++```javascript
++        throw new RuntimeException("Expected: controller used to showcase what " +
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++To fix this issue, make sure to throw specific exceptions that are relevant to the context in which they arise. It is recommended to either:
++
++  
++-  Raise a specific exception from the Java standard library when one matches. For example an `IllegalArgumentException` should be
++  thrown when a method receives an invalid argument. 
++  
++-  Create a custom exception class deriving from `Exception` or one of its subclasses. 
++
++#### Noncompliant code example
++
++```
++void checkValue(int value) throws Throwable { // Noncompliant: signature is too broad
++    if (value == 42) {
++        throw new RuntimeException("Value is 42"); // Noncompliant: This will be difficult for consumers to handle
++    }
++}
++```
++
++#### Compliant solution
++
++```
++void checkValue(int value) {
++    if (value == 42) {
++        throw new IllegalArgumentException("Value is 42"); // Compliant
++    }
++}
++```
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++
+
+# 2026-06-05 13:32:39.717869
++Make ONE surgical edit to resolve this SonarQube issue.
++Output the fix immediately. No internal debate, no 'Actually'/'But wait' loops.
++You must modify SonarQube's exact reported target lines 34-34. Do not fix another matching keyword or similar occurrence elsewhere.
++Target file: /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/web/CrashController.java
++
++**File:** /Users/peterscheffer/Code/langgraph-project/client_repos/PetClinic/src/main/java/org/springframework/samples/petclinic/web/CrashController.java
++**Rule:** java:S112 — java:S112
++**Issue:** Replace generic exceptions with specific library exceptions or a custom exception.
++**Target lines:** 34–34 (exact SonarQube target lines)
++**Code Snippet:** 
++
++**TARGET LINES 34–34:**
++```javascript
++        throw new RuntimeException("Expected: controller used to showcase what " +
++```
++
++
++**How to fix: Use Sonarqube's guidance to fix this issue**
++To fix this issue, make sure to throw specific exceptions that are relevant to the context in which they arise. It is recommended to either:
++
++  
++-  Raise a specific exception from the Java standard library when one matches. For example an `IllegalArgumentException` should be
++  thrown when a method receives an invalid argument. 
++  
++-  Create a custom exception class deriving from `Exception` or one of its subclasses. 
++
++#### Noncompliant code example
++
++```
++void checkValue(int value) throws Throwable { // Noncompliant: signature is too broad
++    if (value == 42) {
++        throw new RuntimeException("Value is 42"); // Noncompliant: This will be difficult for consumers to handle
++    }
++}
++```
++
++#### Compliant solution
++
++```
++void checkValue(int value) {
++    if (value == 42) {
++        throw new IllegalArgumentException("Value is 42"); // Compliant
++    }
++}
++```
++
++**Do** make the code change.
++**Do** move onto the next issue if the current one appears to have already been solved by previous fixes.
++
++
