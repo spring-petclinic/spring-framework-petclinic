@@ -91,7 +91,7 @@ public class OwnerController {
 
         // allow parameterless GET request for /owners to return all records
         // find owners by last name
-        Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
+        Collection<Owner> results = findMatchingOwners(owner);
         if (results.isEmpty()) {
             return handleNoOwners(result);
         }
@@ -106,6 +106,10 @@ public class OwnerController {
         if (owner.getLastName() == null) {
             owner.setLastName("");
         }
+    }
+
+    private Collection<Owner> findMatchingOwners(Owner owner) {
+        return this.clinicService.findOwnerByLastName(owner.getLastName());
     }
 
     private String handleNoOwners(BindingResult result) {
