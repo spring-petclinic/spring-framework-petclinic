@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class VisitController {
 
+    private static final String VIEWS_VISIT_FORM = "pets/createOrUpdateVisitForm";
     private final ClinicService clinicService;
 
     public VisitController(ClinicService clinicService) {
@@ -67,14 +68,14 @@ public class VisitController {
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
     @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
     public String initNewVisitForm() {
-        return "pets/createOrUpdateVisitForm";
+        return VIEWS_VISIT_FORM;
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
     @PostMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
     public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
         if (result.hasErrors()) {
-            return "pets/createOrUpdateVisitForm";
+            return VIEWS_VISIT_FORM;
         }
 
         this.clinicService.saveVisit(visit);

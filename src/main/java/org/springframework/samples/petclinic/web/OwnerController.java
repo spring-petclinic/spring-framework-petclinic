@@ -40,6 +40,7 @@ public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
+    private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -53,7 +54,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/new")
     public String initCreationForm(Map<String, Object> model) {
-        model.put("owner", new Owner());
+        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
@@ -69,7 +70,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/find")
     public String initFindForm(Map<String, Object> model) {
-        model.put("owner", new Owner());
+        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
         return VIEWS_OWNER_FIND_OWNERS;
     }
 
@@ -84,17 +85,26 @@ public class OwnerController {
         // find owners by last name
         Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
         if (results.isEmpty()) {
-            // no owners found
-            result.rejectValue("lastName", "notFound", "not found");
-            return VIEWS_OWNER_FIND_OWNERS;
-        } else if (results.size() == 1) {
-            // 1 owner found
-            return "redirect:/owners/" + results.iterator().next().getId();
-        } else {
-            // multiple owners found
-            model.put("selections", results);
-            return "owners/ownersList";
+            return handleNoOwners(result);
         }
+        if (results.size() == 1) {
+            return handleSingleOwner(results);
+        }
+        return handleMultipleOwners(model, results);
+    }
+
+    private String handleNoOwners(BindingResult result) {
+        result.rejectValue("lastName", "notFound", "not found");
+        return VIEWS_OWNER_FIND_OWNERS;
+    }
+
+    private String handleSingleOwner(Collection<Owner> results) {
+        return "redirect:/owners/" + results.iterator().next().getId();
+    }
+
+    private String handleMultipleOwners(Map<String, Object> model, Collection<Owner> results) {
+        model.put("selections", results);
+        return "owners/ownersList";
     }
 
     @GetMapping(value = "/owners/{ownerId}/edit")
