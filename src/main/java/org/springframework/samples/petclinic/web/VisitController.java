@@ -37,6 +37,10 @@ import org.springframework.web.bind.annotation.*;
 public class VisitController {
 
     private static final String VIEWS_VISIT_FORM = "pets/createOrUpdateVisitForm";
+    private static final String MODEL_ATTRIBUTE_VISITS = "visits";
+    private static final String VISIT_NEW_PATH = "/owners/{ownerId}/pets/{petId}/visits/new";
+    private static final String REDIRECT_TO_VISIT_OWNER = "redirect:/owners/{ownerId}";
+    private static final String VIEWS_VISIT_LIST = "visitList";
     private final ClinicService clinicService;
 
     public VisitController(ClinicService clinicService) {
@@ -60,32 +64,52 @@ public class VisitController {
      */
     @ModelAttribute("visit")
     public Visit loadPetWithVisit(@PathVariable("petId") int petId) {
+        return createVisitForPet(petId);
+    }
+
+    private Visit createVisitForPet(int petId) {
         Visit visit = new Visit();
         this.clinicService.findPetById(petId).addVisit(visit);
         return visit;
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
-    @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
+    @GetMapping(value = VISIT_NEW_PATH)
     public String initNewVisitForm() {
-        return VIEWS_VISIT_FORM;
+        return visitFormView();
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
-    @PostMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
+    @PostMapping(value = VISIT_NEW_PATH)
     public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
+        return handleVisitSubmission(visit, result);
+    }
+
+    private String handleVisitSubmission(Visit visit, BindingResult result) {
         if (result.hasErrors()) {
-            return VIEWS_VISIT_FORM;
+            return visitFormView();
         }
 
+        saveVisit(visit);
+        return REDIRECT_TO_VISIT_OWNER;
+    }
+
+    private String visitFormView() {
+        return VIEWS_VISIT_FORM;
+    }
+
+    private void saveVisit(Visit visit) {
         this.clinicService.saveVisit(visit);
-        return "redirect:/owners/{ownerId}";
     }
 
     @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits")
     public String showVisits(@PathVariable int petId, Map<String, Object> model) {
-        model.put("visits", this.clinicService.findPetById(petId).getVisits());
-        return "visitList";
+        addVisitsToModel(petId, model);
+        return VIEWS_VISIT_LIST;
+    }
+
+    private void addVisitsToModel(int petId, Map<String, Object> model) {
+        model.put(MODEL_ATTRIBUTE_VISITS, this.clinicService.findPetById(petId).getVisits());
     }
 
 }

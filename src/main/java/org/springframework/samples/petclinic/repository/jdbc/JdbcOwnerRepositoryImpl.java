@@ -124,15 +124,15 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         if (owner.isNew()) {
             Number newKey = this.insertOwner.executeAndReturnKey(parameterSource);
             owner.setId(newKey.intValue());
-        } else {
-            this.jdbcClient.sql("""
+            return;
+        }
+        this.jdbcClient.sql("""
                     UPDATE owners
                     SET first_name=:firstName, last_name=:lastName, address=:address, city=:city, telephone=:telephone
                     WHERE id=:id
                     """)
                 .paramSource(parameterSource)
                 .update();
-        }
     }
 
     public Collection<PetType> getPetTypes() {

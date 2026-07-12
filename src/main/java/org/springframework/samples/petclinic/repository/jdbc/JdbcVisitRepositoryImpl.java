@@ -54,13 +54,12 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     @Override
     public void save(Visit visit) {
-        if (visit.isNew()) {
-            Number newKey = this.insertVisit.executeAndReturnKey(
-                createVisitParameterSource(visit));
-            visit.setId(newKey.intValue());
-        } else {
+        if (!visit.isNew()) {
             throw new UnsupportedOperationException("Visit update not supported");
         }
+        Number newKey = this.insertVisit.executeAndReturnKey(
+            createVisitParameterSource(visit));
+        visit.setId(newKey.intValue());
     }
 
 

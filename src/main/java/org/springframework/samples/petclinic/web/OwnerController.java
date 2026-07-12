@@ -40,7 +40,14 @@ public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
+    private static final String VIEWS_OWNER_LIST = "owners/ownersList";
+    private static final String VIEWS_OWNER_DETAILS = "owners/ownerDetails";
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
+    private static final String MODEL_ATTRIBUTE_SELECTIONS = "selections";
+    private static final String OWNER_EDIT_PATH = "/owners/{ownerId}/edit";
+    private static final String OWNER_NEW_PATH = "/owners/new";
+    private static final String REDIRECT_TO_OWNERS = "redirect:/owners/";
+    private static final String REDIRECT_TO_OWNER = "redirect:/owners/{ownerId}";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -52,36 +59,37 @@ public class OwnerController {
         dataBinder.setDisallowedFields("id");
     }
 
-    @GetMapping(value = "/owners/new")
+    @GetMapping(value = OWNER_NEW_PATH)
     public String initCreationForm(Map<String, Object> model) {
-        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
+        initializeOwnerModel(model);
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-    @PostMapping(value = "/owners/new")
+    @PostMapping(value = OWNER_NEW_PATH)
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         }
 
         this.clinicService.saveOwner(owner);
-        return "redirect:/owners/" + owner.getId();
+        return buildOwnerRedirect(owner.getId());
     }
 
     @GetMapping(value = "/owners/find")
     public String initFindForm(Map<String, Object> model) {
-        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
+        initializeOwnerModel(model);
         return VIEWS_OWNER_FIND_OWNERS;
+    }
+
+    private void initializeOwnerModel(Map<String, Object> model) {
+        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
     }
 
     @GetMapping(value = "/owners")
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
+        normalizeLastName(owner);
 
         // allow parameterless GET request for /owners to return all records
-        if (owner.getLastName() == null) {
-            owner.setLastName(""); // empty string signifies broadest possible search
-        }
-
         // find owners by last name
         Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
         if (results.isEmpty()) {
@@ -93,27 +101,42 @@ public class OwnerController {
         return handleMultipleOwners(model, results);
     }
 
+    private void normalizeLastName(Owner owner) {
+        // Empty string signifies broadest possible search.
+        if (owner.getLastName() == null) {
+            owner.setLastName("");
+        }
+    }
+
     private String handleNoOwners(BindingResult result) {
         result.rejectValue("lastName", "notFound", "not found");
         return VIEWS_OWNER_FIND_OWNERS;
     }
 
     private String handleSingleOwner(Collection<Owner> results) {
-        return "redirect:/owners/" + results.iterator().next().getId();
+        return buildOwnerRedirect(results.iterator().next().getId());
+    }
+
+    private String buildOwnerRedirect(Integer ownerId) {
+        return REDIRECT_TO_OWNERS + ownerId;
     }
 
     private String handleMultipleOwners(Map<String, Object> model, Collection<Owner> results) {
-        model.put("selections", results);
-        return "owners/ownersList";
+        model.put(MODEL_ATTRIBUTE_SELECTIONS, results);
+        return VIEWS_OWNER_LIST;
     }
 
-    @GetMapping(value = "/owners/{ownerId}/edit")
+    @GetMapping(value = OWNER_EDIT_PATH)
     public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
-        model.addAttribute(this.clinicService.findOwnerById(ownerId));
+        addOwnerToModel(model, ownerId);
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-    @PostMapping(value = "/owners/{ownerId}/edit")
+    private void addOwnerToModel(Model model, int ownerId) {
+        model.addAttribute(MODEL_ATTRIBUTE_OWNER, this.clinicService.findOwnerById(ownerId));
+    }
+
+    @PostMapping(value = OWNER_EDIT_PATH)
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
@@ -121,7 +144,7 @@ public class OwnerController {
 
         owner.setId(ownerId);
         this.clinicService.saveOwner(owner);
-        return "redirect:/owners/{ownerId}";
+        return REDIRECT_TO_OWNER;
     }
 
     /**
@@ -132,7 +155,11 @@ public class OwnerController {
      */
     @GetMapping("/owners/{ownerId}")
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
-        return new ModelAndView("owners/ownerDetails").addObject(this.clinicService.findOwnerById(ownerId));
+        return buildOwnerDetailsView(ownerId);
+    }
+
+    private ModelAndView buildOwnerDetailsView(int ownerId) {
+        return new ModelAndView(VIEWS_OWNER_DETAILS).addObject(this.clinicService.findOwnerById(ownerId));
     }
 
 }

@@ -48,9 +48,9 @@ public class JpaVisitRepositoryImpl implements VisitRepository {
     public void save(Visit visit) {
         if (visit.getId() == null) {
             this.em.persist(visit);
-        } else {
-            this.em.merge(visit);
+            return;
         }
+        this.em.merge(visit);
     }
 
 
