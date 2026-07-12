@@ -66,7 +66,7 @@ public class PetController {
         dataBinder.setDisallowedFields("id");
     }
 
-    @InitBinder("pet")
+    @InitBinder(MODEL_ATTRIBUTE_PET)
     public void initPetBinder(WebDataBinder dataBinder) {
         dataBinder.setValidator(new PetValidator());
     }
