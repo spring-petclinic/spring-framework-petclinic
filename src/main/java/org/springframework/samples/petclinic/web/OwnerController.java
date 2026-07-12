@@ -40,7 +40,10 @@ public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
+    private static final String VIEWS_OWNER_LIST = "owners/ownersList";
+    private static final String VIEWS_OWNER_DETAILS = "owners/ownerDetails";
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
+    private static final String MODEL_ATTRIBUTE_SELECTIONS = "selections";
     private static final String OWNER_EDIT_PATH = "/owners/{ownerId}/edit";
     private static final String OWNER_NEW_PATH = "/owners/new";
     private static final String REDIRECT_TO_OWNERS = "redirect:/owners/";
@@ -114,8 +117,8 @@ public class OwnerController {
     }
 
     private String handleMultipleOwners(Map<String, Object> model, Collection<Owner> results) {
-        model.put("selections", results);
-        return "owners/ownersList";
+        model.put(MODEL_ATTRIBUTE_SELECTIONS, results);
+        return VIEWS_OWNER_LIST;
     }
 
     @GetMapping(value = OWNER_EDIT_PATH)
@@ -147,7 +150,7 @@ public class OwnerController {
     }
 
     private ModelAndView buildOwnerDetailsView(int ownerId) {
-        return new ModelAndView("owners/ownerDetails").addObject(this.clinicService.findOwnerById(ownerId));
+        return new ModelAndView(VIEWS_OWNER_DETAILS).addObject(this.clinicService.findOwnerById(ownerId));
     }
 
 }
