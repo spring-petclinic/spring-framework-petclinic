@@ -42,6 +42,7 @@ public class OwnerController {
     private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private static final String OWNER_EDIT_PATH = "/owners/{ownerId}/edit";
+    private static final String OWNER_NEW_PATH = "/owners/new";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -53,13 +54,13 @@ public class OwnerController {
         dataBinder.setDisallowedFields("id");
     }
 
-    @GetMapping(value = "/owners/new")
+    @GetMapping(value = OWNER_NEW_PATH)
     public String initCreationForm(Map<String, Object> model) {
         model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-    @PostMapping(value = "/owners/new")
+    @PostMapping(value = OWNER_NEW_PATH)
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
