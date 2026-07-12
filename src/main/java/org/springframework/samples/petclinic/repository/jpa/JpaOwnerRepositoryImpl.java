@@ -72,9 +72,9 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
     public void save(Owner owner) {
         if (owner.getId() == null) {
             this.em.persist(owner);
-        } else {
-            this.em.merge(owner);
+            return;
         }
+        this.em.merge(owner);
 
     }
 
