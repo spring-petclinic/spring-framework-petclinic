@@ -34,23 +34,26 @@ import org.springframework.validation.Validator;
 public class PetValidator implements Validator {
 
     private static final String REQUIRED = "required";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_TYPE = "type";
+    private static final String FIELD_BIRTH_DATE = "birthDate";
 
     @Override
     public void validate(Object obj, Errors errors) {
         Pet pet = (Pet) obj;
         // name validation
         if (!StringUtils.hasLength(pet.getName())) {
-            errors.rejectValue("name", REQUIRED, REQUIRED);
+            errors.rejectValue(FIELD_NAME, REQUIRED, REQUIRED);
         }
 
         // type validation
         if (pet.isNew() && pet.getType() == null) {
-            errors.rejectValue("type", REQUIRED, REQUIRED);
+            errors.rejectValue(FIELD_TYPE, REQUIRED, REQUIRED);
         }
 
         // birth date validation
         if (pet.getBirthDate() == null) {
-            errors.rejectValue("birthDate", REQUIRED, REQUIRED);
+            errors.rejectValue(FIELD_BIRTH_DATE, REQUIRED, REQUIRED);
         }
     }
 
