@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.web;
 
 import java.util.Map;
+import java.util.Collection;
 
 import jakarta.validation.Valid;
 
@@ -109,7 +110,11 @@ public class VisitController {
     }
 
     private void addVisitsToModel(int petId, Map<String, Object> model) {
-        model.put(MODEL_ATTRIBUTE_VISITS, this.clinicService.findPetById(petId).getVisits());
+        model.put(MODEL_ATTRIBUTE_VISITS, findVisitsForPet(petId));
+    }
+
+    private Collection<Visit> findVisitsForPet(int petId) {
+        return this.clinicService.findPetById(petId).getVisits();
     }
 
 }
