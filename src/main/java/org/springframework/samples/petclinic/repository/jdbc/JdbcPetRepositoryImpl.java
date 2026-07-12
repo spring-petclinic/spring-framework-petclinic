@@ -90,8 +90,9 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             Number newKey = this.insertPet.executeAndReturnKey(
                 createPetParameterSource(pet));
             pet.setId(newKey.intValue());
-        } else {
-            this.jdbcClient
+            return;
+        }
+        this.jdbcClient
                 .sql("""
                     UPDATE pets
                     SET name=:name, birth_date=:birth_date, type_id=:type_id, owner_id=:owner_id
@@ -99,7 +100,6 @@ public class JdbcPetRepositoryImpl implements PetRepository {
                     """)
                 .paramSource(createPetParameterSource(pet))
                 .update();
-        }
     }
 
     /**
