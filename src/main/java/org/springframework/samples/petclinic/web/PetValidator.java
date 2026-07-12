@@ -46,19 +46,31 @@ public class PetValidator implements Validator {
     }
 
     private void validateName(Errors errors, Pet pet) {
-        if (!StringUtils.hasLength(pet.getName())) {
+        if (isMissingName(pet)) {
             rejectRequiredField(errors, FIELD_NAME);
         }
     }
 
     private void validateRequiredFieldsForNewPet(Errors errors, Pet pet) {
-        if (pet.isNew() && pet.getType() == null) {
+        if (isMissingTypeForNewPet(pet)) {
             rejectRequiredField(errors, FIELD_TYPE);
         }
 
-        if (pet.getBirthDate() == null) {
+        if (isMissingBirthDate(pet)) {
             rejectRequiredField(errors, FIELD_BIRTH_DATE);
         }
+    }
+
+    private boolean isMissingName(Pet pet) {
+        return !StringUtils.hasLength(pet.getName());
+    }
+
+    private boolean isMissingTypeForNewPet(Pet pet) {
+        return pet.isNew() && pet.getType() == null;
+    }
+
+    private boolean isMissingBirthDate(Pet pet) {
+        return pet.getBirthDate() == null;
     }
 
     private void rejectRequiredField(Errors errors, String fieldName) {
