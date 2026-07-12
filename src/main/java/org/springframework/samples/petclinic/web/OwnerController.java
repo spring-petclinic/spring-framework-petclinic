@@ -128,8 +128,12 @@ public class OwnerController {
 
     @GetMapping(value = OWNER_EDIT_PATH)
     public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
-        model.addAttribute(this.clinicService.findOwnerById(ownerId));
+        addOwnerToModel(model, ownerId);
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+    }
+
+    private void addOwnerToModel(Model model, int ownerId) {
+        model.addAttribute(MODEL_ATTRIBUTE_OWNER, this.clinicService.findOwnerById(ownerId));
     }
 
     @PostMapping(value = OWNER_EDIT_PATH)
