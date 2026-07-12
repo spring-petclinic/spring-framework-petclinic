@@ -143,6 +143,10 @@ public class OwnerController {
      */
     @GetMapping("/owners/{ownerId}")
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
+        return buildOwnerDetailsView(ownerId);
+    }
+
+    private ModelAndView buildOwnerDetailsView(int ownerId) {
         return new ModelAndView("owners/ownerDetails").addObject(this.clinicService.findOwnerById(ownerId));
     }
 
