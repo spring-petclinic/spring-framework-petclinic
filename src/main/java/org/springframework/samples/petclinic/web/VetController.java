@@ -56,13 +56,13 @@ public class VetController {
     @GetMapping(value = "/vets.json", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Vets showJsonVetList() {
-        return getVets();
+        return getVetsForResponse();
     }
 
     @GetMapping(value = "/vets.xml", produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public Vets showXmlVetList() {
-        return getVets();
+        return getVetsForResponse();
     }
 
     private Vets getVets() {
@@ -71,6 +71,10 @@ public class VetController {
         Vets vets = new Vets();
         vets.getVetList().addAll(this.clinicService.findVets());
         return vets;
+    }
+
+    private Vets getVetsForResponse() {
+        return getVets();
     }
 
 }
