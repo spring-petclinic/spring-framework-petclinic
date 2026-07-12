@@ -81,15 +81,7 @@ public class PetController {
 
     @PostMapping(value = PET_NEW_PATH)
     public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
-        if (hasDuplicatePetName(owner, pet)) {
-            result.rejectValue("name", "duplicate", "already exists");
-        }
-        if (result.hasErrors()) {
-            return showPetForm(model, pet);
-        }
-
-        savePetForOwner(owner, pet);
-        return VIEW_REDIRECT_OWNERS;
+        return savePetFormResult(owner, pet, result, model, hasDuplicatePetName(owner, pet));
     }
 
     private boolean hasDuplicatePetName(Owner owner, Pet pet) {
@@ -104,17 +96,24 @@ public class PetController {
 
     @PostMapping(value = PET_EDIT_PATH)
     public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
+        return savePetFormResult(owner, pet, result, model, false);
+    }
+
+    private void savePetForOwner(Owner owner, Pet pet) {
+        owner.addPet(pet);
+        this.clinicService.savePet(pet);
+    }
+
+    private String savePetFormResult(Owner owner, Pet pet, BindingResult result, ModelMap model, boolean duplicate) {
+        if (duplicate) {
+            result.rejectValue("name", "duplicate", "already exists");
+        }
         if (result.hasErrors()) {
             return showPetForm(model, pet);
         }
 
         savePetForOwner(owner, pet);
         return VIEW_REDIRECT_OWNERS;
-    }
-
-    private void savePetForOwner(Owner owner, Pet pet) {
-        owner.addPet(pet);
-        this.clinicService.savePet(pet);
     }
 
     private String showPetForm(ModelMap model, Pet pet) {
