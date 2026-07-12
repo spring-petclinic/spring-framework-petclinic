@@ -57,9 +57,14 @@ public class JpaVisitRepositoryImpl implements VisitRepository {
     @Override
     @SuppressWarnings("unchecked")
     public List<Visit> findByPetId(Integer petId) {
+        Query query = createFindByPetIdQuery(petId);
+        return query.getResultList();
+    }
+
+    private Query createFindByPetIdQuery(Integer petId) {
         Query query = this.em.createQuery("SELECT v FROM Visit v where v.pet.id= :id");
         query.setParameter("id", petId);
-        return query.getResultList();
+        return query;
     }
 
 }
