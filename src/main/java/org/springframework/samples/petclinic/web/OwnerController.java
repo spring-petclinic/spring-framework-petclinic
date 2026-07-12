@@ -92,6 +92,10 @@ public class OwnerController {
         // allow parameterless GET request for /owners to return all records
         // find owners by last name
         Collection<Owner> results = findMatchingOwners(owner);
+        return resolveOwnerFindResult(results, result, model);
+    }
+
+    private String resolveOwnerFindResult(Collection<Owner> results, BindingResult result, Map<String, Object> model) {
         if (results.isEmpty()) {
             return handleNoOwners(result);
         }
