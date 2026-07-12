@@ -73,10 +73,14 @@ public class PetController {
 
     @GetMapping(value = PET_NEW_PATH)
     public String initCreationForm(Owner owner, ModelMap model) {
+        addPetToModel(owner, model);
+        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+    }
+
+    private void addPetToModel(Owner owner, ModelMap model) {
         Pet pet = new Pet();
         owner.addPet(pet);
         model.put(MODEL_ATTRIBUTE_PET, pet);
-        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
     @PostMapping(value = PET_NEW_PATH)
