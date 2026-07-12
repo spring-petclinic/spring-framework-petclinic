@@ -76,21 +76,29 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     @Override
     public List<Visit> findByPetId(Integer petId) {
-        JdbcPet pet = this.jdbcClient
-            .sql("SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id")
-            .param("id", petId)
-            .query(new JdbcPetRowMapper())
-            .single();
+        JdbcPet pet = loadPetForVisit(petId);
 
-        List<Visit> visits = this.jdbcClient
-            .sql("SELECT id as visit_id, visit_date, description FROM visits WHERE pet_id=:id")
-            .param("id", petId)
-            .query(new JdbcVisitRowMapper())
-            .list();
+        List<Visit> visits = loadVisitsForPet(petId);
 
         attachPetToVisits(visits, pet);
 
         return visits;
+    }
+
+    private JdbcPet loadPetForVisit(Integer petId) {
+        return this.jdbcClient
+            .sql("SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id")
+            .param("id", petId)
+            .query(new JdbcPetRowMapper())
+            .single();
+    }
+
+    private List<Visit> loadVisitsForPet(Integer petId) {
+        return this.jdbcClient
+            .sql("SELECT id as visit_id, visit_date, description FROM visits WHERE pet_id=:id")
+            .param("id", petId)
+            .query(new JdbcVisitRowMapper())
+            .list();
     }
 
     private void attachPetToVisits(List<Visit> visits, JdbcPet pet) {
