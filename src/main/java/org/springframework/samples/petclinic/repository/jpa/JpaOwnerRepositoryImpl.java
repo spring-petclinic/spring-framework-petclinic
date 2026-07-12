@@ -52,16 +52,25 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
     public Collection<Owner> findByLastName(String lastName) {
         // using 'join fetch' because a single query should load both owners and pets
         // using 'left join fetch' because it might happen that an owner does not have pets yet
-        return this.em
-            .createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName")
-            .setParameter("lastName", lastName + "%")
-            .getResultList();
+        return getOwnersByLastNamePrefix(lastName);
     }
 
     @Override
     public Owner findById(int id) {
         // using 'join fetch' because a single query should load both owners and pets
         // using 'left join fetch' because it might happen that an owner does not have pets yet
+        return findOwnerById(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Collection<Owner> getOwnersByLastNamePrefix(String lastName) {
+        return this.em
+            .createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName")
+            .setParameter("lastName", lastName + "%")
+            .getResultList();
+    }
+
+    private Owner findOwnerById(int id) {
         return (Owner) this.em
             .createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
             .setParameter("id", id)
