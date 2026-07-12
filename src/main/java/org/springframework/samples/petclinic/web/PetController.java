@@ -41,6 +41,7 @@ public class PetController {
 
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private static final String MODEL_ATTRIBUTE_PET = "pet";
+    private static final String PET_NEW_PATH = "/pets/new";
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private static final String VIEW_REDIRECT_OWNERS = "redirect:/owners/{ownerId}";
     private final ClinicService clinicService;
@@ -69,7 +70,7 @@ public class PetController {
         dataBinder.setValidator(new PetValidator());
     }
 
-    @GetMapping(value = "/pets/new")
+    @GetMapping(value = PET_NEW_PATH)
     public String initCreationForm(Owner owner, ModelMap model) {
         Pet pet = new Pet();
         owner.addPet(pet);
@@ -77,7 +78,7 @@ public class PetController {
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
-    @PostMapping(value = "/pets/new")
+    @PostMapping(value = PET_NEW_PATH)
     public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
         if (hasDuplicatePetName(owner, pet)) {
             result.rejectValue("name", "duplicate", "already exists");
