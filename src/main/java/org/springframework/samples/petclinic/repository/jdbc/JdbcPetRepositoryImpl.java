@@ -93,9 +93,13 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     }
 
     private Owner loadOwnerForPet(int petId) {
-        int ownerId;
+        int ownerId = findOwnerIdForPet(petId);
+        return this.ownerRepository.findById(ownerId);
+    }
+
+    private int findOwnerIdForPet(int petId) {
         try {
-            ownerId = this.jdbcClient
+            return this.jdbcClient
                 .sql("SELECT owner_id FROM pets WHERE id=:id")
                 .param("id", petId)
                 .query(Integer.class)
@@ -103,7 +107,6 @@ public class JdbcPetRepositoryImpl implements PetRepository {
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Pet.class, petId);
         }
-        return this.ownerRepository.findById(ownerId);
     }
 
     /**
