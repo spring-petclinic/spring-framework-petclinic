@@ -79,12 +79,9 @@ public class OwnerController {
 
     @GetMapping(value = "/owners")
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
+        normalizeLastName(owner);
 
         // allow parameterless GET request for /owners to return all records
-        if (owner.getLastName() == null) {
-            owner.setLastName(""); // empty string signifies broadest possible search
-        }
-
         // find owners by last name
         Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
         if (results.isEmpty()) {
@@ -94,6 +91,13 @@ public class OwnerController {
             return handleSingleOwner(results);
         }
         return handleMultipleOwners(model, results);
+    }
+
+    private void normalizeLastName(Owner owner) {
+        // Empty string signifies broadest possible search.
+        if (owner.getLastName() == null) {
+            owner.setLastName("");
+        }
     }
 
     private String handleNoOwners(BindingResult result) {
