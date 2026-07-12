@@ -40,6 +40,7 @@ public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
+    private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -53,7 +54,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/new")
     public String initCreationForm(Map<String, Object> model) {
-        model.put("owner", new Owner());
+        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
@@ -69,7 +70,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/find")
     public String initFindForm(Map<String, Object> model) {
-        model.put("owner", new Owner());
+        model.put(MODEL_ATTRIBUTE_OWNER, new Owner());
         return VIEWS_OWNER_FIND_OWNERS;
     }
 
