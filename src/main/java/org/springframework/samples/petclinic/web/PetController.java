@@ -41,6 +41,7 @@ public class PetController {
 
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private static final String MODEL_ATTRIBUTE_PET = "pet";
+    private static final String PET_EDIT_PATH = "/pets/{petId}/edit";
     private static final String PET_NEW_PATH = "/pets/new";
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private static final String VIEW_REDIRECT_OWNERS = "redirect:/owners/{ownerId}";
@@ -96,13 +97,13 @@ public class PetController {
         return StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null;
     }
 
-    @GetMapping(value = "/pets/{petId}/edit")
+    @GetMapping(value = PET_EDIT_PATH)
     public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
         model.put(MODEL_ATTRIBUTE_PET, this.clinicService.findPetById(petId));
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
-    @PostMapping(value = "/pets/{petId}/edit")
+    @PostMapping(value = PET_EDIT_PATH)
     public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
         if (result.hasErrors()) {
             return showPetForm(model, pet);
