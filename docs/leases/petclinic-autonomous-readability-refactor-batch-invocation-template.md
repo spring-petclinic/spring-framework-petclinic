@@ -26,6 +26,15 @@ scope:
   optionalAllowedPaths:
     - src/main/java/org/springframework/samples/petclinic/model/**/*.java
     - src/main/java/org/springframework/samples/petclinic/util/**/*.java
+    - src/main/java/org/springframework/samples/petclinic/repository/**/*.java
+  repositoryScopeRules:
+    - readability-only changes
+    - no repository interface signature changes
+    - no SQL/HQL/JPQL string changes
+    - no query parameter name, value, or order changes
+    - no row mapper, result extractor, association, or persistence behavior changes
+    - no transaction or cache annotation changes
+    - no exception type or exception message changes
 
 validation:
   fullMavenTestRequiredPerCandidate: true
@@ -58,6 +67,8 @@ authorization:
     - src/main/resources changes
     - src/main/webapp changes
     - request mapping/view/model/validation/repository/persistence behavior changes
+    - SQL/HQL/JPQL changes
+    - repository interface changes
 
 stopConditions:
   - branch mismatch

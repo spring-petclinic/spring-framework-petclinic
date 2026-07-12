@@ -27,6 +27,8 @@ The lease is designed for mechanical readability work only:
 - redundant local variable simplification
 - small controller branch readability decomposition
 - validator and formatter readability cleanup
+- repository/JDBC/JPA readability cleanup without query or persistence behavior
+  changes
 
 The lease does not authorize behavior changes or public claims about readiness,
 correctness, security, or compliance.
@@ -72,6 +74,7 @@ allowedPaths:
   - src/main/java/org/springframework/samples/petclinic/service/**/*.java
   - src/main/java/org/springframework/samples/petclinic/model/**/*.java
   - src/main/java/org/springframework/samples/petclinic/util/**/*.java
+  - src/main/java/org/springframework/samples/petclinic/repository/**/*.java
 
 forbiddenPaths:
   - pom.xml
@@ -83,9 +86,14 @@ forbiddenPaths:
   - hidden/config files
 ```
 
-The default starting scope should be `web` and `service`. `model` and `util`
-may be admitted only when the candidate is mechanically local and covered by the
-same validation protocol.
+The default starting scope should be `web` and `service`. `model`, `util`, and
+`repository` may be admitted only when the candidate is mechanically local and
+covered by the same validation protocol.
+
+Repository work is restricted to readability-only changes in the existing JDBC,
+JPA, and repository adapter classes. It must not change SQL/HQL/JPQL strings,
+query parameters, result mapping semantics, save/merge/persist behavior,
+transaction behavior, exception behavior, or repository interface contracts.
 
 ## Candidate Classes
 
@@ -146,7 +154,40 @@ Allowed when all conditions hold:
 - no parse/print semantics change
 - no exception message change unless explicitly authorized
 
-### 6. Micro-Format Cleanup
+### 6. Repository/JDBC/JPA Readability Cleanup
+
+Allowed when all conditions hold:
+
+- same class only
+- helper method is private
+- at most two new private methods
+- no repository interface signature change
+- no SQL/HQL/JPQL string change
+- no query parameter name, value, or order change
+- no row mapper, result extractor, or entity association semantic change
+- no persist, merge, insert, generated-key, or update behavior change
+- no transaction annotation or cache annotation change
+- no exception type or exception message change
+- existing repository call order is preserved unless the candidate is purely a
+  local helper extraction that calls the same operations in the same order
+
+Examples that may qualify:
+
+- remove an unnecessary `else` after an immediate `return`
+- extract a contiguous loop body into a private helper when query and mapping
+  behavior remain identical
+- extract a local private helper for setting already-loaded associations on
+  already-loaded entities
+
+Examples that must be rejected:
+
+- rewriting SQL/HQL/JPQL
+- changing joins, ordering, filters, aliases, or selected columns
+- changing mapper classes or result extractor contracts
+- changing save/update support or generated-key handling
+- changing repository interfaces
+
+### 7. Micro-Format Cleanup
 
 Allowed only inside a method already admitted for one of the candidate classes
 above. Broad file formatting is not authorized.
@@ -201,15 +242,19 @@ positive:
   noBehaviorChangeExpected: 30
   fullMavenTestAvailable: 20
   existingControllerOrServiceCoverage: 10
+  existingRepositoryCoverage: 10
   privateHelperImprovesReadability: 15
   duplicateLiteralConstantRemovesRepetition: 10
   redundantLocalVariableSimplification: 12
+  repositoryReadabilityWithoutSemanticChange: 10
   diffUnder40ChangedLines: 10
   diff40To80ChangedLines: 5
   noPublicSignatureChange: 10
 
 negative:
   controllerBranchDecomposition: -10
+  repositoryAdapterTouch: -10
+  jdbcOrJpaQueryAdjacentCode: -15
   helperNameRequiresSemanticJudgment: -10
   changesMoreThanOneBranch: -15
   extractionCrossesNonContiguousLogic: -20
@@ -236,10 +281,13 @@ Apply in order:
 2. Prefer one private helper over two.
 3. Prefer already covered controller or service methods.
 4. Prefer `OwnerController` over `PetController` over `VisitController` over
-   `VetController` over `PetValidator` over `PetTypeFormatter` over service.
-5. Prefer lexical file path.
-6. Prefer lexical method name.
-7. Stop with an ambiguity packet if still indistinguishable.
+   `VetController` over `PetValidator` over `PetTypeFormatter` over service
+   over model over util over repository.
+5. Within repository scope, prefer non-query-adjacent cleanup over JDBC helper
+   extraction, then JDBC helper extraction over JPA query-adjacent cleanup.
+6. Prefer lexical file path.
+7. Prefer lexical method name.
+8. Stop with an ambiguity packet if still indistinguishable.
 
 ## Candidate Packet
 
