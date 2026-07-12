@@ -69,14 +69,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Collection<Owner> findByLastName(String lastName) {
-        List<Owner> owners = this.jdbcClient.sql("""
-                SELECT id, first_name, last_name, address, city, telephone
-                FROM owners
-                WHERE last_name like :lastName
-                """)
-            .param("lastName", lastName + "%")
-            .query(BeanPropertyRowMapper.newInstance(Owner.class))
-            .list();
+        List<Owner> owners = findOwnersByLastNamePrefix(lastName);
         loadOwnersPetsAndVisits(owners);
         return owners;
     }
@@ -87,9 +80,25 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Owner findById(int id) {
-        Owner owner;
+        Owner owner = findOwnerById(id);
+        loadPetsAndVisits(owner);
+        return owner;
+    }
+
+    private List<Owner> findOwnersByLastNamePrefix(String lastName) {
+        return this.jdbcClient.sql("""
+                SELECT id, first_name, last_name, address, city, telephone
+                FROM owners
+                WHERE last_name like :lastName
+                """)
+            .param("lastName", lastName + "%")
+            .query(BeanPropertyRowMapper.newInstance(Owner.class))
+            .list();
+    }
+
+    private Owner findOwnerById(int id) {
         try {
-            owner = this.jdbcClient.sql("""
+            return this.jdbcClient.sql("""
                     SELECT id, first_name, last_name, address, city, telephone
                     FROM owners WHERE id = :id
                     """)
@@ -99,8 +108,6 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Owner.class, id);
         }
-        loadPetsAndVisits(owner);
-        return owner;
     }
 
     public void loadPetsAndVisits(final Owner owner) {
