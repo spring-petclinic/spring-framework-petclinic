@@ -41,6 +41,7 @@ public class PetController {
 
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private static final String MODEL_ATTRIBUTE_PET = "pet";
+    private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private static final String VIEW_REDIRECT_OWNERS = "redirect:/owners/{ownerId}";
     private final ClinicService clinicService;
 
@@ -53,12 +54,12 @@ public class PetController {
         return this.clinicService.findPetTypes();
     }
 
-    @ModelAttribute("owner")
+    @ModelAttribute(MODEL_ATTRIBUTE_OWNER)
     public Owner findOwner(@PathVariable("ownerId") int ownerId) {
         return this.clinicService.findOwnerById(ownerId);
     }
 
-    @InitBinder("owner")
+    @InitBinder(MODEL_ATTRIBUTE_OWNER)
     public void initOwnerBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
     }
