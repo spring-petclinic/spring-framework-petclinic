@@ -72,7 +72,7 @@ public class VisitController {
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
     @GetMapping(value = VISIT_NEW_PATH)
     public String initNewVisitForm() {
-        return VIEWS_VISIT_FORM;
+        return visitFormView();
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
@@ -83,11 +83,15 @@ public class VisitController {
 
     private String handleVisitSubmission(Visit visit, BindingResult result) {
         if (result.hasErrors()) {
-            return VIEWS_VISIT_FORM;
+            return visitFormView();
         }
 
         saveVisit(visit);
         return REDIRECT_TO_VISIT_OWNER;
+    }
+
+    private String visitFormView() {
+        return VIEWS_VISIT_FORM;
     }
 
     private void saveVisit(Visit visit) {
