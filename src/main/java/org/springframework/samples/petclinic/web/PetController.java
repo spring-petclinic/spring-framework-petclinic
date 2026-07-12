@@ -88,8 +88,7 @@ public class PetController {
             return showPetForm(model, pet);
         }
 
-        owner.addPet(pet);
-        this.clinicService.savePet(pet);
+        savePetForOwner(owner, pet);
         return VIEW_REDIRECT_OWNERS;
     }
 
@@ -109,9 +108,13 @@ public class PetController {
             return showPetForm(model, pet);
         }
 
+        savePetForOwner(owner, pet);
+        return VIEW_REDIRECT_OWNERS;
+    }
+
+    private void savePetForOwner(Owner owner, Pet pet) {
         owner.addPet(pet);
         this.clinicService.savePet(pet);
-        return VIEW_REDIRECT_OWNERS;
     }
 
     private String showPetForm(ModelMap model, Pet pet) {
