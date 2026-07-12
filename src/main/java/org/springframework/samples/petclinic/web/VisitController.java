@@ -39,6 +39,8 @@ public class VisitController {
     private static final String VIEWS_VISIT_FORM = "pets/createOrUpdateVisitForm";
     private static final String MODEL_ATTRIBUTE_VISITS = "visits";
     private static final String VISIT_NEW_PATH = "/owners/{ownerId}/pets/{petId}/visits/new";
+    private static final String REDIRECT_TO_VISIT_OWNER = "redirect:/owners/{ownerId}";
+    private static final String VIEWS_VISIT_LIST = "visitList";
     private final ClinicService clinicService;
 
     public VisitController(ClinicService clinicService) {
@@ -81,13 +83,13 @@ public class VisitController {
         }
 
         this.clinicService.saveVisit(visit);
-        return "redirect:/owners/{ownerId}";
+        return REDIRECT_TO_VISIT_OWNER;
     }
 
     @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits")
     public String showVisits(@PathVariable int petId, Map<String, Object> model) {
         addVisitsToModel(petId, model);
-        return "visitList";
+        return VIEWS_VISIT_LIST;
     }
 
     private void addVisitsToModel(int petId, Map<String, Object> model) {
