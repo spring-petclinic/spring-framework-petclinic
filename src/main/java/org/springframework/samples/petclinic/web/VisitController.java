@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class VisitController {
 
+    private static final String VIEWS_VISIT_FORM = "pets/createOrUpdateVisitForm";
     private final ClinicService clinicService;
 
     public VisitController(ClinicService clinicService) {
@@ -59,30 +60,29 @@ public class VisitController {
      */
     @ModelAttribute("visit")
     public Visit loadPetWithVisit(@PathVariable("petId") int petId) {
-        Pet pet = this.clinicService.findPetById(petId);
         Visit visit = new Visit();
-        pet.addVisit(visit);
+        this.clinicService.findPetById(petId).addVisit(visit);
         return visit;
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
-    @GetMapping(value = "/owners/*/pets/{petId}/visits/new")
-    public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
-        return "pets/createOrUpdateVisitForm";
+    @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
+    public String initNewVisitForm() {
+        return VIEWS_VISIT_FORM;
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
     @PostMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new")
     public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
         if (result.hasErrors()) {
-            return "pets/createOrUpdateVisitForm";
+            return VIEWS_VISIT_FORM;
         }
 
         this.clinicService.saveVisit(visit);
         return "redirect:/owners/{ownerId}";
     }
 
-    @GetMapping(value = "/owners/*/pets/{petId}/visits")
+    @GetMapping(value = "/owners/{ownerId}/pets/{petId}/visits")
     public String showVisits(@PathVariable int petId, Map<String, Object> model) {
         model.put("visits", this.clinicService.findPetById(petId).getVisits());
         return "visitList";
