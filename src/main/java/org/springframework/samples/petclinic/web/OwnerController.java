@@ -47,6 +47,7 @@ public class OwnerController {
     private static final String OWNER_EDIT_PATH = "/owners/{ownerId}/edit";
     private static final String OWNER_NEW_PATH = "/owners/new";
     private static final String REDIRECT_TO_OWNERS = "redirect:/owners/";
+    private static final String REDIRECT_TO_OWNER = "redirect:/owners/{ownerId}";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -135,7 +136,7 @@ public class OwnerController {
 
         owner.setId(ownerId);
         this.clinicService.saveOwner(owner);
-        return "redirect:/owners/{ownerId}";
+        return REDIRECT_TO_OWNER;
     }
 
     /**
