@@ -125,13 +125,15 @@ public class Owner extends Person {
     public Pet getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
         for (Pet pet : getPetsInternal()) {
-            if (!ignoreNew || !pet.isNew()) {
-                if (pet.getName().toLowerCase().equals(name)) {
-                    return pet;
-                }
+            if (isMatchingPet(pet, name, ignoreNew)) {
+                return pet;
             }
         }
         return null;
+    }
+
+    private boolean isMatchingPet(Pet pet, String name, boolean ignoreNew) {
+        return (!ignoreNew || !pet.isNew()) && pet.getName().toLowerCase().equals(name);
     }
 
     @Override
