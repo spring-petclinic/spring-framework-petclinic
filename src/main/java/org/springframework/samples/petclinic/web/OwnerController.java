@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
+    private static final String VIEWS_OWNER_FIND_OWNERS = "owners/findOwners";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -52,8 +53,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/new")
     public String initCreationForm(Map<String, Object> model) {
-        Owner owner = new Owner();
-        model.put("owner", owner);
+        model.put("owner", new Owner());
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
@@ -70,7 +70,7 @@ public class OwnerController {
     @GetMapping(value = "/owners/find")
     public String initFindForm(Map<String, Object> model) {
         model.put("owner", new Owner());
-        return "owners/findOwners";
+        return VIEWS_OWNER_FIND_OWNERS;
     }
 
     @GetMapping(value = "/owners")
@@ -86,11 +86,10 @@ public class OwnerController {
         if (results.isEmpty()) {
             // no owners found
             result.rejectValue("lastName", "notFound", "not found");
-            return "owners/findOwners";
+            return VIEWS_OWNER_FIND_OWNERS;
         } else if (results.size() == 1) {
             // 1 owner found
-            owner = results.iterator().next();
-            return "redirect:/owners/" + owner.getId();
+            return "redirect:/owners/" + results.iterator().next().getId();
         } else {
             // multiple owners found
             model.put("selections", results);
@@ -100,8 +99,7 @@ public class OwnerController {
 
     @GetMapping(value = "/owners/{ownerId}/edit")
     public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
-        Owner owner = this.clinicService.findOwnerById(ownerId);
-        model.addAttribute(owner);
+        model.addAttribute(this.clinicService.findOwnerById(ownerId));
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
@@ -124,9 +122,7 @@ public class OwnerController {
      */
     @GetMapping("/owners/{ownerId}")
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
-        ModelAndView mav = new ModelAndView("owners/ownerDetails");
-        mav.addObject(this.clinicService.findOwnerById(ownerId));
-        return mav;
+        return new ModelAndView("owners/ownerDetails").addObject(this.clinicService.findOwnerById(ownerId));
     }
 
 }
