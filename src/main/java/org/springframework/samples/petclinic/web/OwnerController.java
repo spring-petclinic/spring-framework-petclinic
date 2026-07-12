@@ -43,6 +43,7 @@ public class OwnerController {
     private static final String MODEL_ATTRIBUTE_OWNER = "owner";
     private static final String OWNER_EDIT_PATH = "/owners/{ownerId}/edit";
     private static final String OWNER_NEW_PATH = "/owners/new";
+    private static final String REDIRECT_TO_OWNERS = "redirect:/owners/";
     private final ClinicService clinicService;
 
     public OwnerController(ClinicService clinicService) {
@@ -67,7 +68,7 @@ public class OwnerController {
         }
 
         this.clinicService.saveOwner(owner);
-        return "redirect:/owners/" + owner.getId();
+        return buildOwnerRedirect(owner.getId());
     }
 
     @GetMapping(value = "/owners/find")
@@ -101,7 +102,11 @@ public class OwnerController {
     }
 
     private String handleSingleOwner(Collection<Owner> results) {
-        return "redirect:/owners/" + results.iterator().next().getId();
+        return buildOwnerRedirect(results.iterator().next().getId());
+    }
+
+    private String buildOwnerRedirect(Integer ownerId) {
+        return REDIRECT_TO_OWNERS + ownerId;
     }
 
     private String handleMultipleOwners(Map<String, Object> model, Collection<Owner> results) {
