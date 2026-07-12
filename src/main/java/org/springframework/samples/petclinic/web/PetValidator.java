@@ -41,17 +41,21 @@ public class PetValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Pet pet = (Pet) obj;
-        // name validation
+        validateName(errors, pet);
+        validateRequiredFieldsForNewPet(errors, pet);
+    }
+
+    private void validateName(Errors errors, Pet pet) {
         if (!StringUtils.hasLength(pet.getName())) {
             rejectRequiredField(errors, FIELD_NAME);
         }
+    }
 
-        // type validation
+    private void validateRequiredFieldsForNewPet(Errors errors, Pet pet) {
         if (pet.isNew() && pet.getType() == null) {
             rejectRequiredField(errors, FIELD_TYPE);
         }
 
-        // birth date validation
         if (pet.getBirthDate() == null) {
             rejectRequiredField(errors, FIELD_BIRTH_DATE);
         }
