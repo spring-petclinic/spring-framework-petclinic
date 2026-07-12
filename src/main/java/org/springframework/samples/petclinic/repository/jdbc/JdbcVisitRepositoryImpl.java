@@ -88,11 +88,15 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
             .query(new JdbcVisitRowMapper())
             .list();
 
-        for (Visit visit: visits) {
-            visit.setPet(pet);
-        }
+        attachPetToVisits(visits, pet);
 
         return visits;
+    }
+
+    private void attachPetToVisits(List<Visit> visits, JdbcPet pet) {
+        for (Visit visit : visits) {
+            visit.setPet(pet);
+        }
     }
 
 }
