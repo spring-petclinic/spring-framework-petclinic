@@ -47,11 +47,15 @@ public class EntityUtils {
      */
     public static <T extends BaseEntity> T getById(Collection<T> entities, Class<T> entityClass, int entityId) {
         for (T entity : entities) {
-            if (entity.getId() == entityId && entityClass.isInstance(entity)) {
+            if (isMatchingEntity(entity, entityClass, entityId)) {
                 return entity;
             }
         }
         throw new ObjectRetrievalFailureException(entityClass, entityId);
+    }
+
+    private static <T extends BaseEntity> boolean isMatchingEntity(T entity, Class<T> entityClass, int entityId) {
+        return entity.getId() == entityId && entityClass.isInstance(entity);
     }
 
 }
