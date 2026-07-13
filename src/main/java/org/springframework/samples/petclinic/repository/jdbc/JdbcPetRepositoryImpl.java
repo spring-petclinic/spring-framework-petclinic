@@ -93,8 +93,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     }
 
     private Owner loadOwnerForPet(int petId) {
-        int ownerId = findOwnerIdForPet(petId);
-        return this.ownerRepository.findById(ownerId);
+        return this.ownerRepository.findById(findOwnerIdForPet(petId));
     }
 
     private int findOwnerIdForPet(int petId) {
