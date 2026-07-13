@@ -111,8 +111,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
     }
 
     public void loadPetsAndVisits(final Owner owner) {
-        final List<JdbcPet> pets = findPetsForOwner(owner.getId());
-        attachPetsToOwner(owner, pets);
+        attachPetsToOwner(owner, findPetsForOwner(owner.getId()));
     }
 
     private List<JdbcPet> findPetsForOwner(int ownerId) {
