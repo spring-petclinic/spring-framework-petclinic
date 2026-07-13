@@ -89,7 +89,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
                     WHERE id=:id
                     """)
                 .paramSource(createPetParameterSource(pet))
-            .update();
+                .update();
     }
 
     private Owner loadOwnerForPet(int petId) {
