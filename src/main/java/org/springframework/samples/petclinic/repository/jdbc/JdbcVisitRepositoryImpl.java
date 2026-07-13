@@ -54,13 +54,12 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     @Override
     public void save(Visit visit) {
-        if (visit.isNew()) {
-            Number newKey = this.insertVisit.executeAndReturnKey(
-                createVisitParameterSource(visit));
-            visit.setId(newKey.intValue());
-        } else {
+        if (!visit.isNew()) {
             throw new UnsupportedOperationException("Visit update not supported");
         }
+        Number newKey = this.insertVisit.executeAndReturnKey(
+            createVisitParameterSource(visit));
+        visit.setId(newKey.intValue());
     }
 
 
@@ -77,23 +76,35 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     @Override
     public List<Visit> findByPetId(Integer petId) {
-        JdbcPet pet = this.jdbcClient
+        JdbcPet pet = loadPetForVisit(petId);
+
+        List<Visit> visits = loadVisitsForPet(petId);
+
+        attachPetToVisits(visits, pet);
+
+        return visits;
+    }
+
+    private JdbcPet loadPetForVisit(Integer petId) {
+        return this.jdbcClient
             .sql("SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id")
             .param("id", petId)
             .query(new JdbcPetRowMapper())
             .single();
+    }
 
-        List<Visit> visits = this.jdbcClient
+    private List<Visit> loadVisitsForPet(Integer petId) {
+        return this.jdbcClient
             .sql("SELECT id as visit_id, visit_date, description FROM visits WHERE pet_id=:id")
             .param("id", petId)
             .query(new JdbcVisitRowMapper())
             .list();
+    }
 
-        for (Visit visit: visits) {
+    private void attachPetToVisits(List<Visit> visits, JdbcPet pet) {
+        for (Visit visit : visits) {
             visit.setPet(pet);
         }
-
-        return visits;
     }
 
 }

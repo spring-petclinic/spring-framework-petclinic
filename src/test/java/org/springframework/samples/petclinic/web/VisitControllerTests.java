@@ -41,14 +41,14 @@ class VisitControllerTests {
 
     @Test
     void testInitNewVisitForm() throws Exception {
-        mockMvc.perform(get("/owners/*/pets/{petId}/visits/new", TEST_PET_ID))
+        mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/visits/new", 1, TEST_PET_ID))
             .andExpect(status().isOk())
             .andExpect(view().name("pets/createOrUpdateVisitForm"));
     }
 
     @Test
     void testProcessNewVisitFormSuccess() throws Exception {
-        mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
+        mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/visits/new", 1, TEST_PET_ID)
             .param("name", "George")
             .param("description", "Visit Description")
         )
@@ -58,7 +58,7 @@ class VisitControllerTests {
 
     @Test
     void testProcessNewVisitFormHasErrors() throws Exception {
-        mockMvc.perform(post("/owners/*/pets/{petId}/visits/new", TEST_PET_ID)
+        mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/visits/new", 1, TEST_PET_ID)
             .param("name", "George")
         )
             .andExpect(model().attributeHasErrors("visit"))
@@ -68,7 +68,7 @@ class VisitControllerTests {
 
     @Test
     void testShowVisits() throws Exception {
-        mockMvc.perform(get("/owners/*/pets/{petId}/visits", TEST_PET_ID))
+        mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/visits", 1, TEST_PET_ID))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("visits"))
             .andExpect(view().name("visitList"));

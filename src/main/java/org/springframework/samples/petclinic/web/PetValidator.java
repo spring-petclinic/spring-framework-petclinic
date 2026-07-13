@@ -34,25 +34,47 @@ import org.springframework.validation.Validator;
 public class PetValidator implements Validator {
 
     private static final String REQUIRED = "required";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_TYPE = "type";
+    private static final String FIELD_BIRTH_DATE = "birthDate";
 
     @Override
     public void validate(Object obj, Errors errors) {
         Pet pet = (Pet) obj;
-        String name = pet.getName();
-        // name validation
-        if (!StringUtils.hasLength(name)) {
-            errors.rejectValue("name", REQUIRED, REQUIRED);
+        validateName(errors, pet);
+        validateRequiredFieldsForNewPet(errors, pet);
+    }
+
+    private void validateName(Errors errors, Pet pet) {
+        if (isMissingName(pet)) {
+            rejectRequiredField(errors, FIELD_NAME);
+        }
+    }
+
+    private void validateRequiredFieldsForNewPet(Errors errors, Pet pet) {
+        if (isMissingTypeForNewPet(pet)) {
+            rejectRequiredField(errors, FIELD_TYPE);
         }
 
-        // type validation
-        if (pet.isNew() && pet.getType() == null) {
-            errors.rejectValue("type", REQUIRED, REQUIRED);
+        if (isMissingBirthDate(pet)) {
+            rejectRequiredField(errors, FIELD_BIRTH_DATE);
         }
+    }
 
-        // birth date validation
-        if (pet.getBirthDate() == null) {
-            errors.rejectValue("birthDate", REQUIRED, REQUIRED);
-        }
+    private boolean isMissingName(Pet pet) {
+        return !StringUtils.hasLength(pet.getName());
+    }
+
+    private boolean isMissingTypeForNewPet(Pet pet) {
+        return pet.isNew() && pet.getType() == null;
+    }
+
+    private boolean isMissingBirthDate(Pet pet) {
+        return pet.getBirthDate() == null;
+    }
+
+    private void rejectRequiredField(Errors errors, String fieldName) {
+        errors.rejectValue(fieldName, REQUIRED, REQUIRED);
     }
 
     /**

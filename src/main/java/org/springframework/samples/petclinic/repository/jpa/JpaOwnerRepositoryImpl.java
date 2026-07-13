@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.repository.jpa;
 import java.util.Collection;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -53,18 +52,29 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
     public Collection<Owner> findByLastName(String lastName) {
         // using 'join fetch' because a single query should load both owners and pets
         // using 'left join fetch' because it might happen that an owner does not have pets yet
-        Query query = this.em.createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName");
-        query.setParameter("lastName", lastName + "%");
-        return query.getResultList();
+        return getOwnersByLastNamePrefix(lastName);
     }
 
     @Override
     public Owner findById(int id) {
         // using 'join fetch' because a single query should load both owners and pets
         // using 'left join fetch' because it might happen that an owner does not have pets yet
-        Query query = this.em.createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id");
-        query.setParameter("id", id);
-        return (Owner) query.getSingleResult();
+        return findOwnerById(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Collection<Owner> getOwnersByLastNamePrefix(String lastName) {
+        return this.em
+            .createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName")
+            .setParameter("lastName", lastName + "%")
+            .getResultList();
+    }
+
+    private Owner findOwnerById(int id) {
+        return (Owner) this.em
+            .createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
+            .setParameter("id", id)
+            .getSingleResult();
     }
 
 
@@ -72,9 +82,9 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
     public void save(Owner owner) {
         if (owner.getId() == null) {
             this.em.persist(owner);
-        } else {
-            this.em.merge(owner);
+            return;
         }
+        this.em.merge(owner);
 
     }
 

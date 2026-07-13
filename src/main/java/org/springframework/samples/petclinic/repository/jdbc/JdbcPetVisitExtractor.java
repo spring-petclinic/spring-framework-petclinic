@@ -41,9 +41,8 @@ public class JdbcPetVisitExtractor extends
     protected Integer mapForeignKey(ResultSet rs) throws SQLException {
         if (rs.getObject("visits.pet_id") == null) {
             return null;
-        } else {
-            return rs.getInt("visits.pet_id");
         }
+        return rs.getInt("visits.pet_id");
     }
 
     @Override
