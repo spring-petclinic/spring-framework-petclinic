@@ -48,18 +48,23 @@ public class JpaVisitRepositoryImpl implements VisitRepository {
     public void save(Visit visit) {
         if (visit.getId() == null) {
             this.em.persist(visit);
-        } else {
-            this.em.merge(visit);
+            return;
         }
+        this.em.merge(visit);
     }
 
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Visit> findByPetId(Integer petId) {
+        Query query = createFindByPetIdQuery(petId);
+        return query.getResultList();
+    }
+
+    private Query createFindByPetIdQuery(Integer petId) {
         Query query = this.em.createQuery("SELECT v FROM Visit v where v.pet.id= :id");
         query.setParameter("id", petId);
-        return query.getResultList();
+        return query;
     }
 
 }

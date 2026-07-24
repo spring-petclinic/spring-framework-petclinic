@@ -44,7 +44,10 @@ public class ClinicServiceImpl implements ClinicService {
     private final OwnerRepository ownerRepository;
     private final VisitRepository visitRepository;
 
-    public ClinicServiceImpl(PetRepository petRepository, VetRepository vetRepository, OwnerRepository ownerRepository, VisitRepository visitRepository) {
+    public ClinicServiceImpl(PetRepository petRepository,
+            VetRepository vetRepository,
+            OwnerRepository ownerRepository,
+            VisitRepository visitRepository) {
         this.petRepository = petRepository;
         this.vetRepository = vetRepository;
         this.ownerRepository = ownerRepository;
@@ -75,7 +78,6 @@ public class ClinicServiceImpl implements ClinicService {
         ownerRepository.save(owner);
     }
 
-
     @Override
     @Transactional
     public void saveVisit(Visit visit) {
@@ -102,10 +104,10 @@ public class ClinicServiceImpl implements ClinicService {
         return vetRepository.findAll();
     }
 
-	@Override
-	public Collection<Visit> findVisitsByPetId(int petId) {
-		return visitRepository.findByPetId(petId);
-	}
-
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Visit> findVisitsByPetId(int petId) {
+        return visitRepository.findByPetId(petId);
+    }
 
 }

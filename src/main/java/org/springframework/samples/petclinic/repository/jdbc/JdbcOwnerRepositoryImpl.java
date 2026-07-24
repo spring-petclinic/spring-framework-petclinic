@@ -69,14 +69,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Collection<Owner> findByLastName(String lastName) {
-        List<Owner> owners = this.jdbcClient.sql("""
-                SELECT id, first_name, last_name, address, city, telephone
-                FROM owners
-                WHERE last_name like :lastName
-                """)
-            .param("lastName", lastName + "%")
-            .query(BeanPropertyRowMapper.newInstance(Owner.class))
-            .list();
+        List<Owner> owners = findOwnersByLastNamePrefix(lastName);
         loadOwnersPetsAndVisits(owners);
         return owners;
     }
@@ -87,9 +80,25 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Owner findById(int id) {
-        Owner owner;
+        Owner owner = findOwnerById(id);
+        loadPetsAndVisits(owner);
+        return owner;
+    }
+
+    private List<Owner> findOwnersByLastNamePrefix(String lastName) {
+        return this.jdbcClient.sql("""
+                SELECT id, first_name, last_name, address, city, telephone
+                FROM owners
+                WHERE last_name like :lastName
+                """)
+            .param("lastName", lastName + "%")
+            .query(BeanPropertyRowMapper.newInstance(Owner.class))
+            .list();
+    }
+
+    private Owner findOwnerById(int id) {
         try {
-            owner = this.jdbcClient.sql("""
+            return this.jdbcClient.sql("""
                     SELECT id, first_name, last_name, address, city, telephone
                     FROM owners WHERE id = :id
                     """)
@@ -99,18 +108,23 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         } catch (EmptyResultDataAccessException ex) {
             throw new ObjectRetrievalFailureException(Owner.class, id);
         }
-        loadPetsAndVisits(owner);
-        return owner;
     }
 
     public void loadPetsAndVisits(final Owner owner) {
-        final List<JdbcPet> pets = this.jdbcClient.sql("""
+        attachPetsToOwner(owner, findPetsForOwner(owner.getId()));
+    }
+
+    private List<JdbcPet> findPetsForOwner(int ownerId) {
+        return this.jdbcClient.sql("""
             SELECT pets.id, name, birth_date, type_id, owner_id, visits.id as visit_id, visit_date, description, pet_id
             FROM pets LEFT OUTER JOIN visits ON pets.id = pet_id
             WHERE owner_id=:id ORDER BY pet_id
             """)
-            .param("id", owner.getId())
+            .param("id", ownerId)
             .query(new JdbcPetVisitExtractor());
+    }
+
+    private void attachPetsToOwner(Owner owner, List<JdbcPet> pets) {
         Collection<PetType> petTypes = getPetTypes();
         for (JdbcPet pet : pets) {
             pet.setType(EntityUtils.getById(petTypes, PetType.class, pet.getTypeId()));
@@ -124,15 +138,15 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         if (owner.isNew()) {
             Number newKey = this.insertOwner.executeAndReturnKey(parameterSource);
             owner.setId(newKey.intValue());
-        } else {
-            this.jdbcClient.sql("""
+            return;
+        }
+        this.jdbcClient.sql("""
                     UPDATE owners
                     SET first_name=:firstName, last_name=:lastName, address=:address, city=:city, telephone=:telephone
                     WHERE id=:id
                     """)
                 .paramSource(parameterSource)
                 .update();
-        }
     }
 
     public Collection<PetType> getPetTypes() {

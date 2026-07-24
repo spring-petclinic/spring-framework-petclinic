@@ -43,6 +43,10 @@ import org.springframework.core.style.ToStringCreator;
 @Entity
 @Table(name = "owners")
 public class Owner extends Person {
+
+    private static final Comparator<Pet> PET_NAME_COMPARATOR =
+        Comparator.comparing(Pet::getName, String.CASE_INSENSITIVE_ORDER);
+
     @Column(name = "address")
     @NotEmpty
     private String address;
@@ -97,7 +101,7 @@ public class Owner extends Person {
 
     public List<Pet> getPets() {
         List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
-        sortedPets.sort(Comparator.comparing(Pet::getName, String.CASE_INSENSITIVE_ORDER));
+        sortedPets.sort(PET_NAME_COMPARATOR);
         return Collections.unmodifiableList(sortedPets);
     }
 
@@ -125,15 +129,15 @@ public class Owner extends Person {
     public Pet getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
         for (Pet pet : getPetsInternal()) {
-            if (!ignoreNew || !pet.isNew()) {
-                String compName = pet.getName();
-                compName = compName.toLowerCase();
-                if (compName.equals(name)) {
-                    return pet;
-                }
+            if (isMatchingPet(pet, name, ignoreNew)) {
+                return pet;
             }
         }
         return null;
+    }
+
+    private boolean isMatchingPet(Pet pet, String name, boolean ignoreNew) {
+        return (!ignoreNew || !pet.isNew()) && pet.getName().toLowerCase().equals(name);
     }
 
     @Override

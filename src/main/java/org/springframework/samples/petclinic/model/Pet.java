@@ -45,6 +45,8 @@ import java.util.Set;
 @Table(name = "pets")
 public class Pet extends NamedEntity {
 
+    private static final Comparator<Visit> VISIT_DATE_DESCENDING = Comparator.comparing(Visit::getDate).reversed();
+
     @Column(name = "birth_date")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
@@ -98,7 +100,7 @@ public class Pet extends NamedEntity {
 
     public List<Visit> getVisits() {
         List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
-        sortedVisits.sort(Comparator.comparing(Visit::getDate).reversed());
+        sortedVisits.sort(VISIT_DATE_DESCENDING);
         return Collections.unmodifiableList(sortedVisits);
     }
 

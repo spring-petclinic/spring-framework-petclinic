@@ -53,13 +53,16 @@ public class PetTypeFormatter implements Formatter<PetType> {
 
     @Override
     public PetType parse(String text, Locale locale) throws ParseException {
-        Collection<PetType> findPetTypes = this.clinicService.findPetTypes();
-        for (PetType type : findPetTypes) {
-            if (type.getName().equals(text)) {
+        for (PetType type : this.clinicService.findPetTypes()) {
+            if (matchesName(type, text)) {
                 return type;
             }
         }
         throw new ParseException("type not found: " + text, 0);
+    }
+
+    private boolean matchesName(PetType type, String text) {
+        return type.getName().equals(text);
     }
 
 }
