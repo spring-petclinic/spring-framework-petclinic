@@ -40,6 +40,8 @@ import java.util.Collection;
 public class PetController {
 
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
+    private static final String MODEL_ATTRIBUTE_PET = "pet";
+    private static final String VIEW_REDIRECT_OWNERS = "redirect:/owners/{ownerId}";
     private final ClinicService clinicService;
 
     public PetController(ClinicService clinicService) {
@@ -70,42 +72,48 @@ public class PetController {
     public String initCreationForm(Owner owner, ModelMap model) {
         Pet pet = new Pet();
         owner.addPet(pet);
-        model.put("pet", pet);
+        model.put(MODEL_ATTRIBUTE_PET, pet);
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
     @PostMapping(value = "/pets/new")
     public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
-        if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null){
+        if (hasDuplicatePetName(owner, pet)) {
             result.rejectValue("name", "duplicate", "already exists");
         }
         if (result.hasErrors()) {
-            model.put("pet", pet);
-            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+            return showPetForm(model, pet);
         }
 
         owner.addPet(pet);
         this.clinicService.savePet(pet);
-        return "redirect:/owners/{ownerId}";
+        return VIEW_REDIRECT_OWNERS;
+    }
+
+    private boolean hasDuplicatePetName(Owner owner, Pet pet) {
+        return StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null;
     }
 
     @GetMapping(value = "/pets/{petId}/edit")
     public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
-        Pet pet = this.clinicService.findPetById(petId);
-        model.put("pet", pet);
+        model.put(MODEL_ATTRIBUTE_PET, this.clinicService.findPetById(petId));
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
     @PostMapping(value = "/pets/{petId}/edit")
     public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
         if (result.hasErrors()) {
-            model.put("pet", pet);
-            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+            return showPetForm(model, pet);
         }
 
         owner.addPet(pet);
         this.clinicService.savePet(pet);
-        return "redirect:/owners/{ownerId}";
+        return VIEW_REDIRECT_OWNERS;
+    }
+
+    private String showPetForm(ModelMap model, Pet pet) {
+        model.put(MODEL_ATTRIBUTE_PET, pet);
+        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
 }
