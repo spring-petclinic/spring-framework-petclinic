@@ -7,9 +7,9 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -DskipTests clean package
 RUN ls -lah /app/target
 
-FROM tomcat:9.0-jdk17-temurin
+# Servlet 6.1 / Jakarta EE 11 -> Tomcat 11 (NOT 9, NOT 10)
+FROM tomcat:11.0-jdk21-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
-# Replace spring-framework-petclinic.war with actual produced WAR filename
 COPY --from=build /app/target/petclinic.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
