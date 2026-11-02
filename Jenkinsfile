@@ -7,17 +7,15 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout') {
+       stage('Checkout') {
             steps {
                 git branch: 'main',
-                credentialsId: 'git-access-token',
+                credentialsId: 'git-token',
                     url: 'https://github.com/udevop-2026/demo-spring-framework-petclinic.git'
             }
         }
-
-        stage('Build and SonarQube Analysis') {
-    steps {
+    stage('Build and SonarQube Analysis') {
+       steps {
         withSonarQubeEnv('sonarqube') {
             sh '''
                 mvn clean package \
@@ -26,30 +24,27 @@ pipeline {
             '''
                 }
             }
-        }
-
-        stage('Verify WAR') {
+       }
+       stage('Verify WAR') {
             steps {
                 sh 'ls -lh target/*.war'
             }
         }
-
         stage('Deploy to Tomcat') {
     steps {
         sshagent(credentials: ['tomcat-ssh-key']) {
             sh '''
-                ssh -o StrictHostKeyChecking=no root@172.31.10.114 \
+                ssh -o StrictHostKeyChecking=no root@172.31.25.174 \
                 "rm -rf /opt/apache-tomcat-11.0.27/webapps/petclinic \
                  /opt/apache-tomcat-11.0.27/webapps/petclinic.war"
 
                 scp -o StrictHostKeyChecking=no target/*.war \
-                root@172.31.10.114:/opt/apache-tomcat-11.0.27/webapps/petclinic.war
+                root@172.31.25.174:/opt/apache-tomcat-11.0.27/webapps/petclinic.war
             '''
                 }
             }
         }
     }
-
     post {
         success {
             echo 'PetClinic build and deployment successful'
@@ -59,4 +54,5 @@ pipeline {
             echo 'PetClinic pipeline failed'
         }
     }
+
 }
