@@ -43,8 +43,6 @@ pipeline {
             }
         }
 
-## It means the Deploy to Tomcat stage will execute only when the user selects the DEPLOY_TO_TOMCAT checkbox while starting the build.
-## "Jenkins lo when condition ni particular stage execute cheyyala vadha ani control cheyyadaniki use chestham.
 
         stage('Deploy to Tomcat') {  
             when {
