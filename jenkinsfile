@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'test-slave'
+    }
     tools {
         jdk 'JDK21'
         maven 'maven'
