@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'JDK21'
+        maven 'maven'
+    }
+    stages {
+        stage('Checkout') {
+            steps{
+                git branch: 'main',
+                credentialsId: 'git-token',
+                   url:'https://github.com/udevop-2026/demo-spring-framework-petclinic.git'
+            }
+        }
+        stage('Build and sonaqube Scan'){
+            steps{
+                withSonarQubeEnv('sonarqube'){
+                sh '''
+                mvn clean package \
+                org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                -Dsonar.projectKey=petclinic-demo-project
+            '''
+                }
+            }
+        }
+        stage('Deploy to Tomcat'){
+            steps{
+                sshagent(credentials: ['tomcat-key']) {
+                    sh '''
+                ssh -o StrictHostKeyChecking=no root@172.31.25.174 \
+                "rm -rf /opt/apache-tomcat-11.0.27/webapps/petclinic \
+                 /opt/apache-tomcat-11.0.27/webapps/petclinic.war"
+
+                scp -o StrictHostKeyChecking=no target/*.war \
+                root@172.31.25.174:/opt/apache-tomcat-11.0.27/webapps/petclinic.war
+            '''
+                }
+            }
+        }
+    }
+    post{
+        success{
+            echo 'PetClinic build and deployment successful'
+        }
+        failure{
+            echo 'PetClinic pipeline failed'
+        }
+    }
+}
