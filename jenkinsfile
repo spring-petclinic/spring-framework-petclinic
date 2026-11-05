@@ -1,4 +1,7 @@
 pipeline {
+    agent {
+        label 'agent-1'
+    }
     tools {
         jdk 'JDK21'
         maven 'maven'
